@@ -142,6 +142,12 @@
 <script src="<?php echo url('public/assets/js/step-form.js'); ?>"></script>
 <script src="<?php echo url('public/assets/js/app.js'); ?>"></script>
 <script src="<?php echo url('public/assets/admin/event.js')?>"></script>
+<script src="https://unpkg.com/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6.3.2/dist/tippy-bundle.umd.min.js"></script>
+<script>
+  tippy('[data-tippy-content]')
+</script>
+
 </body>
 
 </html>

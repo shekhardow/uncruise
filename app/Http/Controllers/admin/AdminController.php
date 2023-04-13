@@ -5,16 +5,20 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\admin\AdminModel;
+use App\Models\admin\UserModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Config;
 
 class AdminController extends Controller
 {
+    // DB Instance
     private $admin_model;
+    private $user_model;
 
     public function __construct(){
         $this->admin_model = new AdminModel();
+        $this->user_model = new UserModel();
     }
 
     private function loadview($view, $data = NULL){
@@ -55,23 +59,8 @@ class AdminController extends Controller
     // ------------------------- Dashboard ------------------------------
     public function dashboard(Request $Request){
         $data['title'] ='Dashboard';
-        $data['totalusers'] = count($this->admin_model->getAllUsers());
+        $data['totalusers'] = count($this->user_model->getAllUsers());
         return $this->loadview('dashboard',$data);
-    }
-
-    // ------------------------- Users ------------------------------
-    public function users() {
-        $data['title'] ='Users';
-        $data['basic_datatable']='1';
-        $data['users'] = $this->admin_model->getAllUsers();
-        return $this->loadview('user',$data);
-    }
-    
-    public function viewUser($user_id) {
-        $data['title'] ='View Users';
-        $user_id = decryptionID($user_id);
-        $data['users'] = $this->admin_model->getAllUsersByUserID($user_id);
-        return $this->loadview('view_user',$data);
     }
 
     //------------------------- Profile ------------------------------

@@ -29,15 +29,6 @@ class AdminModel extends Model
             ->get();
     }
 
-    public function getAllUsers(){
-        return DB::table('users')->select('users.*')
-            ->orderByDesc('user_id')->get();
-    }
-
-    public function getAllUsersByUserID($user_id){
-        return DB::table('users')->where('user_id', $user_id)->get();
-    }
-
     public function getAllFacebookUsers(){
         return DB::table('users')->select('users.*')
             ->where('source', '=', 'facebook')

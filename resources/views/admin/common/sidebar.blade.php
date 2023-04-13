@@ -43,10 +43,18 @@
             <!-- Apps Area -->
             <li class="sidebar-menu-title">COMPONENTS</li>
             <li>
-                <a href="<?php echo route('admin/users'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Users') ? 'active' : ''; ?>">
+                <a href="<?php echo route('admin/users'); ?>" class="navItem <?php echo (!empty($title) && ($title == 'Users' || $title == 'User Details')) ? 'active' : ''; ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="heroicons-outline:user-group"></iconify-icon>
                         <span>Users</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo route('admin/surveys'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Surveys') ? 'active' : ''; ?>">
+                    <span class="flex items-center">
+                        <iconify-icon class="nav-icon" icon="ri:survey-fill"></iconify-icon>
+                        <span>Surveys</span>
                     </span>
                 </a>
             </li>

@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Request;
 
     // For Id Encryption 
     function encryptionID($id){
-        $res=substr(uniqid(), 0, 10).$id.substr(uniqid(), 0, 10);
-        return $res;
+        $result = substr(uniqid(), 0, 10).$id.substr(uniqid(), 0, 10);
+        return $result;
     }
 
    // For Id Decryption 
@@ -25,8 +25,8 @@ use Illuminate\Support\Facades\Request;
 
     // Common function to insert the data into database
     function insert($table,$data=[]){
-        $result=DB::table($table)->insert($data);
-        return  DB::getPdo()->lastInsertId();
+        DB::table($table)->insert($data);
+        return DB::getPdo()->lastInsertId();
     }
 
     // Common function to update the data into database

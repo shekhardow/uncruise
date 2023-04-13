@@ -32,3 +32,12 @@
     top: 8px;
     left: 16px;
   }
+
+.userDetailsPage .form-group:not(:last-child){
+    margin-bottom: 15px;
+}
+.userDetailsPage .form-group label:first-child{
+    font-weight: 700;
+    color: #444444c2;
+}
+  

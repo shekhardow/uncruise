@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminAuth;
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\admin\SurveyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,17 +25,20 @@ Route::get('admin',[AdminController::class,'login'])->name('admin/login');
 Route::post('admin/check-login',[AdminController::class,'check_login'])->name('admin/check_login');
 Route::get('admin/logout',[AdminController::class,'logout'])->name('admin/logout');
 //-----------------------------Forgot password--------------------------------------------------
-Route::get('admin/forget_password',[AdminController::class,'forget_password'])->name('admin/forget_password');
+Route::get('admin/forget-password',[AdminController::class,'forget_password'])->name('admin/forget_password');
 Route::post('forgot_password',[AdminController::class,'forgot_password'])->name('admin/forgot_password');
 
 Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function () {
     Route::get('dashboard',[AdminController::class,'dashboard'])->name('admin/dashboard');
 
     Route::get('profile',[AdminController::class,'profile'])->name('admin/profile');
-    Route::post('updateProfile',[AdminController::class,'updateProfile'])->name('admin/updateProfile');
+    Route::post('update-profile',[AdminController::class,'updateProfile'])->name('admin/updateProfile');
 
-    Route::get('users',[AdminController::class,'users'])->name('admin/users');
-    Route::get('viewUsers/{user_id}',[AdminController::class,'viewUser'])->name('admin/viewUsers');
+    Route::get('users',[UserController::class,'users'])->name('admin/users');
+    Route::get('user-details/{user_id}',[UserController::class,'userDetails'])->name('admin/userDetails');
+    
+    Route::get('surveys',[SurveyController::class,'surveys'])->name('admin/surveys');
+    Route::get('survey-details/{survey_id}',[SurveyController::class,'surveyDetails'])->name('admin/surveyDetails');
 
     Route::get('social',[AdminController::class,'social'])->name('admin/social');
     Route::post('update-social-link',[AdminController::class,'update_social_link'])->name('admin/update-social-link');
