@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\admin\AdminModel;
 use App\Models\admin\UserModel;
+use App\Models\admin\SurveyModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Config;
@@ -15,10 +16,12 @@ class AdminController extends Controller
     // DB Instance
     private $admin_model;
     private $user_model;
+    private $survey_model;
 
     public function __construct(){
         $this->admin_model = new AdminModel();
         $this->user_model = new UserModel();
+        $this->survey_model = new SurveyModel();
     }
 
     private function loadview($view, $data = NULL){
@@ -74,7 +77,8 @@ class AdminController extends Controller
     // ------------------------- Dashboard ------------------------------
     public function dashboard(Request $Request){
         $data['title'] ='Dashboard';
-        $data['totalusers'] = count($this->user_model->getAllUsers());
+        $data['total_users'] = count($this->user_model->getAllUsers());
+        $data['total_surveys'] = count($this->survey_model->getAllSurveys());
         return $this->loadview('dashboard',$data);
     }
 
@@ -218,58 +222,61 @@ class AdminController extends Controller
     }
 
     // ------------------------- Faqs ------------------------------
-    public function faq() {
-        $data['title'] ='Faq';
-        $data['admin_detail']= $this->admin_model->getAdminDetail(session()->get('admin_id'));
-        $data['faq'] = DB::table('faq')->get();
-        return $this->loadview('faq',$data);
+    public function faqs() {
+        $data['title'] = "FAQs";
+        $data['admin_detail'] = $this->admin_model->getAdminDetail(session()->get('admin_id'));
+        $data['faqs'] = $this->admin_model->getAllFaqs();
+        return $this->loadview('faqs/faq', $data);
     }
 
-    public function faqform($id=NULL){
-        if(empty($id)){
-            $data['data'] = NULL;
-            $model_wrapper =  $this->loadview('faqs-form',$data);
+    public function openFaqForm(Request $request){
+        $faq_id = $request->faq_id;
+        if(empty($faq_id)){
+            echo 'Hello';
+            $data['data'] = null;
+            $htmlwrapper = view('admin/faqs/faq-form', $data)->render();
         }else{
-            $data['faq_detail'] = $this->admin_model->get_faq_ById($id);
-            $model_wrapper =  $this->loadview('faqs-form',$data);
+            echo 'Hey';
+            $data['faq_detail'] = $this->admin_model->getFaqById($faq_id);
+            $htmlwrapper = view('admin/faqs/faq-form', $data)->render();
         }
-        return response()->json(['result' => 1, 'model_wrapper' => $model_wrapper]);
+        return response()->json(['result' => 1, 'htmlwrapper' => $htmlwrapper]);
     }
 
-    public function add_faq(Request $Request){
-        $form_data= $Request->post();
+    public function addFaq(Request $request){
+        $form_data = $request->post();
         $insert_data = [
             'question'  => $form_data['question'],
             'answer'    => $form_data['answer'],
         ];
-        $result=DB::table('faq')->insert($insert_data);
-        if ($result) {
-            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq Added successfully ']);
+        $result = DB::table('faqs')->insert($insert_data);
+        if($result){
+            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq added successfully']);
         }else{
-            return response()->json(['result' => -1, 'msg' => 'OOPs Something went wrong']);
+            return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
         }
     }
 
-    public function update_faq(Request $Request){
-        $form_data= $Request->post();
+    public function updateFaq(Request $request){
+        $form_data = $request->post();
         $update_data = [
             'question'  => $form_data['question'],
             'answer'    => $form_data['answer'],
         ];
-        $result=DB::table('faq')->where('faq_id',$form_data['faq_id'])->update($update_data);
-        if ($result) {
-            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq Updated successfully ']);
+        $result = DB::table('faqs')->where('faq_id', $form_data['faq_id'])->update($update_data);
+        if($result){
+            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq updated successfully']);
         }else{
-            return response()->json(['result' => -1, 'msg' => 'OOPs Something went wrong']);
+            return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
         }
     }
     
-    public function delete_faq($id,Request $Request){
-        $result = DB::table('faq')->where('faq_id',$id)->delete();
-        if ($result) {
-            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq Deleted successfully ']);
+    public function deleteFaq($id){
+        $result = DB::table('faqs')->where('faq_id', $id)->delete();
+        if($result){
+            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq deleted successfully']);
         }else{
-            return response()->json(['result' => -1, 'msg' => 'OOPs Something went wrong']);
+            return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
         }
     }
 

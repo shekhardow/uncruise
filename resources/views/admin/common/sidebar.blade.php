@@ -61,7 +61,7 @@
             <!-- Pages Area -->
             <li class="sidebar-menu-title">APP MANAGEMENT</li>
             <!-- Authentication -->
-            <li class="<?php if($title == 'Terms & Condition' || $title == 'Privacy Policy' || $title == 'About Us'){echo 'active';} ?>">
+            <li class="<?php if((!empty($title)) && ($title == 'Terms & Condition' || $title == 'Privacy Policy' || $title == 'About Us')){echo 'active';} ?>">
                 <a href="javascript:void(0)" class="navItem">
                     <span class="flex items-center">
                         <iconify-icon class=" nav-icon" icon="heroicons:rocket-launch"></iconify-icon>
@@ -71,24 +71,24 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="<?php echo route('admin/siteSetting',['key' => 'terms-condition']); ?>" class="<?php if($title == 'Terms & Condition'){echo 'active';} ?>">
+                        <a href="<?php echo route('admin/siteSetting',['key' => 'terms-condition']); ?>" class="<?php if((!empty($title)) && ($title == 'Terms & Condition')){echo 'active';} ?>">
                             Terms of Use
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo route('admin/siteSetting',['key' => 'privacy-policy']); ?>"class="<?php if($title == 'Privacy Policy'){echo 'active';} ?>">
+                        <a href="<?php echo route('admin/siteSetting',['key' => 'privacy-policy']); ?>"class="<?php if((!empty($title)) && ($title == 'Privacy Policy')){echo 'active';} ?>">
                             Privacy Notice
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo route('admin/siteSetting',['key' => 'about-us']); ?>"class="<?php if($title == 'About Us'){echo 'active';} ?>">
+                        <a href="<?php echo route('admin/siteSetting',['key' => 'about-us']); ?>"class="<?php if((!empty($title)) && ($title == 'About Us')){echo 'active';} ?>">
                             About
                         </a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="javascript:void(0)" class="navItem">
+                <a href="<?php echo route('admin/faqs'); ?>" class="navItem <?php if((!empty($title)) && ($title == 'FAQs')){echo 'active';} ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="mdi:faq"></iconify-icon>
                         <span>Faqs</span>

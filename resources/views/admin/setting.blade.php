@@ -28,7 +28,7 @@
                     <div class="rounded-md overlay bg-no-repeat bg-center bg-cover card" style="background-image: url('/assets/images/all-img/card-3.png');">
                         <div class="card-body h-full flex flex-col justify-center p-6">
                             <div class="card-text flex flex-col justify-between h-full">
-                                
+
                                 <form method="post" id="submit-setting-form" action="<?php echo route('admin/updateSiteSetting'); ?>">
                                     <div class="max-w-3xl mx-auto">
                                         <label class="card-title block mb-2">Update <?php echo !empty($title) ? $title : null; ?> :</label>

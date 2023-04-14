@@ -110,53 +110,6 @@ class AdminModel extends Model
         $affected_row = DB::table('contact_details')->update($data);
         return $affected_row;
     }
-
-    public function getAllCases(){
-        return DB::table('cases')->select('cases.*')->where('status', '!=', 'Deleted')->orderByDesc('case_id')->get();
-    }
-
-    public function getAllCasesById($case_id){
-        return DB::table('cases')->where('case_id', $case_id)->get();
-    }
-
-    public function getCaseDetail($case_id){
-        return DB::table('cases')->where('case_id', $case_id)->where('status', '!=', 'Deleted')->get()->first();
-    }
-
-    public function getAllCaseTypes(){
-        return DB::table('cases')->select('case_type')->get();
-    }
-
-    public function updateCaseDetails($data, $case_id){
-        $affected_row = DB::table('cases')->where('case_id', $case_id)->update($data);
-        return $affected_row;
-    }
-
-    public function getAllDocuments(){
-        return DB::table('documents')->select('documents.*')->orderByDesc('id')->get();
-    }
-
-    public function getDocumentById($document_id){
-        return DB::table('documents')->where('id', $document_id)->get()->first();
-    }
-
-    public function getAllDocumentTypes(){
-        return DB::table('documents')->select('documents.document_type')->get();
-    }
-
-    public function updateDocumentDetails($data, $id){
-        $affected_row = DB::table('documents')->where('id', $id)->update($data);
-        return $affected_row;
-    }
-
-    public function getAllLawyers(){
-        return DB::table('lawyer')->select('lawyer.*')->orderByDesc('lawyer_id')->get();
-    }
-    
-    //--------------------------percenatage---------------------------------
-    public function getPercentage(){
-        return DB::table('percentage')->select('percentage.*')->get();
-    }
     
     public function sendNotfication($id,$message,$subject){
         $data=array(
@@ -166,6 +119,14 @@ class AdminModel extends Model
         );
         DB::table('notification')->insert($data);
         return true;
+    }
+
+    public function getAllFaqs(){
+        return DB::table('faqs')->select('*')->where('status', '!=', 'Deleted')->get();
+    }
+    
+    public function getFaqById($faq_id){
+        return DB::table('faqs')->where('faq_id', $faq_id)->get()->first();
     }
     
 }

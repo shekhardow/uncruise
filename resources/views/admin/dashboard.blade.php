@@ -56,13 +56,15 @@
                                     <div class="flex-1">
                                         <div class="max-w-[180px]">
                                             <h4 class="text-2xl font-medium text-white mb-2">
-                                                <span class="block text-sm">Current balance,</span>
-                                                <span class="block">$34,564</span>
+                                                <span class="block text-sm">Total Users,</span>
+                                                <span class="block">
+                                                    <?php echo !empty($total_users) ? number_format($total_users) : '0'; ?>
+                                                </span>
                                             </h4>
                                         </div>
                                     </div>
                                     <div class="flex-none">
-                                        <button class="btn-light bg-white btn-sm btn">View details</button>
+                                        <a href="<?php echo route('admin/users'); ?>" class="btn-light bg-white btn-sm btn">View details</a>
                                     </div>
                                 </div>
                                 <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
@@ -70,18 +72,18 @@
                                     <div class="flex-1">
                                         <div class="max-w-[180px]">
                                             <h4 class="text-2xl font-medium text-slate-900 mb-2">
-                                                <span class="block text-sm dark:text-slate-800">
-                                                    Current balance,
+                                                <span class="block text-sm dark:text-slate-800">Total Surveys,</span>
+                                                <span class="block dark:text-slate-800">
+                                                    <?php echo !empty($total_surveys) ? number_format($total_surveys) : '0'; ?>
                                                 </span>
-                                                <span class="block dark:text-slate-800">$34,564</span>
                                             </h4>
                                         </div>
                                     </div>
                                     <div class="flex-none">
-                                        <button class="btn-light bg-white btn-sm btn">View details</button>
+                                        <a href="<?php echo route('admin/surveys'); ?>" class="btn-light bg-white btn-sm btn">View details</a>
                                     </div>
                                 </div>
-                                <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
+                                {{-- <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
                                     style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-8.png'); ?>)">
                                     <div class="flex-1">
                                         <div class="max-w-[180px]">
@@ -172,7 +174,7 @@
                                     <div class="flex-none">
                                         <button class="btn-light bg-white btn-sm btn">View details</button>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

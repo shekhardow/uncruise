@@ -4,6 +4,7 @@ var Events = function () {
 		this.tooltip();
 		this.commonForm();
 		this.submitForm();
+		this.modalForm();
 		this.changeStatus();
 		this.deleteItem();
 		this.reload();
@@ -200,6 +201,20 @@ var Events = function () {
 						return false;
 					}
 				},
+			});
+		});
+	};
+
+	this.modalForm = function () {
+		$(document).on('click','.faqbutton',function(e){
+			e.preventDefault();
+			var url = $(this).data("url");			
+			$.post(url, { }, function (out){
+				if (out.result == 1) {
+					alert()
+					$(".faqFormWrapper").html(out.htmlwrapper);
+					$("#faq_modal").modal('show');
+				}
 			});
 		});
 	};

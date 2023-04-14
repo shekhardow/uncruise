@@ -23,6 +23,7 @@ Route::get('admin',[AdminController::class,'login'])->name('admin/login');
 Route::post('admin/check-login',[AdminController::class,'check_login'])->name('admin/check_login');
 Route::get('admin/logout',[AdminController::class,'logout'])->name('admin/logout');
 
+Route::get('admin/forget-password',[AdminController::class,'forget_password'])->name('admin/forget_password');
 Route::get('admin/forgot-password',[AdminController::class,'forgot_password'])->name('admin/forgot_password');
 Route::post('do-forgot-password',[AdminController::class,'do_forgot_password'])->name('admin/do_forgot_password');
 Route::get('admin/reset-password/{admin_id}/{unique_id}',[AdminController::class,'reset_password'])->name('admin/reset_password');
@@ -50,13 +51,12 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');
     Route::post('update-site-setting',[AdminController::class,'updateSiteSetting'])->name('admin/updateSiteSetting');
 
-    Route::post('faq',[AdminController::class,'faq'])->name('admin/faq');
-    Route::post('faqform/{key?}',[AdminController::class,'faqform'])->name('admin/faqform');
-    Route::post('faqform/{key?}',[AdminController::class,'faqform'])->name('admin/faqform');
-    Route::post('faqform/{key?}',[AdminController::class,'faqform'])->name('admin/faqform');
-    Route::post('add_faq',[AdminController::class,'add_faq'])->name('admin/add_faq');
-    Route::post('update_faq',[AdminController::class,'update_faq'])->name('admin/update_faq');
-    Route::get('delete_faq/{key}',[AdminController::class,'delete_faq'])->name('admin/delete_faq');
+    Route::get('faqs',[AdminController::class,'faqs'])->name('admin/faqs');
+    Route::post('open-faq-form',[AdminController::class,'openFaqForm'])->name('admin/openFaqForm');
+    Route::post('add-faq',[AdminController::class,'addFaq'])->name('admin/addFaq');
+    Route::post('update-faq/{id}',[AdminController::class,'updateFaq'])->name('admin/updateFaq');
+    Route::post('delete-faq/{id}',[AdminController::class,'deleteFaq'])->name('admin/deleteFaq');
+
     Route::post('change_status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_status'])->name('admin/change_status');
 
     //-----------------------------notification--------------------------------
