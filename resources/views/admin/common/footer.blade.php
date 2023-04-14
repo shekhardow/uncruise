@@ -138,14 +138,25 @@
 </main>
 <!-- scripts -->
 <script src="<?php echo url('public/assets/js/jquery-3.6.0.min.js'); ?>"></script>
+<script src="https://cdn.tiny.cloud/1/y6pj0v7um6np2c00xqdn7ciro6mknhd4wgz34ntahykr67cq/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="<?php echo url('public/assets/js/rt-plugins.js'); ?>"></script>
 <script src="<?php echo url('public/assets/js/step-form.js'); ?>"></script>
 <script src="<?php echo url('public/assets/js/app.js'); ?>"></script>
 <script src="<?php echo url('public/assets/admin/event.js')?>"></script>
+
 <script src="https://unpkg.com/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://unpkg.com/tippy.js@6.3.2/dist/tippy-bundle.umd.min.js"></script>
 <script>
-  tippy('[data-tippy-content]')
+    tippy('[data-tippy-content]')
+</script>
+
+<script>
+    tinymce.init({
+        selector: 'textarea.tinymice', // Replace this CSS selector to match the placeholder element for TinyMCE
+        plugins: 'code table lists',
+        toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+    });
 </script>
 
 </body>

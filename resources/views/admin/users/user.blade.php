@@ -67,7 +67,7 @@
                                                         </td>
                                                         <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">
-                                                                <a href="<?php echo route('admin/userDetails', ['user_id' => encryptionID($user->user_id)]); ?>" class="action-btn" data-tippy-content="View <?php echo !empty($user->first_name) ? strtolower($user->first_name)."'s" : null; ?> details" data-tippy-placement="top">
+                                                                <a href="<?php echo route('admin/userDetails',['user_id' => encryptionID($user->user_id)]); ?>" class="action-btn" data-tippy-content="View <?php echo !empty($user->first_name) ? strtolower($user->first_name)."'s" : null; ?> details" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:eye"></iconify-icon>
                                                                 </a>
                                                             </div>

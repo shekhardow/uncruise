@@ -168,7 +168,40 @@ var Events = function () {
 				},
 			});
 		});
-		
+
+		$(document).on("submit", "#submit-setting-form", function (evt) {
+			evt.preventDefault();
+			$.ajax({
+				url: $(this).attr("action"),
+				type: "post",
+				data: new FormData(this),
+				processData: false,
+				contentType: false,
+				success: function (out) {
+					$(".form-group > .text-danger").remove();
+					if (out.result === 0) {
+						for (var i in out.errors) {
+							$("#" + i).parents(".form-group").append('<span class="text-danger">' + out.errors[i] + "</span>");
+							$("#" + i).focus();
+						}
+					}
+					if (out.result === 1) {
+						toastr.remove();
+						toastr.success(out.msg);
+						$("html,body").animate({ scrollTop: 0, }, 800);
+						window.setTimeout(function () {
+							window.location.href = out.url;
+						}, 1000);
+					}
+					if (out.result === -1) {
+						toastr.remove();
+						toastr.error(out.msg);
+						$("html,body").animate({ scrollTop: 0, }, 800);
+						return false;
+					}
+				},
+			});
+		});
 	};
 
 	this.changeStatus = function () {

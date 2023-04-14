@@ -1,46 +1,54 @@
 @extends('admin/layout')
 @section('content')
-<div class="m-grid__item m-grid__item--fluid m-wrapper">
-    <div class="m-content">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="m-portlet">
-                    <div class="m-portlet__head">
-                        <div class="m-portlet__head-caption">
-                            <div class="m-portlet__head-title">
-                                <span class="m-portlet__head-icon m--hide"><i class="la la-gear"></i></span>
-                                <h3 class="m-portlet__head-text">{{$title}}</h3>
+    <div class="content-wrapper transition-all duration-150 ltr:ml-[248px] rtl:mr-[248px]" id="content_wrapper">
+        <div class="page-content mainBodyNewPadding">
+            <div class="transition-all duration-150 container-fluid" id="page_layout">
+                <div id="content_layout">
+
+                    {{-- START: Breadcrumb --}}
+                    <div class="mb-5">
+                        <ul class="m-0 p-0 list-none">
+                            <li class="inline-block relative top-[3px] text-base text-primary-500 font-Inter">
+                                <a href="<?php echo route('admin/dashboard'); ?>">
+                                    <iconify-icon icon="heroicons-outline:home"></iconify-icon>
+                                    <iconify-icon icon="heroicons-outline:chevron-right" class="relative text-slate-500 text-sm rtl:rotate-180"></iconify-icon>
+                                </a>
+                            </li>
+                            <li class="inline-block relative text-sm text-primary-500 font-Inter">
+                                Site Settings
+                                <iconify-icon icon="heroicons-outline:chevron-right" class="relative top-[3px] text-slate-500 rtl:rotate-180"></iconify-icon>
+                            </li>
+                            <li class="inline-block relative text-sm text-slate-500 font-Inter dark:text-white">
+                                <?php echo !empty($title) ? $title : null; ?>
+                            </li>
+                        </ul>
+                    </div>
+                    {{-- END: BreadCrumb --}}
+
+                    <div class="rounded-md overlay bg-no-repeat bg-center bg-cover card" style="background-image: url('/assets/images/all-img/card-3.png');">
+                        <div class="card-body h-full flex flex-col justify-center p-6">
+                            <div class="card-text flex flex-col justify-between h-full">
+                                
+                                <form method="post" id="submit-setting-form" action="<?php echo route('admin/updateSiteSetting'); ?>">
+                                    <div class="max-w-3xl mx-auto">
+                                        <label class="card-title block mb-2">Update <?php echo !empty($title) ? $title : null; ?> :</label>
+                                        <input type="hidden" name="type" value="<?php echo $type; ?>">
+                                        <textarea rows="10" name="description" id="description" class="block w-full py-2 px-3 border border-gray-300 rounded-md tinymice">
+                                            <?php echo !empty($site_setting->description) ? $site_setting->description : null; ?>
+                                        </textarea>
+                                    </div>
+                                    <div class="mt-6 text-right">
+                                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                            Update
+                                        </button>
+                                    </div>
+                                </form>
+
                             </div>
                         </div>
                     </div>
-                    <form  method="post" class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed" id="submit-form" action="{{url('admin/update_site_setting')}}">
-                        @csrf
-                        <div class="m-portlet__body">
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-12">
-                                    <label>{{$title}} Content :</label>
-                                    <input type="hidden" name="type" value="<?php echo $type; ?>">
-                                    <textarea name="description" id="description" class="summernote"><?php echo !empty($site_setting->description) ? $site_setting->description : NULL ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
-                            <div class="m-form__actions m-form__actions--solid">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <!-- <button type="reset" class="btn btn-primary">Save</button> -->
-                                    </div>
-                                    <div class="col-lg-6 m--align-right">
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>  
 @endsection

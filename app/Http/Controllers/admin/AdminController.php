@@ -29,6 +29,21 @@ class AdminController extends Controller
         return view('admin/'.$view, $data);
     }
 
+    public function send_password_reset_mail($admin_detail){
+        $encrypted_id = substr(uniqid(), 0, 10).$admin_detail->id.substr(uniqid(), 0, 10);
+        $htmlContent = "<h3>Dear " . $admin_detail->email . ",</h3>";
+        $htmlContent .= "<div style='padding-top:8px;'>Please click the following link to reset your password.</div>";
+        $htmlContent .= "<a href='" . url('admin/reset-password/' . $encrypted_id) . "'> Click Here!!</a>";
+        $from = "admin@uncruise.com";
+        $to = $admin_detail->email;
+        $subject = "[UnCruise Admin] Forgot Password";
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $headers .= 'From: ' . $from . "\r\n";
+        @mail($to, $subject, $htmlContent, $headers);
+        return FALSE;
+    }
+
     // ------------------------- Login ------------------------------
     public function login(){
         $data['title'] ='Login';
@@ -118,33 +133,32 @@ class AdminController extends Controller
 
     // ------------------------- Change Password ------------------------------
     public function changePassword(Request $Request){
-        $form_data= $Request->post();
-        $admin_detail= $this->admin_model->getAdminDetail(session()->get('admin_id'));
-        $result = DB::table('admin')->where(['password' =>hash('sha256',$form_data['old_password'])])->first();
-
+        $form_data = $Request->post();
+        $admin_detail = $this->admin_model->getAdminDetail(session()->get('admin_id'));
+        $result = DB::table('admin')->where(['password' => hash('sha256',$form_data['old_password'])])->first();
         if (!empty($result)) {
-            if($form_data['new_password']==$form_data['confirm_new_password']){
+            if($form_data['new_password'] == $form_data['confirm_new_password']){
                 $update_data = [
                     'password'  => hash('sha256',$form_data['new_password']),
                 ];
                 $changed = $result = DB::table('admin')->where('id', 1)->update($update_data);
-                if ($changed) {
-                    return response()->json(['result' => 1, 'url' => url('admin'), 'msg' => 'Password successfully changed.']);
+                if($changed){
+                    return response()->json(['result' => 1, 'url' => route('admin/dashboard'), 'msg' => 'Password changed successfully']);
                 }else{
-                    return response()->json(['result' => -1, 'msg' => 'Password did not changed successfully']);
+                    return response()->json(['result' => -1, 'msg' => 'Password change process failed!']);
                 }
             }else{
-                return response()->json(['result' => -1, 'msg' => 'New password and Confirm Password should be same']);
+                return response()->json(['result' => -1, 'msg' => 'New password and Confirm password should be same!']);
             }
-        } else {
-            return response()->json(['result' => -1, 'msg' => 'Old password did not matched current password']);
+        }else{
+            return response()->json(['result' => -1, 'msg' => 'Old password did not matched current password!']);
         }
     }
 
-    // ------------------------- Setting Pages (About, Privacy) ------------------------------
-    public function site_setting($key){
+    // ------------------------- Setting Pages (Terms, Privacy, About) ------------------------------
+    public function siteSetting($key){
         if($key == 'terms-condition'){
-            $type = 'terms';
+            $type = 'Terms';
             $data['title'] = 'Terms & Condition';
         }elseif($key == 'privacy-policy'){
             $type = 'Privacy';
@@ -156,31 +170,31 @@ class AdminController extends Controller
         $data['admin_detail']= $this->admin_model->getAdminDetail(session()->get('admin_id'));
         $data['basic_datatable'] = '1';
         $data['type'] = $type;
-        $data['site_setting'] = DB::table('setting')->where('type',$type)->first();
+        $data['site_setting'] = DB::table('settings')->where('type',$type)->first();
         return $this->loadview('setting',$data);
     }
 
-    public function update_site_setting(Request $Request){
-        $form_data= $Request->post();
+    public function updateSiteSetting(Request $request){
+        $form_data = $request->post();
         $update_data = [
-            'description' =>$form_data['description'],
+            'description' => $form_data['description'],
         ];
         $key = $form_data['type'];
-        $result=DB::table('setting')->where('type',$key)->update($update_data);
+        $result = DB::table('settings')->where('type', $key)->update($update_data);
         if($key == 'terms'){
-            $url = url('admin/setting/terms-condition');
+            $url = route('admin/siteSetting',['key' => 'terms-condition']);
             $title = 'Terms & Condition';
         }elseif($key == 'Privacy'){
-            $url = url('admin/setting/privacy-policy');
+            $url = route('admin/siteSetting',['key' => 'privacy-policy']);
             $title = 'Privacy Policy';
         }else{
-            $url = url('admin/setting/about-us');
+            $url = route('admin/siteSetting',['key' => 'about-us']);
             $title = 'About Us';
         }
-        if ($result) {
-            return response()->json(['result' => 1, 'url' => $url, 'msg' => $title.' Updated successfully.']);
+        if($result){
+            return response()->json(['result' => 1, 'url' => $url, 'msg' => "$title updated successfully"]);
         }else{
-            return response()->json(['result' => -1, 'msg' => 'No changes found.']);
+            return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }
     } 
 
@@ -196,7 +210,7 @@ class AdminController extends Controller
         $Requestdata = $request->all();
         $result = $this->admin_model->update_social_link($Requestdata);
         if ($result) {
-            return response()->json(['result' => 1, 'msg' => 'Social Links Updated Successfully!!', 'url' => url('admin/social')]);
+            return response()->json(['result' => 1, 'msg' => 'Social Links Updated Successfully!!', 'url' => route('admin/social')]);
         }else{
             return response()->json(['result' => -1, 'msg' => 'No Changes Were found!!']);
         }
@@ -230,7 +244,7 @@ class AdminController extends Controller
         ];
         $result=DB::table('faq')->insert($insert_data);
         if ($result) {
-            return response()->json(['result' => 1, 'url' => url('admin/faq'), 'msg' => 'Faq Added successfully ']);
+            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq Added successfully ']);
         }else{
             return response()->json(['result' => -1, 'msg' => 'OOPs Something went wrong']);
         }
@@ -244,7 +258,7 @@ class AdminController extends Controller
         ];
         $result=DB::table('faq')->where('faq_id',$form_data['faq_id'])->update($update_data);
         if ($result) {
-            return response()->json(['result' => 1, 'url' => url('admin/faq'), 'msg' => 'Faq Updated successfully ']);
+            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq Updated successfully ']);
         }else{
             return response()->json(['result' => -1, 'msg' => 'OOPs Something went wrong']);
         }
@@ -253,7 +267,7 @@ class AdminController extends Controller
     public function delete_faq($id,Request $Request){
         $result = DB::table('faq')->where('faq_id',$id)->delete();
         if ($result) {
-            return response()->json(['result' => 1, 'url' => url('admin/faq'), 'msg' => 'Faq Deleted successfully ']);
+            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq Deleted successfully ']);
         }else{
             return response()->json(['result' => -1, 'msg' => 'OOPs Something went wrong']);
         }
@@ -286,7 +300,7 @@ class AdminController extends Controller
         foreach($user_id as $id){
             $this->admin_model->sendNotfication($id,$message,$subject);
         }
-        return response()->json(['result' => 1, 'msg' => 'Notification Sent Successfully.','url'=> url('admin/users')]);
+        return response()->json(['result' => 1, 'msg' => 'Notification Sent Successfully.','url'=> route('admin/users')]);
         return false;
     }
 
@@ -317,27 +331,12 @@ class AdminController extends Controller
         if(!empty($admin_detail)){
             $this->send_password_reset_mail($admin_detail);
             $this->admin_model->forgetPasswordLinkValidity($admin_detail->id);
-            return response()->json(['result' => 1, 'msg'=>'Reset Password Link Sent To Your Email Id.','url'=> url('admin/login')]);
+            return response()->json(['result' => 1, 'msg' => 'Reset password link has been sent to your email-id', 'url' => route('admin/login')]);
             return FALSE;
         }else{
-            return response()->json((['result' => -1, 'msg'=>'Please Enter Valid Email Id.']));
+            return response()->json((['result' => -1, 'msg' => 'Please enter valid email-id!']));
             return FALSE;
         }
-    }
-    
-    public function send_password_reset_mail($admin_detail){
-        $encrypted_id = substr(uniqid(), 0, 10).$admin_detail->id.substr(uniqid(), 0, 10);
-        $htmlContent = "<h3>Dear " . $admin_detail->email . ",</h3>";
-        $htmlContent .= "<div style='padding-top:8px;'>Please click the following link to reset your password.</div>";
-        $htmlContent .= "<a href='" . url('admin/reset-password/' . $encrypted_id) . "'> Click Here!!</a>";
-        $from = "admin@tawid.de";
-        $to = $admin_detail->email;
-        $subject = "[Tawid] Forgot Password";
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $headers .= 'From: ' . $from . "\r\n";
-        @mail($to, $subject, $htmlContent, $headers);
-        return FALSE;
     }
     
     public function reset_password($admin_id){
@@ -362,7 +361,7 @@ class AdminController extends Controller
         $admin_id = decryptionID($encrypted_id);
         $result = $this->admin_model->do_fogot_password($admin_id,$newpassword);
         if (!empty($result)) {
-            return response()->json(['result' => 1, 'url' => url('admin'), 'msg' => 'Pasword Reset Successfully']);
+            return response()->json(['result' => 1, 'url' => route('admin/login'), 'msg' => 'Pasword Reset Successfully']);
             return FALSE;
         } else {
             return response()->json(['result' => -1, 'msg' => 'New Password Cannot Be Same As Old Password.']);
@@ -402,9 +401,9 @@ class AdminController extends Controller
         }
         $result=$this->admin_model->updateContactDetails($request);
         if($result){
-            return response()->json(['result'=>1, 'msg'=>'Contact Detail Updated Successfully!!', 'url'=>url('admin/contactus')]);
+            return response()->json(['result' => 1, 'msg' => 'Contact details updated successfully', 'url' => route('admin/contactus')]);
         }else{
-            return response()->json(['result'=>-1,'msg'=>'No Changes Were Found!!']);
+            return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }
     }
 
