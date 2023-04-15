@@ -131,11 +131,11 @@
 {{-- START: FAQ Modal --}}
 <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto md:inset-0 h-modal
     !items-start md:h-full backdrop-blur-sm transition-all duration-300"
-    id="faq_modal" tabindex="-1" aria-labelledby="faq_modal" aria-hidden="true"
+    id="model_wrapper" tabindex="-1" aria-labelledby="model_wrapper" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-xl top-0 !-translate-y-0 relative w-auto pointer-events-none">
-        <div class="modal-content faqFormWrapper border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
-            
+        <div class="modal-content modelWrapper border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+
         </div>
     </div>
 </div>

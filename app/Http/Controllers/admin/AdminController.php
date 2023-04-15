@@ -232,11 +232,9 @@ class AdminController extends Controller
     public function openFaqForm(Request $request){
         $faq_id = $request->faq_id;
         if(empty($faq_id)){
-            echo 'Hello';
             $data['data'] = null;
             $htmlwrapper = view('admin/faqs/faq-form', $data)->render();
         }else{
-            echo 'Hey';
             $data['faq_detail'] = $this->admin_model->getFaqById($faq_id);
             $htmlwrapper = view('admin/faqs/faq-form', $data)->render();
         }
@@ -244,10 +242,20 @@ class AdminController extends Controller
     }
 
     public function addFaq(Request $request){
-        $form_data = $request->post();
+        $requestdata = $request->all();
+        $validator = Validator::make($requestdata, [
+            'question' => 'required',
+            'answer'   => 'required',
+        ], $messages = [
+            'required' => 'The :attribute field is required.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()]);
+            return false;
+        }
         $insert_data = [
-            'question'  => $form_data['question'],
-            'answer'    => $form_data['answer'],
+            'question'  => $requestdata['question'],
+            'answer'    => $requestdata['answer'],
         ];
         $result = DB::table('faqs')->insert($insert_data);
         if($result){

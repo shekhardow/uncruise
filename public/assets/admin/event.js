@@ -107,6 +107,7 @@ var Events = function () {
 	this.submitForm = function () {
 		$(document).on("submit", "#submit-form", function (evt) {
 			evt.preventDefault();
+			$("#submit-btn").attr("disabled", true);
 			$.ajax({
 				url: $(this).attr("action"),
 				type: "post",
@@ -117,14 +118,13 @@ var Events = function () {
 					$(".form-group > .text-danger").remove();
 					if (out.result === 0) {
 						for (var i in out.errors) {
-							$("#" + i).parents(".form-group").append('<span class="text-danger">' + out.errors[i] + "</span>");
+							$("#" + i).parents(".form-group").append('<span class="text-red-500">' + out.errors[i] + "</span>");
 							$("#" + i).focus();
 						}
 					}
 					if (out.result === 1) {
 						toastr.remove();
 						toastr.success(out.msg);
-						$("html,body").animate({ scrollTop: 0, }, 800);
 						window.setTimeout(function () {
 							window.location.href = out.url;
 						}, 1000);
@@ -132,7 +132,7 @@ var Events = function () {
 					if (out.result === -1) {
 						toastr.remove();
 						toastr.error(out.msg);
-						$("html,body").animate({ scrollTop: 0, }, 800);
+						$("#submit-btn").attr("disabled", false);
 						return false;
 					}
 				},
@@ -206,16 +206,16 @@ var Events = function () {
 	};
 
 	this.modalForm = function () {
-		$(document).on('click','.faqbutton',function(e){
+		$(document).on('click','.openModel',function(e){
 			e.preventDefault();
 			var url = $(this).data("url");			
-			$.post(url, { }, function (out){
+			var faq_id = $(this).data("faq_id");	
+			$.post(url, { faq_id:faq_id }, function (out) {
 				if (out.result == 1) {
-					alert()
-					$(".faqFormWrapper").html(out.htmlwrapper);
-					$("#faq_modal").modal('show');
+					$(".modelWrapper").html(out.htmlwrapper);
+					$('#model_wrapper').modal('show');
 				}
-			});
+			})
 		});
 	};
 

@@ -52,7 +52,7 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('update-site-setting',[AdminController::class,'updateSiteSetting'])->name('admin/updateSiteSetting');
 
     Route::get('faqs',[AdminController::class,'faqs'])->name('admin/faqs');
-    Route::post('open-faq-form',[AdminController::class,'openFaqForm'])->name('admin/openFaqForm');
+    Route::any('open-faq-form',[AdminController::class,'openFaqForm'])->name('admin/openFaqForm');
     Route::post('add-faq',[AdminController::class,'addFaq'])->name('admin/addFaq');
     Route::post('update-faq/{id}',[AdminController::class,'updateFaq'])->name('admin/updateFaq');
     Route::post('delete-faq/{id}',[AdminController::class,'deleteFaq'])->name('admin/deleteFaq');

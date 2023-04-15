@@ -25,7 +25,7 @@
                             </ul>
                         </div>
                         <div class="flex sm:space-x-4 space-x-2 sm:justify-end items-center rtl:space-x-reverse">
-                            <button class="faqbutton btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal" 
+                            <button class="openModel btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal" 
                             data-url="<?php echo route('admin/openFaqForm'); ?>" data-tippy-content="Add New FAQ" data-tippy-placement="left">
                                 <span class="flex items-center">
                                     <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light" icon="heroicons-outline:plus"></iconify-icon>
@@ -67,10 +67,10 @@
                                                         </td>
                                                         <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">
-                                                                <a href="" class="action-btn" data-tippy-content="Edit FAQ" data-tippy-placement="top">
+                                                                <a class="action-btn openModel" data-url="<?php echo route('admin/openFaqForm'); ?>" data-faq_id="<?php echo $faq->faq_id; ?>" href="javascript:void(0)" data-tippy-content="Edit FAQ" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:pencil-square"></iconify-icon>
                                                                 </a>
-                                                                <a href="" class="action-btn" data-tippy-content="Delete FAQ" data-tippy-placement="top">
+                                                                <a class="action-btn" href="javascript:void(0)" data-tippy-content="Delete FAQ" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:trash"></iconify-icon>
                                                                 </a>
                                                             </div>
