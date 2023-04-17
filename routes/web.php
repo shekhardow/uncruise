@@ -54,10 +54,9 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::get('faqs',[AdminController::class,'faqs'])->name('admin/faqs');
     Route::any('open-faq-form',[AdminController::class,'openFaqForm'])->name('admin/openFaqForm');
     Route::post('add-faq',[AdminController::class,'addFaq'])->name('admin/addFaq');
-    Route::post('update-faq/{id}',[AdminController::class,'updateFaq'])->name('admin/updateFaq');
-    Route::post('delete-faq/{id}',[AdminController::class,'deleteFaq'])->name('admin/deleteFaq');
-
-    Route::post('change_status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_status'])->name('admin/change_status');
+    Route::post('update-faq/{faq_id}',[AdminController::class,'updateFaq'])->name('admin/updateFaq');
+    Route::post('delete-faq/{faq_id}',[AdminController::class,'deleteFaq'])->name('admin/deleteFaq');
+    Route::post('change-faq-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_faq_status'])->name('admin/change_faq_status');
 
     //-----------------------------notification--------------------------------
     Route::post('notification',[AdminController::class,'notifiction'])->name('admin/notification');

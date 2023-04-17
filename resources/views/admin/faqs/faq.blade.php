@@ -44,7 +44,7 @@
                                     <span class="col-span-4 hidden"></span>
                                     <div class="inline-block min-w-full align-middle">
                                         <div class="overflow-hidden ">
-                                            <table class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 data-table">
+                                            <table id="myTable" class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 data-table">
                                                 <thead class=" bg-slate-200 dark:bg-slate-700">
                                                     <tr>
                                                         <th scope="col" class="table-th">S/N</th>
@@ -60,17 +60,29 @@
                                                         <td class="table-td"><?php echo $i; ?></td>
                                                         <td class="table-td"><?php echo !empty($faq->question) ? $faq->question : null; ?></td>
                                                         <td class="table-td"><?php echo !empty($faq->answer) ? $faq->answer : null; ?></td>
+                                                        <?php
+                                                        if ($faq->status == 'Active') {
+                                                            $class = "text-success-500 bg-success-500";
+                                                            $status = "Active";
+                                                            $change_to = "Inactive";
+                                                        } else {
+                                                            $class = "text-danger-500 bg-danger-500";
+                                                            $status = "Inactive";
+                                                            $change_to = "Active";
+                                                        } ?>
                                                         <td class="table-td">
-                                                            <div class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500">
-                                                                Active
-                                                            </div>
+                                                            <a href="<?php echo url('admin/change-faq-status/' . $faq->faq_id . '/' . $change_to . '/faqs/faq_id/status'); ?>" status-type="<?php echo $change_to; ?>" 
+                                                                class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php echo $class; ?>"
+                                                                data-tippy-content="Change status to {{$change_to}}" data-tippy-placement="top">
+                                                                <?php echo $status ?>
+                                                            </a>
                                                         </td>
                                                         <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">
                                                                 <a class="action-btn openModel" data-url="<?php echo route('admin/openFaqForm'); ?>" data-faq_id="<?php echo $faq->faq_id; ?>" href="javascript:void(0)" data-tippy-content="Edit FAQ" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:pencil-square"></iconify-icon>
                                                                 </a>
-                                                                <a class="action-btn" href="javascript:void(0)" data-tippy-content="Delete FAQ" data-tippy-placement="top">
+                                                                <a href="<?php echo url('admin/change-faq-status/'.$faq->faq_id.'/Deleted/faqs/faq_id/status'); ?>" class="status action-btn" data-tippy-content="Delete FAQ" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:trash"></iconify-icon>
                                                                 </a>
                                                             </div>

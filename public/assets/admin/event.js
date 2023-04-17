@@ -1,7 +1,6 @@
 var Events = function () {
 	this.__construct = function () {
 		this.loader();
-		this.tooltip();
 		this.commonForm();
 		this.submitForm();
 		this.modalForm();
@@ -15,38 +14,14 @@ var Events = function () {
 	};
 
 	this.loader = function () {
-		$(document).ready(function () {
+		jQuery(function () {
 			$(".loader-admin").fadeOut("slow");
 		});
 	};
 
-	this.tooltip = function () {
-		$(document).ready(function () {
-			$('[data-toggle="tooltip"]').tooltip();
-			$(document).ready(function () {
-				$("#datatable").DataTable({
-					responsive: true,
-					destroy: true,
-				});
-			});
-			$('.summernote').summernote({
-				tabsize: 2,
-				height: 300
-			});
-			$('.dropify').dropify();
-			// select 2  dropdown 
-			$(document).ready(function () {
-				var $disabledResults = $(".select2Custom");
-				$disabledResults.select2();
-				$('b[role="presentation"]').hide();
-			});
-			// select 2  dropdown End
-		});
-	};
-
 	this.commonForm = function () {
-		$(document).on("submit", "#common-form", function (evt) {
-			evt.preventDefault();
+		$(document).on("submit", "#common-form", function (e) {
+			e.preventDefault();
 			$(".loader").fadeIn("slow");
 			var url = $(this).attr("action");
 			var postdata = $(this).serialize();
@@ -105,8 +80,8 @@ var Events = function () {
 	};
 
 	this.submitForm = function () {
-		$(document).on("submit", "#submit-form", function (evt) {
-			evt.preventDefault();
+		$(document).on("submit", "#submit-form", function (e) {
+			e.preventDefault();
 			$("#submit-btn").attr("disabled", true);
 			$.ajax({
 				url: $(this).attr("action"),
@@ -121,6 +96,8 @@ var Events = function () {
 							$("#" + i).parents(".form-group").append('<span class="text-red-500">' + out.errors[i] + "</span>");
 							$("#" + i).focus();
 						}
+						$("#submit-btn").attr("disabled", false);
+						return false;
 					}
 					if (out.result === 1) {
 						toastr.remove();
@@ -139,8 +116,8 @@ var Events = function () {
 			});
 		});
 
-		$(document).on("submit", "#submitProfileForm", function (event) {
-			event.preventDefault();
+		$(document).on("submit", "#submitProfileForm", function (e) {
+			e.preventDefault();
 			// alert()
 			$.ajax({
 				url: $(this).attr("action"),
@@ -148,7 +125,7 @@ var Events = function () {
 				data: new FormData(this),
 				processData: false,
 				contentType: false,
-				success: function(out) {
+				success: function (out) {
 					$(".form-group > .text-danger").remove();
 					if (out.result === 0) {
 						for (var i in out.errors) {
@@ -170,8 +147,8 @@ var Events = function () {
 			});
 		});
 
-		$(document).on("submit", "#submit-setting-form", function (evt) {
-			evt.preventDefault();
+		$(document).on("submit", "#submit-setting-form", function (e) {
+			e.preventDefault();
 			$.ajax({
 				url: $(this).attr("action"),
 				type: "post",
@@ -206,68 +183,108 @@ var Events = function () {
 	};
 
 	this.modalForm = function () {
-		$(document).on('click','.openModel',function(e){
+		$(document).on('click', '.openModel', function (e) {
 			e.preventDefault();
-			var url = $(this).data("url");			
-			var faq_id = $(this).data("faq_id");	
-			$.post(url, { faq_id:faq_id }, function (out) {
+			var url = $(this).data("url");
+			var faq_id = $(this).data("faq_id");
+			$.post(url, { faq_id: faq_id }, function (out) {
 				if (out.result == 1) {
+					// Destroy DataTable instance before reinitializing
+					$('#myTable').DataTable().destroy();
 					$(".modelWrapper").html(out.htmlwrapper);
 					$('#model_wrapper').modal('show');
+					// Destroy previous instance of TinyMCE if it exists
+					if (tinymce.get('answer')) {
+						tinymce.get('answer').remove();
+					}
+					// Initialize TinyMCE in modal
+					tinymce.init({
+						selector: 'textarea', // Replace this CSS selector to match the placeholder element for TinyMCE
+						plugins: 'code table lists',
+						toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+					});
 				}
 			})
 		});
+
+		function reloadDataTable() {
+			// Reinitialize DataTable
+			$("#data-table, .data-table").DataTable({
+				dom: "<'grid grid-cols-12 gap-5 px-6 mt-6'<'col-span-4'l><'col-span-8 flex justify-end'f><'#pagination.flex items-center'>><'min-w-full't><'flex justify-end items-center'p>",
+				paging: true,
+				ordering: true,
+				info: false,
+				searching: true,
+				lengthChange: true,
+				lengthMenu: [10, 25, 50, 100],
+				language: {
+					lengthMenu: "Show _MENU_ entries",
+					paginate: {
+						previous: "<iconify-icon icon=\"ic:round-keyboard-arrow-left\"></iconify-icon>",
+						next: "<iconify-icon icon=\"ic:round-keyboard-arrow-right\"></iconify-icon>"
+					},
+					search: "Search:"
+				}
+			});
+		}
+
+		$('#myTable').on('hidden.bs.modal', function () {
+			reloadDataTable();
+		})
 	};
 
 	this.changeStatus = function () {
 		$(document).on("click", ".status", function (e) {
 			e.preventDefault();
 			var url = $(this).attr("href");
-			var msg_type = $(this).attr("msg-type");
-			if (msg_type == 'Active') {
-				text = 'Are you sure you want to change the status to ' + msg_type.toLowerCase() + ' ?';
+			var status_type = $(this).attr("status-type");
+			var text = '';
+			if (status_type == 'Active') {
+				text = 'Are you sure you want to change the status to ' + status_type.toLowerCase() + ' ?';
 			}
-			if (msg_type == 'Inactive') {
-				text = 'Are you sure you want to change the status to ' + msg_type.toLowerCase() + ' ?';
+			if (status_type == 'Inactive') {
+				text = 'Are you sure you want to change the status to ' + status_type.toLowerCase() + ' ?';
 			}
-			if (msg_type == 'Blocked') {
-				text = 'Are you sure you want to change the status to ' + msg_type.toLowerCase() + ' ?';
+			if (status_type == 'Blocked') {
+				text = 'Are you sure you want to change the status to ' + status_type.toLowerCase() + ' ?';
 			}
-			if (!msg_type) {
+			if (!status_type) {
 				text = 'Are you sure you want to delete?';
 			}
-			swal({
+			Swal.fire({
 				title: text,
-				// text: text,
-				icon: "success",
+				icon: 'warning',
+				showCancelButton: true,
 				confirmButtonText: "<span><i class='la la-thumbs-up'></i><span>Yes</span></span>",
-				confirmButtonClass: "btn btn-danger m-btn m-btn--pill m-btn--air m-btn--icon",
-				showCancelButton: !0,
 				cancelButtonText: "<span><i class='la la-thumbs-down'></i><span>No, thanks</span></span>",
-				cancelButtonClass: "btn btn-secondary m-btn m-btn--pill m-btn--icon"
-			}).then(function (e) {
-				if (e.value) {
-					$.post(url, {}, function (out) {
+				customClass: {
+					confirmButton: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded inline-flex items-center",
+					cancelButton: "bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded inline-flex items-center",
+					popup: 'bg-white rounded-md shadow-lg p-6 sm:p-12 max-w-md mx-auto'
+				}
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.post(url, {status_type:status_type}, function (out) {
 						if (out.result === 1) {
 							window.setTimeout(function () {
 								location.reload();
 							}, 1000);
-							if (msg_type == 'Active') {
+							if (status_type == 'Active') {
 								toastr.remove()
 								toastr.success(out.msg);
 							}
-							if (msg_type == 'Inactive') {
+							if (status_type == 'Inactive') {
 								toastr.remove()
 								toastr.error(out.msg);
 							}
-							if (!msg_type) {
+							if (!status_type) {
 								toastr.remove()
 								toastr.error(out.msg);
 							}
 						}
 					});
 				}
-			})
+			});
 		});
 	};
 

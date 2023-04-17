@@ -1,4 +1,3 @@
-
 function initializeWizardForm(form) {
 
   // Get references
@@ -84,7 +83,7 @@ function initializeWizardForm(form) {
 }
 
 // Get all the forms
-const forms = document.querySelectorAll(".wizard");
+const forms2 = document.querySelectorAll(".wizard");
 
 // Initialize each form
-forms.forEach((form) => initializeWizardForm(form));
+forms2.forEach((form) => initializeWizardForm(form));

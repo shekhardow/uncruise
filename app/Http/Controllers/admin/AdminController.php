@@ -229,12 +229,14 @@ class AdminController extends Controller
         return $this->loadview('faqs/faq', $data);
     }
 
-    public function openFaqForm(Request $request){
+    public function openFaqForm(Request $request) {
         $faq_id = $request->faq_id;
         if(empty($faq_id)){
+            // Add FAQ form
             $data['data'] = null;
             $htmlwrapper = view('admin/faqs/faq-form', $data)->render();
         }else{
+            // Edit FAQ form
             $data['faq_detail'] = $this->admin_model->getFaqById($faq_id);
             $htmlwrapper = view('admin/faqs/faq-form', $data)->render();
         }
@@ -259,30 +261,31 @@ class AdminController extends Controller
         ];
         $result = DB::table('faqs')->insert($insert_data);
         if($result){
-            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq added successfully']);
+            return response()->json(['result' => 1, 'url' => route('admin/faqs'), 'msg' => 'Faq added successfully']);
         }else{
             return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
         }
     }
 
-    public function updateFaq(Request $request){
+    public function updateFaq(Request $request, $faq_id){
         $form_data = $request->post();
+        $faq_id = decryptionID($faq_id);
         $update_data = [
             'question'  => $form_data['question'],
             'answer'    => $form_data['answer'],
         ];
-        $result = DB::table('faqs')->where('faq_id', $form_data['faq_id'])->update($update_data);
+        $result = DB::table('faqs')->where('faq_id', $faq_id)->update($update_data);
         if($result){
-            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq updated successfully']);
+            return response()->json(['result' => 1, 'url' => route('admin/faqs'), 'msg' => 'Faq updated successfully']);
         }else{
-            return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
+            return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }
     }
     
     public function deleteFaq($id){
         $result = DB::table('faqs')->where('faq_id', $id)->delete();
         if($result){
-            return response()->json(['result' => 1, 'url' => route('admin/faq'), 'msg' => 'Faq deleted successfully']);
+            return response()->json(['result' => 1, 'url' => route('admin/faqs'), 'msg' => 'Faq deleted successfully']);
         }else{
             return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
         }
@@ -319,18 +322,18 @@ class AdminController extends Controller
         return false;
     }
 
-    public function change_status(Request $request, $id, $status, $table, $wherecol, $status_variable){
-        $delete_service = change_status($id, $status, $table, $wherecol, $status_variable, '=');
+    public function change_faq_status(Request $request, $id, $status, $table, $wherecol, $status_variable){
+        $delete_faq = change_status($id, $status, $table, $wherecol, $status_variable, '=');
         $status_type = $request->post('status_type');
-        if($status_type != 'delete'){
-            $message = 'Status Changed Successfully!';
+        if($status_type != null){
+            $message = 'Status changed successfully';
         }else{
-            $message = 'Service Deleted Successfully!';
+            $message = 'FAQ deleted successfully';
         }
-        if(!empty($delete_service)){
-            return response()->json(['result' => 1, 'msg' => $message, 'url' => route('admin/users')]);
+        if(!empty($delete_faq)){
+            return response()->json(['result' => 1, 'msg' => $message]);
         }else{
-            return response()->json(['result' => -1, 'msg' => 'Something Went Wrong']);
+            return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
         }
     }
 

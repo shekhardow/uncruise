@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="<?php echo url('public/assets/css/app.css'); ?>">
-<link rel="stylesheet" href="<?php echo url('public/assets/css/style.css'); ?>">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 <div class="relative bg-white rounded-lg shadow dark:bg-slate-700">
     <!-- Modal header -->
     <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-slate-600 bg-black-500">
@@ -12,12 +9,12 @@
             <svg aria-hidden="true" class="w-5 h-5" fill="#ffffff" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
             </svg>
-            <span class="sr-only">Close modal</span>
+            <span class="sr-only" id="closeModal">Close modal</span>
         </button>
     </div>
     <!-- Modal body -->
     <div>
-        <form id="submit-form" method="post" action="<?php echo !empty($faq_detail) ? route('admin/updateFaq', ['id' => $faq_detail->faq_id]) : route('admin/addFaq'); ?>">
+        <form id="submit-form" method="post" action="<?php echo !empty($faq_detail) ? route('admin/updateFaq', ['faq_id' => encryptionID($faq_detail->faq_id)]) : route('admin/addFaq'); ?>">
             <div class="p-6 space-y-6">
                 <div class="form-group input-group">
                     <label for="question" class="text-sm font-Inter font-normal text-slate-900 block">Question :</label>
@@ -25,7 +22,7 @@
                 </div>
                 <div class="form-group input-group">
                     <label for="answer" class="text-sm font-Inter font-normal text-slate-900 block">Answer :</label>
-                    <textarea rows="5" name="answer" id="answer" class="block w-full py-2 px-3 border border-gray-300 rounded-md tinymice">
+                    <textarea rows="3" name="answer" id="answer" class="block w-full py-2 px-3 border border-gray-300 rounded-md tinymice">
                         <?php echo !empty($faq_detail->answer) ? $faq_detail->answer : null; ?>
                     </textarea>
                 </div>
@@ -40,9 +37,6 @@
         </form>
     </div>
 </div>
-
-<script src="<?php echo url('public/assets/js/app.js'); ?>"></script>
-<script src="<?php echo url('public/assets/admin/event.js')?>"></script>
 
 <script src="https://unpkg.com/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://unpkg.com/tippy.js@6.3.2/dist/tippy-bundle.umd.min.js"></script>

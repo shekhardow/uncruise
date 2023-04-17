@@ -122,7 +122,7 @@ class AdminModel extends Model
     }
 
     public function getAllFaqs(){
-        return DB::table('faqs')->select('*')->where('status', '!=', 'Deleted')->get();
+        return DB::table('faqs')->select('*')->where('status', '!=', 'Deleted')->orderBy('faq_id', 'desc')->get();
     }
     
     public function getFaqById($faq_id){
