@@ -96,7 +96,7 @@
                 </a>
             </li>
             <li>
-                <a href="javascript:void(0)" class="navItem">
+                <a href="<?php echo route('admin/social'); ?>" class="navItem <?php if((!empty($title)) && ($title == 'Social')){echo 'active';} ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="tabler:social"></iconify-icon>
                         <span>Social Links</span>
@@ -104,9 +104,9 @@
                 </a>
             </li>
             <li>
-                <a href="javascript:void(0)" class="navItem">
+                <a href="<?php echo route('admin/contactDetails'); ?>" class="navItem <?php if((!empty($title)) && ($title == 'Contact Details')){echo 'active';} ?>">
                     <span class="flex items-center">
-                        <iconify-icon class="nav-icon" icon="material-symbols:contact-page"></iconify-icon>
+                        <iconify-icon class="nav-icon" icon="heroicons-outline:chat"></iconify-icon>
                         <span>Contact Details</span>
                     </span>
                 </a>

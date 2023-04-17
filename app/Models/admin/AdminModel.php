@@ -23,22 +23,15 @@ class AdminModel extends Model
     }
 
     public function get_social_link(){
-        return DB::table('social')
-            ->where('status', '=', '1')
-            ->orderBy('id', 'DESC')
-            ->get();
+        return DB::table('social')->where('status', '=', '1')->orderBy('id', 'DESC')->get();
     }
 
     public function getAllFacebookUsers(){
-        return DB::table('users')->select('users.*')
-            ->where('source', '=', 'facebook')
-            ->orderByDesc('user_id')->get();
+        return DB::table('users')->select('users.*')->where('source', '=', 'facebook')->orderByDesc('user_id')->get();
     }
 
     public function getAllGmailUsers(){
-        return DB::table('users')->select('users.*')
-            ->where('source', '=', 'google')
-            ->orderByDesc('user_id')->get();
+        return DB::table('users')->select('users.*')->where('source', '=', 'google')->orderByDesc('user_id')->get();
     }
 
     public function updateProfile($data){
@@ -66,7 +59,7 @@ class AdminModel extends Model
 
     //--------------------------------------------------------Forgot Password------------------------------------------
     public function do_reset_password($email,$password) {
-      return  DB::table('admin')->where('email',$email)->update(['admin_password' => $password]);
+        return  DB::table('admin')->where('email',$email)->update(['admin_password' => $password]);
     }
     
     public function get_admin_by_email($email) {
@@ -74,7 +67,6 @@ class AdminModel extends Model
     }
     
     public function forgetPasswordLinkValidity($admin_id) {
-        
         $data = array(
             'admin_id'  => $admin_id,
             'status'   => '0',
@@ -82,7 +74,6 @@ class AdminModel extends Model
         DB::table('forgot_password')->insert($data);
         $id = DB::getPdo()->lastInsertId();
         return DB::table('forgot_password')->where('forgot_password_id',$id)->get()->first();
-
     }
     
     public function linkValidity($admin_id) {
@@ -94,7 +85,7 @@ class AdminModel extends Model
     }
     
     public function do_fogot_password($id,$newpassword) {
-       return DB::table('admin')->where('admin_id',$id)->update(['password' => $newpassword]);
+        return DB::table('admin')->where('admin_id',$id)->update(['password' => $newpassword]);
     }
     //--------------------------------------------------------------------------------------------------
 

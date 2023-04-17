@@ -186,8 +186,8 @@ var Events = function () {
 		$(document).on('click', '.openModel', function (e) {
 			e.preventDefault();
 			var url = $(this).data("url");
-			var faq_id = $(this).data("faq_id");
-			$.post(url, { faq_id: faq_id }, function (out) {
+			var data_id = $(this).data("id");
+			$.post(url, { data_id: data_id }, function (out) {
 				if (out.result == 1) {
 					// Destroy DataTable instance before reinitializing
 					$('#myTable').DataTable().destroy();
@@ -266,9 +266,7 @@ var Events = function () {
 				if (result.isConfirmed) {
 					$.post(url, {status_type:status_type}, function (out) {
 						if (out.result === 1) {
-							window.setTimeout(function () {
-								location.reload();
-							}, 1000);
+							location.reload();
 							if (status_type == 'Active') {
 								toastr.remove()
 								toastr.success(out.msg);

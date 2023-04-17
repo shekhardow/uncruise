@@ -37,6 +37,7 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
 
     Route::get('users',[UserController::class,'users'])->name('admin/users');
     Route::get('user-details/{user_id}',[UserController::class,'userDetails'])->name('admin/userDetails');
+    Route::post('change-user-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_user_status'])->name('admin/change_user_status');
     
     Route::get('surveys',[SurveyController::class,'surveys'])->name('admin/surveys');
     Route::get('survey-details/{survey_id}',[SurveyController::class,'surveyDetails'])->name('admin/surveyDetails');
@@ -63,10 +64,9 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
      Route::post('sendNotficationToAll',[AdminController::class,'sendNotficationToAll'])->name('admin/sendNotficationToAll');
 
     /*Contact Start*/
-    Route::get('contactus',[AdminController::class,'contactus'])->name('admin/contactus');
-    Route::get('add-contact',[AdminController::class,'open_contact_form'])->name('admin/add-contact');
-    Route::get('update-contact',[AdminController::class,'open_contact_form'])->name('admin/update-contact');
-    Route::post('do-update-contact',[AdminController::class,'doUpdateContact'])->name('admin/do-update-contact');
+    Route::get('contact-details',[AdminController::class,'contactDetails'])->name('admin/contactDetails');
+    Route::post('open-contact-form',[AdminController::class,'openContactForm'])->name('admin/openContactForm');
+    Route::post('update-contact-details/{contact_detail_id}',[AdminController::class,'updateContactDetails'])->name('admin/updateContactDetails');
     /*Contact End*/
 
     Route::fallback(function () {

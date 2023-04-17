@@ -60,10 +60,21 @@
                                                         <td class="table-td">
                                                             <div><?php echo !empty($user->contact_no) ? $user->country_code.' '.$user->contact_no : null; ?></div>
                                                         </td>
+                                                        <?php if($user->status == 'Active'){
+                                                            $class = "text-success-500 bg-success-500";
+                                                            $status = "Active";
+                                                            $change_to = "Inactive";
+                                                        }else{
+                                                            $class = "text-danger-500 bg-danger-500";
+                                                            $status = "Inactive";
+                                                            $change_to = "Active";
+                                                        } ?>
                                                         <td class="table-td">
-                                                            <div class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500">
-                                                                Active
-                                                            </div>
+                                                            <a href="<?php echo url('admin/change-faq-status/' . $user->user_id . '/' . $change_to . '/users/user_id/status'); ?>" status-type="<?php echo $change_to; ?>" 
+                                                                class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php echo $class; ?>"
+                                                                data-tippy-content="Change status to {{$change_to}}" data-tippy-placement="top">
+                                                                <?php echo $status ?>
+                                                            </a>
                                                         </td>
                                                         <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">

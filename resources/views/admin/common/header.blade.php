@@ -42,14 +42,6 @@
                                         class="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
                                         icon="heroicons-outline:menu-alt-3"></iconify-icon>
                                 </button>
-                                <button
-                                    class="flex items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 px-1 rtl:space-x-reverse search-modal"
-                                    data-bs-toggle="modal" data-bs-target="#searchModal">
-                                    <iconify-icon icon="heroicons-outline:search"></iconify-icon>
-                                    <span class="xl:inline-block hidden ml-3">Search...
-                                    </span>
-                                </button>
-
                             </div>
                             <!-- end vertcial -->
                             <div class="items-center space-x-4 rtl:space-x-reverse horizental-box">
@@ -158,8 +150,7 @@
                                 class="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse leading-0">
 
                                 <!-- BEGIN: Language Dropdown  -->
-
-                                <div class="relative">
+                                {{-- <div class="relative">
                                     <button
                                         class="text-slate-800 dark:text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm text-center inline-flex items-center"
                                         type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -191,8 +182,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
-                                <!-- Theme Changer -->
+                                </div> --}}
                                 <!-- END: Language Dropdown -->
 
                                 <!-- BEGIN: Toggle Theme -->
@@ -221,7 +211,7 @@
 
                                 <!-- BEGIN: Message Dropdown -->
                                 <!-- Mail Dropdown -->
-                                <div class="relative md:block hidden">
+                                {{-- <div class="relative md:block hidden">
                                     <button
                                         class="lg:h-[32px] lg:w-[32px] lg:bg-slate-100 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center"
                                         type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -330,7 +320,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- END: Message Dropdown -->
 
                                 <!-- BEGIN: Notification Dropdown -->

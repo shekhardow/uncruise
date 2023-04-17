@@ -1,7 +1,7 @@
 @include('admin/common/header')
 @if (@$title != 'Login')
     @include('admin/common/sidebar')
-    @include('admin/common/setting')
+    {{-- @include('admin/common/setting') --}}
 @endif
 @section('content')
 

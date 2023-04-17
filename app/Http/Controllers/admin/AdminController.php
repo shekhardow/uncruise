@@ -135,7 +135,7 @@ class AdminController extends Controller
         }
     }
 
-    // ------------------------- Change Password ------------------------------
+    // -------------------- Change Password ---------------------------
     public function changePassword(Request $Request){
         $form_data = $Request->post();
         $admin_detail = $this->admin_model->getAdminDetail(session()->get('admin_id'));
@@ -159,7 +159,7 @@ class AdminController extends Controller
         }
     }
 
-    // ------------------------- Setting Pages (Terms, Privacy, About) ------------------------------
+    // ------------ Setting Pages (Terms, Privacy, About) --------------
     public function siteSetting($key){
         if($key == 'terms-condition'){
             $type = 'Terms';
@@ -200,25 +200,6 @@ class AdminController extends Controller
         }else{
             return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }
-    } 
-
-    // ------------------------- Social ------------------------------
-    public function social(){
-        $data['title'] ='Social';
-        $data['social_link'] = Config::get('constants.social_link');
-        $data['social_data'] = $this->admin_model->get_social_link();
-        return $this->loadview('social', $data);
-    }
-
-    public function update_social_link(Request $request){
-        $Requestdata = $request->all();
-        $result = $this->admin_model->update_social_link($Requestdata);
-        if ($result) {
-            return response()->json(['result' => 1, 'msg' => 'Social Links Updated Successfully!!', 'url' => route('admin/social')]);
-        }else{
-            return response()->json(['result' => -1, 'msg' => 'No Changes Were found!!']);
-        }
-        return FALSE;
     }
 
     // ------------------------- Faqs ------------------------------
@@ -230,7 +211,7 @@ class AdminController extends Controller
     }
 
     public function openFaqForm(Request $request) {
-        $faq_id = $request->faq_id;
+        $faq_id = $request->data_id;
         if(empty($faq_id)){
             // Add FAQ form
             $data['data'] = null;
@@ -245,7 +226,7 @@ class AdminController extends Controller
 
     public function addFaq(Request $request){
         $requestdata = $request->all();
-        $validator = Validator::make($requestdata, [
+        $validator = Validator::make($requestdata, $rules = [
             'question' => 'required',
             'answer'   => 'required',
         ], $messages = [
@@ -291,6 +272,86 @@ class AdminController extends Controller
         }
     }
 
+    public function change_faq_status(Request $request, $id, $status, $table, $wherecol, $status_variable){
+        $delete_faq = change_status($id, $status, $table, $wherecol, $status_variable, '=');
+        $status_type = $request->post('status_type');
+        if($status_type != null){
+            $message = 'Status changed successfully';
+        }else{
+            $message = 'FAQ deleted successfully';
+        }
+        if(!empty($delete_faq)){
+            return response()->json(['result' => 1, 'msg' => $message]);
+        }else{
+            return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
+        }
+    }
+
+    // ------------------------- Social ------------------------------
+    public function social(){
+        $data['title'] ='Social';
+        $data['social_link'] = Config::get('constants.social_link');
+        $data['social_data'] = $this->admin_model->get_social_link();
+        return $this->loadview('social', $data);
+    }
+
+    public function update_social_link(Request $request){
+        $requestdata = $request->all();
+        $validator = Validator::make($requestdata, $rules = [
+            'social_link' => 'required',
+        ], $messages = [
+            'required' => 'The :attribute field is required.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()]);
+            return false;
+        }
+        $result = $this->admin_model->update_social_link($requestdata);
+        if ($result) {
+            return response()->json(['result' => 1, 'msg' => 'Social links updated successfully', 'url' => route('admin/social')]);
+        }else{
+            return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
+        }
+    }
+
+    // --------------------- Contact Details -------------------------
+    public function contactDetails() {
+        $data['title'] ='Contact Details';
+        $data['contact_details'] = $this->admin_model->getContactDetail();
+        return $this->loadview('contact_details/contact_detail',$data);
+    }
+
+    public function openContactForm(Request $request){
+        $data['contact_details'] = $this->admin_model->getContactDetail();
+        $htmlwrapper = view('admin/contact_details/contact_details_form', $data)->render();
+        return response()->json(['result' => 1, 'htmlwrapper' => $htmlwrapper]);
+    }
+
+    public function updateContactDetails(Request $request, $contact_detail_id){
+        $Requestdata = $request->all();
+        $contact_detail_id = decryptionID($contact_detail_id);
+        $validator = Validator::make($Requestdata, $rules = [
+            'company_name' => 'required',
+            'address' => 'required',
+            'contact_no1' => 'required',
+            'contact_no2' => 'required',
+            'email1' => 'required|email',
+            'email2' => 'required|email',
+        ], $messages = [
+            'required' => 'The :attribute field is required.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()]);
+            return false;
+        }
+        $result = $this->admin_model->updateContactDetails($request);
+        if($result){
+            return response()->json(['result' => 1, 'msg' => 'Contact details updated successfully', 'url' => route('admin/contactDetails')]);
+        }else{
+            return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
+        }
+    }
+
     // ------------------------- Send Notification To All ------------------------------
     public function notifiction(Request $request){
         $data['user_id'] = $request->post('user_id');
@@ -320,21 +381,6 @@ class AdminController extends Controller
         }
         return response()->json(['result' => 1, 'msg' => 'Notification Sent Successfully.','url'=> route('admin/users')]);
         return false;
-    }
-
-    public function change_faq_status(Request $request, $id, $status, $table, $wherecol, $status_variable){
-        $delete_faq = change_status($id, $status, $table, $wherecol, $status_variable, '=');
-        $status_type = $request->post('status_type');
-        if($status_type != null){
-            $message = 'Status changed successfully';
-        }else{
-            $message = 'FAQ deleted successfully';
-        }
-        if(!empty($delete_faq)){
-            return response()->json(['result' => 1, 'msg' => $message]);
-        }else{
-            return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
-        }
     }
 
     // ------------------------- Forgot Password ------------------------------
@@ -384,44 +430,6 @@ class AdminController extends Controller
         } else {
             return response()->json(['result' => -1, 'msg' => 'New Password Cannot Be Same As Old Password.']);
             return FALSE;
-        }
-    }
-
-    // ------------------------- Contact Us ------------------------------
-    public function contactus() {
-        $data['title'] ='Contact Details';
-        $data['basic_datatable'] ='1';
-        $data['contact_detail'] = $this->admin_model->getContactDetail();
-        return $this->loadview('contactus/contactus',$data);
-    }
-
-    public function open_contact_form($id=NULL){
-        $data['title'] = 'Edit Contact Details';
-        $data['contact_detail'] = $this->admin_model->getContactDetail();
-        return $this->loadview('contactus/contact-form',$data,true);
-    }
-
-    public function doUpdateContact(Request $request){
-        $Requestdata = $request->all();
-        $validator = Validator::make($Requestdata, $rules = [
-            'company_name' => 'required',
-            'address' => 'required',
-            'email1' => 'required|email',
-            'email2' => 'required|email',
-            'contact_no1' => 'required',
-            'contact_no2' => 'required',
-        ], $messages = [
-            'required' => 'The :attribute field is required.',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['result' => 0, 'errors' => $validator->errors()]);
-            return false;
-        }
-        $result=$this->admin_model->updateContactDetails($request);
-        if($result){
-            return response()->json(['result' => 1, 'msg' => 'Contact details updated successfully', 'url' => route('admin/contactus')]);
-        }else{
-            return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }
     }
 

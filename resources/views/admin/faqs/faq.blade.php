@@ -60,12 +60,11 @@
                                                         <td class="table-td"><?php echo $i; ?></td>
                                                         <td class="table-td"><?php echo !empty($faq->question) ? $faq->question : null; ?></td>
                                                         <td class="table-td"><?php echo !empty($faq->answer) ? $faq->answer : null; ?></td>
-                                                        <?php
-                                                        if ($faq->status == 'Active') {
+                                                        <?php if($faq->status == 'Active'){
                                                             $class = "text-success-500 bg-success-500";
                                                             $status = "Active";
                                                             $change_to = "Inactive";
-                                                        } else {
+                                                        }else{
                                                             $class = "text-danger-500 bg-danger-500";
                                                             $status = "Inactive";
                                                             $change_to = "Active";
@@ -79,7 +78,7 @@
                                                         </td>
                                                         <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">
-                                                                <a class="action-btn openModel" data-url="<?php echo route('admin/openFaqForm'); ?>" data-faq_id="<?php echo $faq->faq_id; ?>" href="javascript:void(0)" data-tippy-content="Edit FAQ" data-tippy-placement="top">
+                                                                <a class="action-btn openModel" data-url="<?php echo route('admin/openFaqForm'); ?>" data-id="<?php echo $faq->faq_id; ?>" href="javascript:void(0)" data-tippy-content="Edit FAQ" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:pencil-square"></iconify-icon>
                                                                 </a>
                                                                 <a href="<?php echo url('admin/change-faq-status/'.$faq->faq_id.'/Deleted/faqs/faq_id/status'); ?>" class="status action-btn" data-tippy-content="Delete FAQ" data-tippy-placement="top">
