@@ -19,8 +19,8 @@ class UserController extends Controller
     }
 
     private function loadview($view, $data = NULL){
-        $admin_detail = admin_detail();
-        if (empty($admin_detail)) {
+        $data['admin_detail'] = admin_detail();
+        if (empty($data['admin_detail'])) {
             return redirect('admin');
         }
         return view('admin/'.$view, $data);

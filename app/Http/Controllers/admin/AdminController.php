@@ -10,6 +10,7 @@ use App\Models\admin\SurveyModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
@@ -25,8 +26,8 @@ class AdminController extends Controller
     }
 
     private function loadview($view, $data = NULL){
-        $admin_detail = admin_detail();
-        if (empty($admin_detail)) {
+        $data['admin_detail'] = admin_detail();
+        if (empty($data['admin_detail'])) {
             return redirect('admin');
         }
         return view('admin/'.$view, $data);
@@ -50,12 +51,13 @@ class AdminController extends Controller
     // ------------------------- Login ------------------------------
     public function login(){
         $data['title'] ='Login';
+        $data['admin_detail'] = $this->admin_model->getAdminDetails();
         return view('admin/login', $data);
     }
 
     public function check_login(Request $request){
         $form_data = $request->post();
-        $admin_detail = $this->admin_model->getAdmin();
+        $admin_detail = $this->admin_model->getAdminDetails();
         if($admin_detail->email != $form_data['email'] && $admin_detail->password != hash('sha256',$form_data['password'])){
             return response()->json(['result' => -1, 'msg' => 'Please Enter Valid Email and Password']);
         }elseif($admin_detail->email != $form_data['email']){
@@ -64,18 +66,18 @@ class AdminController extends Controller
             return response()->json(['result' => -1, 'msg' => 'Please Enter Valid Password']);
         }else{
             $request->session()->put(['admin_id' => $admin_detail->id]);
-            return response()->json(['result' => 1, 'msg' => 'Loading... Please Wait', 'url' => route('admin/dashboard')]);
+            return response()->json(['result' => 1, 'msg' => 'Loading... Please Wait', 'url' => redirect()->route('admin/dashboard')->with('status', 'Logged in successfully')->getTargetUrl()]);
         }
     }
 
     // ------------------------- Logout ------------------------------
-    public function logout(Request $Request){
-        $Request->session()->forget('admin_id');
-        return redirect('admin');
+    public function logout(Request $request){
+        $request->session()->forget('admin_id');
+        return response()->json(['result' => 1, 'url' => redirect()->route('admin/login')->with('status', 'Logged out!')->getTargetUrl()]);
     }
     
     // ------------------------- Dashboard ------------------------------
-    public function dashboard(Request $Request){
+    public function dashboard(){
         $data['title'] ='Dashboard';
         $data['total_users'] = count($this->user_model->getAllUsers());
         $data['total_surveys'] = count($this->survey_model->getAllSurveys());
@@ -85,7 +87,6 @@ class AdminController extends Controller
     //------------------------- Profile ------------------------------
     public function profile(){
         $data['title'] = "Profile";
-        $data['admin_detail'] = $this->admin_model->getAdminDetail(session()->get('admin_id'));
         return $this->loadview('profile', $data);
     }
 
@@ -93,7 +94,6 @@ class AdminController extends Controller
         $request->validate([
             'name'    => 'required',
             'email'   => 'required',
-            'phone'   => 'required',
         ]);
         $form_data = $request->post();
         $admin_detail = admin_detail();
@@ -129,33 +129,52 @@ class AdminController extends Controller
         ];
         $result = DB::table('admin')->where('id', session()->get('admin_id'))->update($update_data);
         if($result){
-            return response()->json(['result' => 1, 'msg' => 'Profile updated succesfully']);
+            return response()->json(['result' => 1, 'msg' => 'Profile updated succesfully', 'url' => route('admin/profile')]);
         }else{
             return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }
     }
 
     // -------------------- Change Password ---------------------------
-    public function changePassword(Request $Request){
-        $form_data = $Request->post();
-        $admin_detail = $this->admin_model->getAdminDetail(session()->get('admin_id'));
-        $result = DB::table('admin')->where(['password' => hash('sha256',$form_data['old_password'])])->first();
-        if (!empty($result)) {
-            if($form_data['new_password'] == $form_data['confirm_new_password']){
-                $update_data = [
-                    'password'  => hash('sha256',$form_data['new_password']),
-                ];
-                $changed = $result = DB::table('admin')->where('id', 1)->update($update_data);
-                if($changed){
-                    return response()->json(['result' => 1, 'url' => route('admin/dashboard'), 'msg' => 'Password changed successfully']);
+    public function changePassword(){
+        $data['title'] = "Change Password";
+        return $this->loadview('change_password', $data);
+    }
+
+    public function updatePassword(Request $request){
+        $form_data = $request->all();
+        $validator = Validator::make($form_data, $rules = [
+            'old_password' => 'required',
+            'new_password' =>'required|min:6',
+            'confirm_password' => 'required|same:new_password',
+        ], $messages = [
+            'required' => 'The :attribute field is required.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()]);
+            return false;
+        }
+        $old_password = DB::table('admin')->where(['password' => hash('sha256', $form_data['old_password'])])->first();
+        if(!empty($old_password)){
+            if($form_data['old_password'] !== $form_data['new_password']){
+                if($form_data['new_password'] == $form_data['confirm_password']){
+                    $update_data = [
+                        'password' => hash('sha256', $form_data['new_password']),
+                    ];
+                    $changed = DB::table('admin')->where('id', 1)->update($update_data);
+                    if($changed){
+                        return response()->json(['result' => 1, 'url' => route('admin/dashboard'), 'msg' => 'Password changed successfully']);
+                    }else{
+                        return response()->json(['result' => -1, 'msg' => 'Password change process failed!']);
+                    }
                 }else{
-                    return response()->json(['result' => -1, 'msg' => 'Password change process failed!']);
+                    return response()->json(['result' => -1, 'msg' => 'Please verify password with confirm password!']);
                 }
             }else{
-                return response()->json(['result' => -1, 'msg' => 'New password and Confirm password should be same!']);
+                return response()->json(['result' => -1, 'msg' => "Old password and new password shouldn't be same!"]);
             }
         }else{
-            return response()->json(['result' => -1, 'msg' => 'Old password did not matched current password!']);
+            return response()->json(['result' => -1, 'msg' => 'Old password is not correct!']);
         }
     }
 
@@ -171,7 +190,6 @@ class AdminController extends Controller
             $type = 'About';
             $data['title'] = 'About Us';
         }
-        $data['admin_detail']= $this->admin_model->getAdminDetail(session()->get('admin_id'));
         $data['basic_datatable'] = '1';
         $data['type'] = $type;
         $data['site_setting'] = DB::table('settings')->where('type',$type)->first();
@@ -205,7 +223,6 @@ class AdminController extends Controller
     // ------------------------- Faqs ------------------------------
     public function faqs() {
         $data['title'] = "FAQs";
-        $data['admin_detail'] = $this->admin_model->getAdminDetail(session()->get('admin_id'));
         $data['faqs'] = $this->admin_model->getAllFaqs();
         return $this->loadview('faqs/faq', $data);
     }
@@ -321,7 +338,7 @@ class AdminController extends Controller
         return $this->loadview('contact_details/contact_detail',$data);
     }
 
-    public function openContactForm(Request $request){
+    public function openContactForm(){
         $data['contact_details'] = $this->admin_model->getContactDetail();
         $htmlwrapper = view('admin/contact_details/contact_details_form', $data)->render();
         return response()->json(['result' => 1, 'htmlwrapper' => $htmlwrapper]);
@@ -353,17 +370,15 @@ class AdminController extends Controller
     }
 
     // ------------------------- Send Notification To All ------------------------------
-    public function notifiction(Request $request){
+    public function notification(Request $request){
         $data['user_id'] = $request->post('user_id');
-        $data['data'] = NULL;
-        $model_wrapper = view('admin/notification',$data)->render();
-        return response()->json(['result' => 1, 'model_wrapper' => $model_wrapper]);
-        return false;
+        $htmlwrapper = view('admin/users/notification', $data)->render();
+        return response()->json(['result' => 1, 'htmlwrapper' => $htmlwrapper]);
     }
 
-    public function sendNotficationToAll(Request $request){
-        $RequestData=$request->all();
-        $validator = Validator::make($RequestData, $rules = [
+    public function sendNotification(Request $request){
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, $rules = [
             'subject' => 'required',
             'message' => 'required|min:6',
         ], $messages = [
@@ -377,16 +392,16 @@ class AdminController extends Controller
         $message = strip_tags($request->post('message'));
         $subject = strip_tags($request->post('subject'));
         foreach($user_id as $id){
-            $this->admin_model->sendNotfication($id,$message,$subject);
+            $this->admin_model->sendNotification($id, $message, $subject);
         }
-        return response()->json(['result' => 1, 'msg' => 'Notification Sent Successfully.','url'=> route('admin/users')]);
-        return false;
+        return response()->json(['result' => 1, 'msg' => 'Notification sent successfully', 'url' => route('admin/users')]);
     }
 
     // ------------------------- Forgot Password ------------------------------
     public function forget_password(){
-        $data['title'] = "Forget Password";
-        return view('admin/forget_password', $data);
+        $data['title'] = "Forgot Password";
+        $data['admin_detail'] = $this->admin_model->getAdminDetails();
+        return view('admin/forgot_password', $data);
     }
 
     public function forgot_password(Request $request){
@@ -404,7 +419,7 @@ class AdminController extends Controller
     }
     
     public function reset_password($admin_id){
-        $data['admin_detail'] = $this->admin_model->getAdminDetail($admin_id);
+        $data['admin_detail'] = $this->admin_model->getAdminDetails();
         $data['title'] = "Reset Password";        
         $data['admin_id'] = $admin_id;
         $id = substr($admin_id, 10);

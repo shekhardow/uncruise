@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <title><?php echo !empty($title) ? $title . ' | ' : null; ?>Uncruise - Admin</title>
-    <link rel="icon" type="image/png" href="<?php echo url('public/assets/images/logo/favicon.svg'); ?>">
+    <link rel="icon" type="image/png" href="<?php echo !empty($admin_detail->favicon) ? url('public/assets/admin/adminimages/' . $admin_detail->favicon) : url('public/assets/images/logo/favicon.svg'); ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
     <div class="loginwrapper">
         <div class="lg-inner-column">
             <div class="left-column relative z-[1] fixedImage">
-                <img src="<?php echo url('public/assets/images/auth/cruise-bg.jpg'); ?>" alt="" class="h-full w-full object-contain">
+                <img src="<?php echo url('public/assets/images/auth/cruise-bg-min.webp'); ?>" alt="" class="h-full w-full object-contain">
                 {{-- <div class="top-left">
                     <h4>
                         <span class="text-slate-800 dark:text-slate-400 font-bold">
@@ -34,15 +34,30 @@
             </div>
             <div class="right-column relative">
                 <div class="inner-content h-full flex flex-col bg-white dark:bg-slate-800">
+                    <div class="top-right">                       
+                        @if (session('status'))
+                            <div class="alert py-[18px] px-6 font-normal text-sm rounded-md bg-danger-500 text-white">
+                                <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                                    <p class="flex-1 font-Inter">
+                                        {{ session('status') }}
+                                    </p>
+                                    <div class="close-icon flex-0 text-xl cursor-pointer">
+                                        <iconify-icon icon="line-md:close"></iconify-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                     <div class="auth-box h-full flex flex-col justify-center">
                         <div class="text-center 2xl:mb-10 mb-4">
-                            <a href="<?php echo route('admin/dashboard'); ?>" class="centerImg">
-                                <img src="<?php echo url('public/assets/images/logo/logo.svg'); ?>" alt="" class="mb-10 dark_logo">
-                                <img src="<?php echo url('public/assets/images/logo/logo-white.svg'); ?>" alt="" class="mb-10 white_logo">
+                            <a href="javascript:void(0)" class="centerImg">
+                                {{-- <img src="<?php //echo url('public/assets/images/logo/logo.svg'); ?>" alt="" class="mb-10 dark_logo">
+                                <img src="<?php echo //url('public/assets/images/logo/logo-white.svg'); ?>" alt="" class="mb-10 white_logo"> --}}
+                                <img src="<?php echo !empty($admin_detail->logo) ? url('public/assets/admin/adminimages/' . $admin_detail->logo) : url('public/assets/images/logo/logo.svg'); ?>" alt="">
                             </a>
-                            <h4 class="font-medium">Sign in</h4>
+                            <h4 class="font-medium signInHeading">Sign in</h4>
                             <div class="text-slate-500 text-base">
-                                Sign in to your account to start using Uncruise Admin
+                                Sign in to your account to start using Admin Panel
                             </div>
                         </div>
                         {{-- START: Login Form --}}
@@ -90,10 +105,29 @@
 
     <!-- scripts -->
     <script src="<?php echo url('public/assets/js/jquery-3.6.0.min.js'); ?>"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="<?php echo url('public/assets/js/rt-plugins.js'); ?>"></script>
     <script src="<?php echo url('public/assets/js/app.js'); ?>"></script>
 	<script src="<?php echo url('public/assets/admin/event.js')?>"></script>
+
+    <script>
+        const alertBox = document.querySelector('.alert');
+        const closeIcon = document.querySelector('.close-icon');
+        setTimeout(() => {
+            alertBox.classList.add('hide');
+
+            setTimeout(() => {
+                alertBox.remove();
+            }, 500);
+        }, 2000);
+        closeIcon.addEventListener('click', () => {
+            alertBox.classList.add('hide');
+
+            setTimeout(() => {
+                alertBox.remove();
+            }, 500);
+        });
+    </script>
 </body>
 
 </html>

@@ -10,16 +10,12 @@ class AdminModel extends Model
 {
     use HasFactory;
 
-    public function getAdminDetail($id){
-        return DB::table('admin')->where('id', $id)->first();
+    public function getAdminDetails(){
+        return DB::table('admin')->get()->first();
     }
 
     public function getContactDetail(){
         return DB::table('contact_details')->get()->first();
-    }
-
-    public function getAdmin(){
-        return DB::table('admin')->first();
     }
 
     public function get_social_link(){
@@ -102,8 +98,8 @@ class AdminModel extends Model
         return $affected_row;
     }
     
-    public function sendNotfication($id,$message,$subject){
-        $data=array(
+    public function sendNotification($id, $message, $subject){
+        $data = array(
             'user_id' => $id,
             'message' => $message,
             'title' => $subject 

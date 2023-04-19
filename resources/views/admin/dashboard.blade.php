@@ -24,6 +24,18 @@
                                         <span>Select Date</span>
                                     </span>
                                 </button> --}}
+                                @if (session('status'))
+                                <div class="alert py-[18px] px-6 font-normal text-sm rounded-md bg-primary-500 text-white">
+                                    <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                                            <p class="flex-1 font-Inter">
+                                                {{ session('status') }}
+                                            </p>
+                                            <div class="close-icon flex-0 text-xl cursor-pointer">
+                                                <iconify-icon icon="line-md:close"></iconify-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="space-y-8">
@@ -83,98 +95,6 @@
                                         <a href="<?php echo route('admin/surveys'); ?>" class="btn-light bg-white btn-sm btn">View details</a>
                                     </div>
                                 </div>
-                                {{-- <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-8.png'); ?>)">
-                                    <div class="flex-1">
-                                        <div class="max-w-[180px]">
-                                            <h4 class="text-2xl font-medium text-slate-900 mb-2">
-                                                <span class="block text-sm dark:text-slate-800">
-                                                    Current balance,
-                                                </span>
-                                                <span class="block dark:text-slate-800">$34,564</span>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="flex-none">
-                                        <button class="btn-light bg-white btn-sm btn">View details</button>
-                                    </div>
-                                </div>
-                                <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-7.png'); ?>)">
-                                    <div class="flex-1">
-                                        <div class="max-w-[180px]">
-                                            <h4 class="text-2xl font-medium text-slate-900 mb-2">
-                                                <span class="block text-sm dark:text-slate-800">
-                                                    Current balance,
-                                                </span>
-                                                <span class="block dark:text-slate-800">$34,564</span>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="flex-none">
-                                        <button class="btn-light bg-white btn-sm btn">View details</button>
-                                    </div>
-                                </div>
-                                <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-6.png'); ?>)">
-                                    <div class="flex-1">
-                                        <div class="max-w-[180px]">
-                                            <h4 class="text-2xl font-medium text-white mb-2">
-                                                <span class="block text-sm">Current balance,</span>
-                                                <span class="block">$34,564</span>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="flex-none">
-                                        <button class="btn-light bg-white btn-sm btn">View details</button>
-                                    </div>
-                                </div>
-                                <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-7.png'); ?>)">
-                                    <div class="flex-1">
-                                        <div class="max-w-[180px]">
-                                            <h4 class="text-2xl font-medium text-slate-900 mb-2">
-                                                <span class="block text-sm dark:text-slate-800">
-                                                    Current balance,
-                                                </span>
-                                                <span class="block dark:text-slate-800">$34,564</span>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="flex-none">
-                                        <button class="btn-light bg-white btn-sm btn">View details</button>
-                                    </div>
-                                </div>
-                                <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-6.png'); ?>)">
-                                    <div class="flex-1">
-                                        <div class="max-w-[180px]">
-                                            <h4 class="text-2xl font-medium text-white mb-2">
-                                                <span class="block text-sm">Current balance,</span>
-                                                <span class="block">$34,564</span>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="flex-none">
-                                        <button class="btn-light bg-white btn-sm btn">View details</button>
-                                    </div>
-                                </div>
-                                <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-8.png'); ?>)">
-                                    <div class="flex-1">
-                                        <div class="max-w-[180px]">
-                                            <h4 class="text-2xl font-medium text-slate-900 mb-2">
-                                                <span class="block text-sm dark:text-slate-800">
-                                                    Current balance,
-                                                </span>
-                                                <span class="block dark:text-slate-800">$34,564</span>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="flex-none">
-                                        <button class="btn-light bg-white btn-sm btn">View details</button>
-                                    </div>
-                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -183,4 +103,23 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        const alertBox = document.querySelector('.alert');
+        const closeIcon = document.querySelector('.close-icon');
+        setTimeout(() => {
+            alertBox.classList.add('hide');
+    
+            setTimeout(() => {
+                alertBox.remove();
+            }, 500);
+        }, 2000);
+        closeIcon.addEventListener('click', () => {
+            alertBox.classList.add('hide');
+    
+            setTimeout(() => {
+                alertBox.remove();
+            }, 500);
+        });
+    </script>
 @endsection

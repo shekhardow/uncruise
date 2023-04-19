@@ -6,22 +6,33 @@
                 <div id="content_layout">
 
                     {{-- START: Breadcrumb --}}
-                    <div class="mb-5">
-                        <ul class="m-0 p-0 list-none">
-                            <li class="inline-block relative top-[3px] text-base text-primary-500 font-Inter">
-                                <a href="<?php echo route('admin/dashboard'); ?>">
-                                    <iconify-icon icon="heroicons-outline:home"></iconify-icon>
-                                    <iconify-icon icon="heroicons-outline:chevron-right" class="relative text-slate-500 text-sm rtl:rotate-180"></iconify-icon>
-                                </a>
-                            </li>
-                            <li class="inline-block relative text-sm text-primary-500 font-Inter">
-                                Users
-                                <iconify-icon icon="heroicons-outline:chevron-right" class="relative top-[3px] text-slate-500 rtl:rotate-180"></iconify-icon>
-                            </li>
-                            <li class="inline-block relative text-sm text-slate-500 font-Inter dark:text-white">
-                                Listing
-                            </li>
-                        </ul>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="mb-5 breadcrumb">
+                            <ul class="m-0 p-0 list-none">
+                                <li class="inline-block relative top-[3px] text-base text-primary-500 font-Inter">
+                                    <a href="<?php echo route('admin/dashboard'); ?>">
+                                        <iconify-icon icon="heroicons-outline:home"></iconify-icon>
+                                        <iconify-icon icon="heroicons-outline:chevron-right" class="relative text-slate-500 text-sm rtl:rotate-180"></iconify-icon>
+                                    </a>
+                                </li>
+                                <li class="inline-block relative text-sm text-primary-500 font-Inter">
+                                    Users
+                                    <iconify-icon icon="heroicons-outline:chevron-right" class="relative top-[3px] text-slate-500 rtl:rotate-180"></iconify-icon>
+                                </li>
+                                <li class="inline-block relative text-sm text-slate-500 font-Inter dark:text-white">
+                                    Listing
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="flex sm:space-x-4 space-x-2 sm:justify-end items-center rtl:space-x-reverse">
+                            <button class="send_notification btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal" 
+                            data-url="<?php echo route('admin/notification'); ?>" data-tippy-content="Send Notification" data-tippy-placement="left">
+                                <span class="flex items-center">
+                                    <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light" icon="fluent:mail-24-regular"></iconify-icon>
+                                    <span>Send Notification</span>
+                                </span>
+                            </button>
+                        </div>                        
                     </div>
                     {{-- END: BreadCrumb --}}
 
@@ -32,10 +43,20 @@
                                     <span class="col-span-8 hidden"></span>
                                     <span class="col-span-4 hidden"></span>
                                     <div class="inline-block min-w-full align-middle">
-                                        <div class="overflow-hidden ">
-                                            <table class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 data-table">
+                                        <div class="overflow-hidden">
+                                            <table id="myTable" class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 data-table">
                                                 <thead class=" bg-slate-200 dark:bg-slate-700">
                                                     <tr>
+                                                        <th>
+                                                            <div class="checkbox-area">
+                                                                <label class="inline-flex items-center cursor-pointer">
+                                                                    <input type="checkbox" value="" class="hidden check">
+                                                                    <span class="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
+                                                                        <img src="<?php echo url('public/assets/images/icon/ck-white.svg'); ?>" alt="" class="h-[10px] w-[10px] block m-auto opacity-0"></span>
+                                                                    <span class="text-slate-500 dark:text-slate-400 text-sm leading-6"></span>
+                                                                </label>
+                                                            </div>
+                                                        </th>
                                                         <th scope="col" class="table-th">S/N</th>
                                                         <th scope="col" class="table-th">User</th>
                                                         <th scope="col" class="table-th">Email</th>
@@ -47,6 +68,16 @@
                                                 <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
                                                     <?php $i=1; if(!empty($users)){ foreach($users as $user){ ?>
                                                     <tr>
+                                                        <td class="table-td newTdClass">
+                                                            <div class="checkbox-area">
+                                                                <label class="inline-flex items-center cursor-pointer">
+                                                                    <input type="checkbox" name="user_id" value="<?php echo $user->user_id; ?>" class="hidden users_id">
+                                                                    <span class="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
+                                                                        <img src="<?php echo url('public/assets/images/icon/ck-white.svg'); ?>" alt="" class="h-[10px] w-[10px] block m-auto opacity-0"></span>
+                                                                    <span class="text-slate-500 dark:text-slate-400 text-sm leading-6"></span>
+                                                                </label>
+                                                              </div>
+                                                        </td>
                                                         <td class="table-td"><?php echo $i; ?></td>
                                                         <td class="table-td">
                                                             <span class="flex">

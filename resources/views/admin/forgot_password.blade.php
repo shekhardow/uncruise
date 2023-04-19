@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <title><?php echo !empty($title) ? $title . ' | ' : null; ?>Uncruise - Admin</title>
-    <link rel="icon" type="image/png" href="<?php echo url('public/assets/images/logo/favicon.svg'); ?>">
+    <link rel="icon" type="image/png" href="<?php echo !empty($admin_detail->favicon) ? url('public/assets/admin/adminimages/' . $admin_detail->favicon) : url('public/assets/images/logo/favicon.svg'); ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -22,19 +22,20 @@
     <div class="loginwrapper">
         <div class="lg-inner-column">
             <div class="left-column relative z-[1] fixedImage">
-                <img src="<?php echo url('public/assets/images/auth/cruise-bg.jpg'); ?>" alt="" class="h-full w-full object-contain">
+                <img src="<?php echo url('public/assets/images/auth/cruise-bg-min.webp'); ?>" alt="" class="h-full w-full object-contain">
             </div>
             <div class="right-column relative">
                 <div class="inner-content h-full flex flex-col bg-white dark:bg-slate-800">
                     <div class="auth-box2 flex flex-col justify-center h-full">
                         <div class="text-center 2xl:mb-10 mb-5">
-                            <a href="<?php echo route('admin/dashboard'); ?>" class="centerImg">
-                                <img src="<?php echo url('public/assets/images/logo/logo.svg'); ?>" alt="" class="mb-10 dark_logo">
-                                <img src="<?php echo url('public/assets/images/logo/logo-white.svg'); ?>" alt="" class="mb-10 white_logo">
+                            <a href="javascript:void(0)" class="centerImg">
+                                {{-- <img src="<?php //echo url('public/assets/images/logo/logo.svg'); ?>" alt="" class="mb-10 dark_logo">
+                                <img src="<?php //echo url('public/assets/images/logo/logo-white.svg'); ?>" alt="" class="mb-10 white_logo"> --}}
+                                <img src="<?php echo !empty($admin_detail->logo) ? url('public/assets/admin/adminimages/' . $admin_detail->logo) : url('public/assets/images/logo/logo.svg'); ?>" alt="">
                             </a>
-                            <h4 class="font-medium mb-4">Forgot Your Password?</h4>
+                            <h4 class="font-medium mb-4 signInHeading">Forgot Your Password?</h4>
                             <div class="text-slate-500 dark:text-slate-400 text-base">
-                                Reset your password.
+                                Reset password.
                             </div>
                         </div>
                         <div class="font-normal text-base text-slate-500 dark:text-slate-400 text-center px-2 bg-slate-100 dark:bg-slate-600 rounded py-3 mb-4 mt-10">

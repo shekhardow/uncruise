@@ -7,7 +7,7 @@
 
                     {{-- START: Breadcrumb --}}
                     <div class="flex justify-between items-center mb-4">
-                        <div class="mb-5">
+                        <div class="mb-5 breadcrumb">
                             <ul class="m-0 p-0 list-none">
                                 <li class="inline-block relative top-[3px] text-base text-primary-500 font-Inter">
                                     <a href="<?php echo route('admin/dashboard'); ?>">
@@ -43,7 +43,7 @@
                                     <span class="col-span-8 hidden"></span>
                                     <span class="col-span-4 hidden"></span>
                                     <div class="inline-block min-w-full align-middle">
-                                        <div class="overflow-hidden ">
+                                        <div class="overflow-hidden">
                                             <table id="myTable" class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 data-table">
                                                 <thead class=" bg-slate-200 dark:bg-slate-700">
                                                     <tr>

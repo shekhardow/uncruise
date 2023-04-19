@@ -42,7 +42,7 @@
                 </div>
             </div>
             <!-- Modal footer -->
-            <div class="flex items-center justify-end p-6 space-x-2 border-t border-slate-200 rounded-b dark:border-slate-600">
+            <div class="flex items-center justify-end p-6 space-x-2 border-slate-200 rounded-b dark:border-slate-600">
                 <button type="reset" class="btn inline-flex justify-center btn-outline-dark">Reset</button>
                 <button type="submit" id="submit-btn" class="btn inline-flex justify-center text-white bg-black-500">
                     Update

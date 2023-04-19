@@ -17,7 +17,7 @@ class AdminAuth
     public function handle(Request $request, Closure $next)
     {
         if (!$request->session()->has('admin_id')) {
-            return redirect('admin'); 
+            return redirect()->route('admin/login')->with('status', 'Session Expired! Login Again');
         }
         return $next($request);
     }

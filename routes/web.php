@@ -21,7 +21,7 @@ use App\Http\Controllers\admin\SurveyController;
 Route::get('/',[AdminController::class,'login'])->name('admin/login');
 Route::get('admin',[AdminController::class,'login'])->name('admin/login');
 Route::post('admin/check-login',[AdminController::class,'check_login'])->name('admin/check_login');
-Route::get('admin/logout',[AdminController::class,'logout'])->name('admin/logout');
+Route::post('admin/logout',[AdminController::class,'logout'])->name('admin/logout');
 
 Route::get('admin/forget-password',[AdminController::class,'forget_password'])->name('admin/forget_password');
 Route::get('admin/forgot-password',[AdminController::class,'forgot_password'])->name('admin/forgot_password');
@@ -34,6 +34,9 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
 
     Route::get('profile',[AdminController::class,'profile'])->name('admin/profile');
     Route::post('update-profile',[AdminController::class,'updateProfile'])->name('admin/updateProfile');
+    
+    Route::get('change-password',[AdminController::class,'changePassword'])->name('admin/changePassword');
+    Route::post('update-password',[AdminController::class,'updatePassword'])->name('admin/updatePassword');
 
     Route::get('users',[UserController::class,'users'])->name('admin/users');
     Route::get('user-details/{user_id}',[UserController::class,'userDetails'])->name('admin/userDetails');
@@ -44,8 +47,6 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
 
     Route::get('social',[AdminController::class,'social'])->name('admin/social');
     Route::post('update-social-link',[AdminController::class,'update_social_link'])->name('admin/update-social-link');
-
-    Route::post('changePassword',[AdminController::class,'changePassword'])->name('admin/changePassword');
 
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');
@@ -60,8 +61,8 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('change-faq-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_faq_status'])->name('admin/change_faq_status');
 
     //-----------------------------notification--------------------------------
-    Route::post('notification',[AdminController::class,'notifiction'])->name('admin/notification');
-     Route::post('sendNotficationToAll',[AdminController::class,'sendNotficationToAll'])->name('admin/sendNotficationToAll');
+    Route::post('notification',[AdminController::class,'notification'])->name('admin/notification');
+    Route::post('send-notification',[AdminController::class,'sendNotification'])->name('admin/sendNotification');
 
     /*Contact Start*/
     Route::get('contact-details',[AdminController::class,'contactDetails'])->name('admin/contactDetails');

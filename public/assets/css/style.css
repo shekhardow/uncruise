@@ -26,18 +26,74 @@
     margin-right: auto;
 }
 
+.userDetailsPage .form-group:not(:last-child) {
+    margin-bottom: 15px;
+}
+
+.userDetailsPage .form-group label:first-child {
+    font-weight: 700;
+    color: #444444c2;
+}
+
+.signInHeading {
+    margin-top: 25px;
+}
+
 /* Top left text */
 .top-left {
     position: absolute;
     top: 8px;
     left: 16px;
-  }
+}
 
-.userDetailsPage .form-group:not(:last-child){
-    margin-bottom: 15px;
+/* Alert */
+.top-right {
+    position: absolute;
+    top: 8px;
+    right: 16px;
 }
-.userDetailsPage .form-group label:first-child{
-    font-weight: 700;
-    color: #444444c2;
+
+.alert {
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
 }
-  
+
+.alert.hide {
+    opacity: 0;
+}
+
+.newTdClass {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.breadcrumb {
+    margin-bottom: 0px !important;
+}
+
+.profile-image {
+    object-fit: contain;
+}
+
+/* .imageSize {
+    max-height: 65px;
+    height: 65px;
+    justify-content: center;
+    width: 100%;
+}
+
+.imageSize img {
+    height: 100%;
+    display: inline-block;
+    float: left;
+}
+
+.imageContainer {
+    padding-top: 7px;
+    padding-bottom: 7px;
+} */
+
+.tinymce {
+    height: 150px !important;
+}

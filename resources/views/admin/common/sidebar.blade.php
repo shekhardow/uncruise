@@ -2,9 +2,10 @@
     <div id="bodyOverlay" class="w-screen h-screen fixed top-0 bg-slate-900 bg-opacity-50 backdrop-blur-sm z-10 hidden">
     </div>
     <div class="logo-segment">
-        <a class="flex items-center" href="<?php echo route('admin/dashboard'); ?>">
-            <img src="<?php echo url('public/assets/images/logo/logo-c.svg'); ?>" class="black_logo" alt="logo">
-            <img src="<?php echo url('public/assets/images/logo/logo-c-white.svg'); ?>" class="white_logo" alt="logo">
+        <a class="flex items-center" href="<?php echo !empty($title !== 'Dashboard') ? route('admin/dashboard') : 'javascript:void(0)'; ?>">
+            {{-- <img src="<?php //echo url('public/assets/images/logo/logo-c.svg'); ?>" class="black_logo" alt="logo">
+            <img src="<?php //echo url('public/assets/images/logo/logo-c-white.svg'); ?>" class="white_logo" alt="logo"> --}}
+            <img src="<?php echo !empty($admin_detail->favicon) ? url('public/assets/admin/adminimages/' . $admin_detail->favicon) : url('public/assets/images/logo/logo-c.svg'); ?>" alt="logo">
             <span class="ltr:ml-3 rtl:mr-3 text-xl font-Inter font-bold text-slate-900 dark:text-white">Uncruise</span>
         </a>
         <!-- Sidebar Type Button -->
@@ -91,7 +92,7 @@
                 <a href="<?php echo route('admin/faqs'); ?>" class="navItem <?php if((!empty($title)) && ($title == 'FAQs')){echo 'active';} ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="mdi:faq"></iconify-icon>
-                        <span>Faqs</span>
+                        <span>FAQ's</span>
                     </span>
                 </a>
             </li>
