@@ -36,16 +36,14 @@
                 <div class="inner-content h-full flex flex-col bg-white dark:bg-slate-800">
                     <div class="top-right">                       
                         @if (session('status'))
-                            <div class="alert py-[18px] px-6 font-normal text-sm rounded-md bg-danger-500 text-white">
-                                <div class="flex items-center space-x-3 rtl:space-x-reverse">
-                                    <p class="flex-1 font-Inter">
-                                        {{ session('status') }}
-                                    </p>
-                                    <div class="close-icon flex-0 text-xl cursor-pointer">
-                                        <iconify-icon icon="line-md:close"></iconify-icon>
-                                    </div>
+                        <div class="alert py-[18px] px-6 font-normal font-Inter text-sm rounded-md bg-danger-500 text-white dark:bg-danger-500 dark:text-slate-300">
+                            <div class="flex items-start space-x-3 rtl:space-x-reverse">
+                                <div class="flex-1">
+                                    {{ session('status') }}
+                                    <iconify-icon class="close-icon" icon="line-md:close"></iconify-icon>
                                 </div>
                             </div>
+                        </div>
                         @endif
                     </div>
                     <div class="auth-box h-full flex flex-col justify-center">
