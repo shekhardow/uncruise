@@ -2,7 +2,7 @@
     <div id="bodyOverlay" class="w-screen h-screen fixed top-0 bg-slate-900 bg-opacity-50 backdrop-blur-sm z-10 hidden">
     </div>
     <div class="logo-segment">
-        <a class="flex items-center" href="<?php echo !empty($title !== 'Dashboard') ? route('admin/dashboard') : 'javascript:void(0)'; ?>">
+        <a class="flex items-center" href="<?php echo (!empty($title) && $title == 'Dashboard') ? route('admin/dashboard') : 'javascript:void(0)'; ?>">
             {{-- <img src="<?php //echo url('public/assets/images/logo/logo-c.svg'); ?>" class="black_logo" alt="logo">
             <img src="<?php //echo url('public/assets/images/logo/logo-c-white.svg'); ?>" class="white_logo" alt="logo"> --}}
             <img src="<?php echo !empty($admin_detail->favicon) ? url('public/assets/admin/adminimages/' . $admin_detail->favicon) : url('public/assets/images/logo/logo-c.svg'); ?>" alt="logo">

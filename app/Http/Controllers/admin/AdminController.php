@@ -181,7 +181,6 @@ class AdminController extends Controller
             $type = 'About';
             $data['title'] = 'About Us';
         }
-        $data['basic_datatable'] = '1';
         $data['type'] = $type;
         $data['site_setting'] = DB::table('settings')->where('type',$type)->first();
         return $this->loadview('setting',$data);

@@ -71,11 +71,11 @@
                             </div>
                             <div class="fromGroup">
                                 <label class="block capitalize form-label">passwrod</label>
-                                <div class="relative" id="passwordInputField">
+                                <div class="relative togglePasswordBox" id="passwordInputField">
 									<input type="password" name="password" id="password" class="form-control py-2 passwordfield text-sm font-Inter font-normal text-slate-600 block w-full py-3 px-4 pr-9 focus:!outline-none
 									focus:!ring-0 border !border-slate-400 rounded-md mt-2" placeholder="password">
 									<span
-                                        class="text-xl text-slate-400 absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" id="toggleIcon">
+                                        class="text-xl text-slate-400 absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer toggleIcon" id="toggleIcon">
                                         <iconify-icon id="hidePassword" class="passwordeye" icon="heroicons-outline:eye-off"></iconify-icon>
                                         <iconify-icon class="hidden passwordeye" id="showPassword" icon="heroicons-outline:eye"></iconify-icon>
                                     </span>

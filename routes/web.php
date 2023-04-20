@@ -41,33 +41,40 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::get('user-details/{user_id}',[UserController::class,'userDetails'])->name('admin/userDetails');
     Route::post('change-user-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_user_status'])->name('admin/change_user_status');
     
+    /* Notification Start */
+    Route::post('notification',[AdminController::class,'notification'])->name('admin/notification');
+    Route::post('send-notification',[AdminController::class,'sendNotification'])->name('admin/sendNotification');
+    /* Notification End */
+
     Route::get('surveys',[SurveyController::class,'surveys'])->name('admin/surveys');
     Route::get('survey-details/{survey_id}',[SurveyController::class,'surveyDetails'])->name('admin/surveyDetails');
 
-    Route::get('social',[AdminController::class,'social'])->name('admin/social');
-    Route::post('update-social-link',[AdminController::class,'update_social_link'])->name('admin/update-social-link');
-
+    /* Site Setting Start */
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');
     Route::post('update-site-setting',[AdminController::class,'updateSiteSetting'])->name('admin/updateSiteSetting');
+    /* Site Setting End */
 
+    /* FAQ Start */
     Route::get('faqs',[AdminController::class,'faqs'])->name('admin/faqs');
     Route::any('open-faq-form',[AdminController::class,'openFaqForm'])->name('admin/openFaqForm');
     Route::post('add-faq',[AdminController::class,'addFaq'])->name('admin/addFaq');
     Route::post('update-faq/{faq_id}',[AdminController::class,'updateFaq'])->name('admin/updateFaq');
     Route::post('delete-faq/{faq_id}',[AdminController::class,'deleteFaq'])->name('admin/deleteFaq');
     Route::post('change-faq-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_faq_status'])->name('admin/change_faq_status');
+    /* FAQ End */
+    
+    /* Social Start */
+    Route::get('social',[AdminController::class,'social'])->name('admin/social');
+    Route::post('update-social-link',[AdminController::class,'update_social_link'])->name('admin/update-social-link');
+    /* Social End */
 
-    //-----------------------------notification--------------------------------
-    Route::post('notification',[AdminController::class,'notification'])->name('admin/notification');
-    Route::post('send-notification',[AdminController::class,'sendNotification'])->name('admin/sendNotification');
-
-    /*Contact Start*/
+    /* Contact Start */
     Route::get('contact-details',[AdminController::class,'contactDetails'])->name('admin/contactDetails');
     Route::post('open-contact-form',[AdminController::class,'openContactForm'])->name('admin/openContactForm');
     Route::post('update-contact-details/{contact_detail_id}',[AdminController::class,'updateContactDetails'])->name('admin/updateContactDetails');
-    /*Contact End*/
+    /* Contact End */
 
     Route::fallback(function () {
         return response()->view('errors.404', [], 404);

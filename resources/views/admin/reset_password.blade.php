@@ -54,10 +54,10 @@
                             <div class="error_msg" id="error_msg"></div>
                             <div class="fromGroup">
                                 <label class="block capitalize form-label">New Password*</label>
-                                <div class="relative" id="passwordInputField">
+                                <div class="relative togglePasswordBox" id="passwordInputField1">
                                     <input type="password" name="new_password" placeholder="Create new password" class="form-control py-2 passwordfield text-sm font-Inter font-normal text-slate-600 block w-full py-3 px-4 pr-9 focus:!outline-none
 									focus:!ring-0 border !border-slate-400 rounded-md mt-2">
-                                    <span class="text-xl text-slate-400 absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" id="toggleIcon">
+                                    <span class="text-xl text-slate-400 absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer toggleIcon" id="toggleIcon1">
                                         <iconify-icon id="hidePassword" class="passwordeye" icon="heroicons-outline:eye-off"></iconify-icon>
                                         <iconify-icon class="hidden passwordeye" id="showPassword" icon="heroicons-outline:eye"></iconify-icon>
                                     </span>
@@ -65,10 +65,10 @@
                             </div>
                             <div class="fromGroup">
                                 <label class="block capitalize form-label">Confirm Password*</label>
-                                <div class="relative" id="passwordInputField">
+                                <div class="relative togglePasswordBox" id="passwordInputField2">
                                     <input type="password" name="confirm_new_password" placeholder="Re-Enter new password" class="form-control py-2 passwordfield text-sm font-Inter font-normal text-slate-600 block w-full py-3 px-4 pr-9 focus:!outline-none
 									focus:!ring-0 border !border-slate-400 rounded-md mt-2">
-                                    <span class="text-xl text-slate-400 absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" id="toggleIcon">
+                                    <span class="text-xl text-slate-400 absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer toggleIcon" id="toggleIcon2">
                                         <iconify-icon id="hidePassword" class="passwordeye" icon="heroicons-outline:eye-off"></iconify-icon>
                                         <iconify-icon class="hidden passwordeye" id="showPassword" icon="heroicons-outline:eye"></iconify-icon>
                                     </span>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <?php if(!empty($title)){ ?>
-        <title>Uncruise - Admin | <?php echo !empty($title) ? $title : null; ?></title>
+        <title><?php echo !empty($title) ? $title . ' | ' : null; ?>Uncruise - Admin</title>
     <?php }else{ ?>
         <title><?php echo "404 Not Found | Uncruise - Admin"; ?></title>
     <?php } ?>
@@ -32,7 +32,7 @@
                         class="app-header z-[999] ltr:ml-[248px] rtl:mr-[248px] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700">
                         <div class="flex justify-between items-center h-full">
                             <div class="flex items-center md:space-x-4 space-x-2 xl:space-x-0 rtl:space-x-reverse vertical-box">
-                                <a href="<?php echo !empty($title !== 'Dashboard') ? route('admin/dashboard') : 'javascript:void(0)'; ?>" class="mobile-logo xl:hidden inline-block">
+                                <a href="<?php echo (!empty($title) && $title == 'Dashboard') ? route('admin/dashboard') : 'javascript:void(0)'; ?>" class="mobile-logo xl:hidden inline-block">
                                     {{-- <img src="<?php //echo url('public/assets/images/logo/logo-c.svg'); ?>" class="black_logo" alt="logo">
                                     <img src="<?php //echo url('public/assets/images/logo/logo-c-white.svg'); ?>" class="white_logo" alt="logo"> --}}
                                     <img src="<?php echo !empty($admin_detail->favicon) ? url('public/assets/admin/adminimages/' . $admin_detail->favicon) : url('public/assets/images/logo/logo-c.svg'); ?>" alt="logo">
@@ -45,7 +45,7 @@
                             </div>
                             <!-- end vertcial -->
                             <div class="items-center space-x-4 rtl:space-x-reverse horizental-box">
-                                <a href="<?php echo !empty($title !== 'Dashboard') ? route('admin/dashboard') : 'javascript:void(0)'; ?>">
+                                <a href="<?php echo (!empty($title) && $title == 'Dashboard') ? route('admin/dashboard') : 'javascript:void(0)'; ?>">
                                     <span class="xl:inline-block hidden">
                                         {{-- <img src="<?php //echo url('public/assets/images/logo/logo-c.svg'); ?>" class="black_logo" alt="logo">
                                     <img src="<?php //echo url('public/assets/images/logo/logo-c-white.svg'); ?>" class="white_logo" alt="logo"> --}}

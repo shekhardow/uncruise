@@ -101,3 +101,7 @@
 .passwordeye {
     margin-top: 9px;
 }
+
+.centerImg img {
+    width: 200px;
+}

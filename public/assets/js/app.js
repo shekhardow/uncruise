@@ -271,16 +271,16 @@
   });
 
   // Password Show Hide Toggle
-  $("#toggleIcon").on("click", function () {
-    var x = $(".passwordfield").attr("type");
+  $(".toggleIcon").on("click", function () {
+    var x = $(this).parents('.togglePasswordBox').find(".passwordfield").attr("type");
     if (x === "password") {
-      $(".passwordfield").prop("type", "text");
-      $("#hidePassword").hide();
-      $("#showPassword").show();
+      $(this).parents('.togglePasswordBox').find(".passwordfield").prop("type", "text");
+      $(this).parents('.togglePasswordBox').find("#hidePassword").hide();
+      $(this).parents('.togglePasswordBox').find("#showPassword").show();
     } else {
-      $(".passwordfield").prop("type", "password");
-      $("#showPassword").hide();
-      $("#hidePassword").show();
+      $(this).parents('.togglePasswordBox').find(".passwordfield").prop("type", "password");
+      $(this).parents('.togglePasswordBox').find("#showPassword").hide();
+      $(this).parents('.togglePasswordBox').find("#hidePassword").show();
     }
   });
 
