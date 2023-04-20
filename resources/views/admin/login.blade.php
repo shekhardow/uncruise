@@ -115,14 +115,12 @@
         const closeIcon = document.querySelector('.close-icon');
         setTimeout(() => {
             alertBox.classList.add('hide');
-
             setTimeout(() => {
                 alertBox.remove();
             }, 500);
-        }, 2000);
+        }, 5000);
         closeIcon.addEventListener('click', () => {
             alertBox.classList.add('hide');
-
             setTimeout(() => {
                 alertBox.remove();
             }, 500);

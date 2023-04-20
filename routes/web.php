@@ -26,7 +26,7 @@ Route::post('admin/logout',[AdminController::class,'logout'])->name('admin/logou
 Route::get('admin/forgot-password',[AdminController::class,'forgot_password'])->name('admin/forgot_password');
 Route::post('send-password-reset-otp',[AdminController::class,'sendPasswordResetOtp'])->name('admin/sendPasswordResetOtp');
 Route::get('admin/reset-password',[AdminController::class,'reset_password'])->name('admin/reset_password');
-Route::post('admin/do-password-reset',[AdminController::class,'do_reset_password'])->name('admin/do_reset_password');
+Route::post('admin/do-reset-password',[AdminController::class,'doResetPassword'])->name('admin/doResetPassword');
 
 Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function () {
     Route::get('dashboard',[AdminController::class,'dashboard'])->name('admin/dashboard');

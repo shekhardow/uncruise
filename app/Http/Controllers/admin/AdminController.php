@@ -72,13 +72,13 @@ class AdminController extends Controller
         $data['title'] ='Dashboard';
         $data['total_users'] = count($this->user_model->getAllUsers());
         $data['total_surveys'] = count($this->survey_model->getAllSurveys());
-        return $this->loadview('dashboard',$data);
+        return $this->loadview('dashboard/dashboard',$data);
     }
 
     //------------------------- Profile ------------------------------
     public function profile(){
         $data['title'] = "Profile";
-        return $this->loadview('profile', $data);
+        return $this->loadview('dashboard/profile', $data);
     }
 
     public function updateProfile(Request $request) {
@@ -129,7 +129,7 @@ class AdminController extends Controller
     // -------------------- Change Password ---------------------------
     public function changePassword(){
         $data['title'] = "Change Password";
-        return $this->loadview('change_password', $data);
+        return $this->loadview('dashboard/change_password', $data);
     }
 
     public function updatePassword(Request $request){
@@ -418,29 +418,45 @@ class AdminController extends Controller
             // }else{
             //     return response()->json((['result' => -1, 'msg' => 'Failed to send otp!']));
             // }
-            return response()->json(['result' => 1, 'msg' => 'OTP has been sent to your email-id', 'url' => route('admin/reset_password')]);
+            return response()->json(['result' => 1, 'msg' => 'OTP has been sent to your email-id', 'url' => redirect()->route('admin/reset_password')->with('status', 'Check your Email for OTP')->getTargetUrl()]);
         }else{
             return response()->json((['result' => -1, 'msg' => 'Something went wrong!']));
         }
     }
     
     public function reset_password(){
-        $data['title'] = "Reset Password";        
+        $data['title'] = "Reset Password";     
         $data['admin_detail'] = $this->admin_model->getAdminDetails();
-        return view('admin/auth/reset_password',$data);
+        return view('admin/reset_password',$data);
     }
     
-    public function do_reset_password(Request $request){
-        $encrypted_id = $request->post('admin_id');
-        $newpassword=hash('sha256',$request->post('newpassword'));
-        $admin_id = decryptionID($encrypted_id);
-        $result = $this->admin_model->do_fogot_password($admin_id,$newpassword);
-        if (!empty($result)) {
-            return response()->json(['result' => 1, 'url' => route('admin/login'), 'msg' => 'Pasword Reset Successfully']);
-            return FALSE;
-        } else {
-            return response()->json(['result' => -1, 'msg' => 'New Password Cannot Be Same As Old Password.']);
-            return FALSE;
+    public function doResetPassword(Request $request){
+        $new_password = $request->post('new_password');
+        $confirm_new_password = $request->post('confirm_new_password');
+        $otp = $request->post('otp');
+        if(empty($new_password)){
+            return response()->json((['result' => -1, 'msg' => 'New password is required!']));
+        }
+        if(empty($confirm_new_password)){
+            return response()->json((['result' => -1, 'msg' => 'Please confirm new password!']));
+        }
+        $old_password = DB::table('admin')->select('password')->first();
+        if($old_password !== $new_password){
+            if($new_password == $confirm_new_password){
+                $update_data = [
+                    'password' => hash('sha256', $new_password),
+                ];
+                $changed = DB::table('admin')->where('id', 1)->where('otp', $otp)->update($update_data);
+                if($changed){
+                    return response()->json(['result' => 1, 'url' => route('admin/login'), 'msg' => 'Password changed successfully']);
+                }else{
+                    return response()->json(['result' => -1, 'msg' => 'Password change process failed!']);
+                }
+            }else{
+                return response()->json(['result' => -1, 'msg' => 'Please verify password with confirm password!']);
+            }
+        }else{
+            return response()->json(['result' => -1, 'msg' => "Old password and new password shouldn't be same!"]);
         }
     }
 
