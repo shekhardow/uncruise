@@ -54,12 +54,12 @@ class AdminModel extends Model
     }
 
     //--------------------------------------------------------Forgot Password------------------------------------------
-    public function do_reset_password($email,$password) {
-        return  DB::table('admin')->where('email',$email)->update(['admin_password' => $password]);
-    }
-    
     public function get_admin_by_email($email) {
-        return DB::table('admin')->where('admin_email',$email)->first();
+        return DB::table('admin')->where('email', $email)->first();
+    }
+
+    public function do_reset_password($email,$password) {
+        return  DB::table('admin')->where('email', $email)->update(['password' => $password]);
     }
     
     public function forgetPasswordLinkValidity($admin_id) {
@@ -78,6 +78,15 @@ class AdminModel extends Model
     
     public function getLinkValidity($admin_id){  
         return DB::table('forgot_password')->where('admin_id',$admin_id)->orderByDesc('forgot_password_id');    
+    }
+
+    public function sendOtp($otp, $admin_id){
+        DB::table('admin')->where('id', $admin_id)->update(['otp' => $otp]);
+        return true;
+    }
+
+    public function verifyOtp($otp, $admin_id){
+        return DB::table('admin')->where('id', $admin_id)->where('otp', $otp)->get()->first();
     }
     
     public function do_fogot_password($id,$newpassword) {

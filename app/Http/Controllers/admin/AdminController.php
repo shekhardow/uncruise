@@ -33,21 +33,6 @@ class AdminController extends Controller
         return view('admin/'.$view, $data);
     }
 
-    public function send_password_reset_mail($admin_detail){
-        $encrypted_id = substr(uniqid(), 0, 10).$admin_detail->id.substr(uniqid(), 0, 10);
-        $htmlContent = "<h3>Dear " . $admin_detail->email . ",</h3>";
-        $htmlContent .= "<div style='padding-top:8px;'>Please click the following link to reset your password.</div>";
-        $htmlContent .= "<a href='" . url('admin/reset-password/' . $encrypted_id) . "'> Click Here!!</a>";
-        $from = "admin@uncruise.com";
-        $to = $admin_detail->email;
-        $subject = "[UnCruise Admin] Forgot Password";
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $headers .= 'From: ' . $from . "\r\n";
-        @mail($to, $subject, $htmlContent, $headers);
-        return FALSE;
-    }
-
     // ------------------------- Login ------------------------------
     public function login(){
         $data['title'] ='Login';
@@ -58,11 +43,17 @@ class AdminController extends Controller
     public function check_login(Request $request){
         $form_data = $request->post();
         $admin_detail = $this->admin_model->getAdminDetails();
-        if($admin_detail->email != $form_data['email'] && $admin_detail->password != hash('sha256',$form_data['password'])){
+        if(empty($form_data['email'])){
+            return response()->json((['result' => -1, 'msg' => 'Email is required!']));
+        }
+        if(empty($form_data['password'])){
+            return response()->json((['result' => -1, 'msg' => 'Password is required!']));
+        }
+        if($admin_detail->email != $form_data['email'] && $admin_detail->password != hash('sha256', $form_data['password'])){
             return response()->json(['result' => -1, 'msg' => 'Please Enter Valid Email and Password']);
         }elseif($admin_detail->email != $form_data['email']){
             return response()->json(['result' => -1, 'msg' => 'Please Enter Valid Email']);
-        }elseif($admin_detail->password != hash('sha256',$form_data['password'])){
+        }elseif($admin_detail->password != hash('sha256', $form_data['password'])){
             return response()->json(['result' => -1, 'msg' => 'Please Enter Valid Password']);
         }else{
             $request->session()->put(['admin_id' => $admin_detail->id]);
@@ -398,40 +389,45 @@ class AdminController extends Controller
     }
 
     // ------------------------- Forgot Password ------------------------------
-    public function forget_password(){
+    public function forgot_password(){
         $data['title'] = "Forgot Password";
         $data['admin_detail'] = $this->admin_model->getAdminDetails();
         return view('admin/forgot_password', $data);
     }
 
-    public function forgot_password(Request $request){
+    public function sendPasswordResetOtp(Request $request){
         $email = $request->post('email');
+        if(empty($email)){
+            return response()->json((['result' => -1, 'msg' => 'Email is required!']));
+        }
         $admin_detail = $this->admin_model->get_admin_by_email($email);
-        if(!empty($admin_detail)){
-            $this->send_password_reset_mail($admin_detail);
-            $this->admin_model->forgetPasswordLinkValidity($admin_detail->id);
-            return response()->json(['result' => 1, 'msg' => 'Reset password link has been sent to your email-id', 'url' => route('admin/login')]);
-            return FALSE;
-        }else{
+        if(empty($admin_detail)){
             return response()->json((['result' => -1, 'msg' => 'Please enter valid email-id!']));
-            return FALSE;
+        }
+        $otp = generateOtp();
+        $result = $this->admin_model->sendOtp($otp, $admin_detail->id);
+        if(!empty($result)){
+            // Send otp mail
+            $maildata['name'] = $admin_detail->name;
+            $maildata['email'] = $admin_detail->email;
+            $maildata['address'] = $admin_detail->address;
+            $maildata['message'] = 'Your Otp for forget password is ' . $otp;
+            $sendmailotp = $this->sendpasswordResetMail($maildata);
+            // if($sendmailotp){
+            //     return response()->json(['result' => 1, 'msg' => 'OTP has been sent to your email-id', 'url' => route('admin/login')]);
+            // }else{
+            //     return response()->json((['result' => -1, 'msg' => 'Failed to send otp!']));
+            // }
+            return response()->json(['result' => 1, 'msg' => 'OTP has been sent to your email-id', 'url' => route('admin/reset_password')]);
+        }else{
+            return response()->json((['result' => -1, 'msg' => 'Something went wrong!']));
         }
     }
     
-    public function reset_password($admin_id){
-        $data['admin_detail'] = $this->admin_model->getAdminDetails();
+    public function reset_password(){
         $data['title'] = "Reset Password";        
-        $data['admin_id'] = $admin_id;
-        $id = substr($admin_id, 10);
-        $admin_id = substr($id, 0, -10);
-        $forget_password = $this->admin_model->getLinkValidity($admin_id);
-        if($forget_password['status'] == 1){
-            $data['forget_password'] = 'expired';
-        }else{
-            $data['forget_password'] = 'valid';
-        }
-        $this->admin_model->linkValidity($admin_id);
-        return view('admin/reset_password',$data);
+        $data['admin_detail'] = $this->admin_model->getAdminDetails();
+        return view('admin/auth/reset_password',$data);
     }
     
     public function do_reset_password(Request $request){
@@ -446,6 +442,18 @@ class AdminController extends Controller
             return response()->json(['result' => -1, 'msg' => 'New Password Cannot Be Same As Old Password.']);
             return FALSE;
         }
+    }
+
+    public function sendpasswordResetMail($data){
+        $htmlContent = view('admin/mail/send_otp_mail', $data)->render();
+        $from = "support@uncruise.com";
+        $to = $data['email'];
+        $subject = "[UnCruise Admin] Forgot Password";
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $headers .= 'From: ' . $from . "\r\n";
+        @mail($to, $subject, $htmlContent, $headers);
+        return false;
     }
 
 }

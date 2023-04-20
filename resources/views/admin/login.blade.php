@@ -76,8 +76,8 @@
 									focus:!ring-0 border !border-slate-400 rounded-md mt-2" placeholder="password">
 									<span
                                         class="text-xl text-slate-400 absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer" id="toggleIcon">
-                                        <iconify-icon id="hidePassword" icon="heroicons-outline:eye-off"></iconify-icon>
-                                        <iconify-icon class="hidden" id="showPassword" icon="heroicons-outline:eye"></iconify-icon>
+                                        <iconify-icon id="hidePassword" class="passwordeye" icon="heroicons-outline:eye-off"></iconify-icon>
+                                        <iconify-icon class="hidden passwordeye" id="showPassword" icon="heroicons-outline:eye"></iconify-icon>
                                     </span>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                                         Keep me signed in</span>
                                 </label>
                                 <a class="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium"
-                                    href="<?php echo route('admin/forget_password'); ?>">Forgot Password?
+                                    href="<?php echo route('admin/forgot_password'); ?>">Forgot Password?
                                 </a>
                             </div>
                             <button type="submit" class="btn btn-dark block w-full text-center">Sign in</button>

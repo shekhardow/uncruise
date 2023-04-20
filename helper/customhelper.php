@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Request;
         return DB::table('admin')->where('id', session()->get('admin_id'))->first();
     }
 
+    function generateOtp(){
+        // return rand(111111, 999999);
+        return 123456;
+    }
+
     // For Id Encryption 
     function encryptionID($id){
         $result = substr(uniqid(), 0, 10).$id.substr(uniqid(), 0, 10);

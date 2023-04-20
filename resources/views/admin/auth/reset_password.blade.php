@@ -19,7 +19,7 @@
 </head>
 
 <body class=" font-inter skin-default">
-    <div class="loginwrapper">
+    <div class="loginwrapper" id="">
         <div class="lg-inner-column">
             <div class="left-column relative z-[1] fixedImage">
                 <img src="<?php echo url('public/assets/images/auth/cruise-bg-min.webp'); ?>" alt="" class="h-full w-full object-contain">
@@ -33,22 +33,24 @@
                                 <img src="<?php //echo url('public/assets/images/logo/logo-white.svg'); ?>" alt="" class="mb-10 white_logo"> --}}
                                 <img src="<?php echo !empty($admin_detail->logo) ? url('public/assets/admin/adminimages/' . $admin_detail->logo) : url('public/assets/images/logo/logo.svg'); ?>" alt="">
                             </a>
-                            <h4 class="font-medium mb-4 signInHeading">Forgot Your Password?</h4>
-                            <div class="text-slate-500 dark:text-slate-400 text-base">
-                                Reset password.
-                            </div>
-                        </div>
-                        <div class="font-normal text-base text-slate-500 dark:text-slate-400 text-center px-2 bg-slate-100 dark:bg-slate-600 rounded py-3 mb-4 mt-10">
-                            Enter your Email to get OTP for Reset Password!
+                            <h4 class="font-medium mb-4 signInHeading">Reset password</h4>
                         </div>
                         {{-- START: Forgot Password Form --}}
                         <form class="space-y-4" id="common-form" action="<?php echo route('admin/sendPasswordResetOtp'); ?>" method="POST">
                             <div class="error_msg" id="error_msg"></div>
                             <div class="form-group">
-                                <label class="block capitalize form-label">email*</label>
-                                <input type="email" name="email" class="form-control py-2" placeholder="Enter your Email">
+                                <label class="block capitalize form-label">New Password*</label>
+                                <input type="password" name="email" class="form-control py-2" placeholder="Create new password">
                             </div>
-                            <button type="submit" class="btn btn-dark block w-full text-center">Send OTP</button>
+                            <div class="form-group">
+                                <label class="block capitalize form-label">Confirm Password*</label>
+                                <input type="password" name="email" class="form-control py-2" placeholder="Re-Enter new password">
+                            </div>                         
+                            <div class="form-group">
+                                <label class="block capitalize form-label">OTP*</label>
+                                <input type="number" name="email" class="form-control py-2" placeholder="Verify with OTP">
+                            </div>
+                            <button type="submit" class="btn btn-dark block w-full text-center">Send recovery email</button>
                         </form>
                         {{-- END: Forgot Password Form --}}
 

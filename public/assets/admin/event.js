@@ -23,15 +23,16 @@ var Events = function () {
 	this.commonForm = function () {
 		$(document).on("submit", "#common-form", function (e) {
 			e.preventDefault();
-			$(".loader").fadeIn("slow");
 			var url = $(this).attr("action");
 			var postdata = $(this).serialize();
 			$.post(url, postdata, function (out) {
-				$(".loader").fadeOut("slow");
-				$(".form-group > .text-danger").remove();
 				if (out.result === 0) {
+					// Remove existing error messages
+					$('.form-group').find('.text-red-500').empty();
+					// Append new error messages
 					for (var i in out.errors) {
-						$("#" + i).parents(".form-group").append('<span class="text-danger">' + out.errors[i] + "</span>");
+						$("#" + i).parents(".form-group").append('<span class="text-sm text-red-500">' + out.errors[i] + "</span>");
+						$("#" + i).focus();
 					}
 				}
 				if (out.result === 1) {
@@ -57,25 +58,6 @@ var Events = function () {
 					$(".error_msg").html(message + out.msg);
 					$(".error_msg").fadeOut(2000);
 				}
-				if (out.result === 2) {
-					toastr.remove();
-					toastr.success(out.msg);
-					window.setTimeout(function () {
-						window.location.href = out.url;
-					}, 1000);
-				}
-				if (out.result === -2) {
-					var message = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-					$(".error_msg")
-						.removeClass("alert-danger alert-success")
-						.addClass("alert alert-danger alert-dismissable")
-						.show();
-					$(".error_msg").html(message + out.msg);
-					$(".error_msg").fadeOut(2000);
-					window.setTimeout(function () {
-						window.location.href = out.url;
-					}, 1000);
-				}
 			});
 		});
 	};
@@ -91,7 +73,6 @@ var Events = function () {
 				processData: false,
 				contentType: false,
 				success: function (out) {
-					$(".form-group > .text-danger").remove();
 					if (out.result === 0) {
 						// Remove existing error messages
 						$('.form-group').find('.text-red-500').empty();
@@ -229,7 +210,8 @@ var Events = function () {
 					tinymce.init({
 						selector: 'textarea', // Replace this CSS selector to match the placeholder element for TinyMCE
 						plugins: 'code table lists',
-						toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+						toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table',
+						height: 300
 					});
 				}
 			})
