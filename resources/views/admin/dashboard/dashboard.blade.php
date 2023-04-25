@@ -24,16 +24,6 @@
                                         <span>Select Date</span>
                                     </span>
                                 </button> --}}
-                                @if (session('status'))
-                                <div class="alert py-[18px] px-6 font-normal font-Inter text-sm rounded-md bg-success-500 text-white dark:bg-success-500 dark:text-slate-300">
-                                    <div class="flex items-start space-x-3 rtl:space-x-reverse">
-                                        <div class="flex-1">
-                                            {{ session('status') }}
-                                            <iconify-icon class="close-icon" icon="line-md:close"></iconify-icon>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endif
                             </div>
                         </div>
                         <div class="space-y-8">
@@ -101,21 +91,4 @@
             </div>
         </div>
     </div>
-    
-    <script>
-        const alertBox = document.querySelector('.alert');
-        const closeIcon = document.querySelector('.close-icon');
-        setTimeout(() => {
-            alertBox.classList.add('hide');
-            setTimeout(() => {
-                alertBox.remove();
-            }, 500);
-        }, 5000);
-        closeIcon.addEventListener('click', () => {
-            alertBox.classList.add('hide');
-            setTimeout(() => {
-                alertBox.remove();
-            }, 500);
-        });
-    </script>
 @endsection

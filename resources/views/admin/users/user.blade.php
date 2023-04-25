@@ -68,7 +68,7 @@
                                                 <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
                                                     <?php $i=1; if(!empty($users)){ foreach($users as $user){ ?>
                                                     <tr>
-                                                        <td class="table-td newTdClass">
+                                                        <td class="table-td new-checkbox-class">
                                                             <div class="checkbox-area">
                                                                 <label class="inline-flex items-center cursor-pointer">
                                                                     <input type="checkbox" name="user_id" value="<?php echo $user->user_id; ?>" class="hidden users_id">

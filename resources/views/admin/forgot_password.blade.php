@@ -9,12 +9,13 @@
     <link rel="icon" type="image/png" href="<?php echo !empty($admin_detail->favicon) ? url('public/assets/admin/adminimages/' . $admin_detail->favicon) : url('public/assets/images/logo/favicon.svg'); ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="<?php echo url('public/assets/css/rt-plugins.css'); ?>">
-    <link href="https://unpkg.com/aos@2.3.0/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.0/dist/aos.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
     <link rel="stylesheet" href="<?php echo url('public/assets/css/app.css'); ?>">
     <link rel="stylesheet" href="<?php echo url('public/assets/css/style.css'); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
     <script src="<?php echo url('public/assets/js/settings.js'); ?>" sync></script>
 </head>
 
@@ -35,11 +36,8 @@
                             </a>
                             <h4 class="font-medium mb-4 signInHeading">Forgot Your Password?</h4>
                             <div class="text-slate-500 dark:text-slate-400 text-base">
-                                Reset password.
+                                Enter your Email to get OTP for Reset Password!
                             </div>
-                        </div>
-                        <div class="font-normal text-base text-slate-500 dark:text-slate-400 text-center px-2 bg-slate-100 dark:bg-slate-600 rounded py-3 mb-4 mt-10">
-                            Enter your Email to get OTP for Reset Password!
                         </div>
                         {{-- START: Forgot Password Form --}}
                         <form class="space-y-4" id="common-form" action="<?php echo route('admin/sendPasswordResetOtp'); ?>" method="POST">
@@ -48,7 +46,7 @@
                                 <label class="block capitalize form-label">email*</label>
                                 <input type="email" name="email" class="form-control py-2" placeholder="Enter your Email">
                             </div>
-                            <button type="submit" class="btn btn-dark block w-full text-center">Send OTP</button>
+                            <button type="submit" id="submit-btn" class="btn btn-dark block w-full text-center">Send OTP</button>
                         </form>
                         {{-- END: Forgot Password Form --}}
 
@@ -61,7 +59,7 @@
                         </div>
                     </div>
                     <div class="auth-footer text-center">
-                        Copyright © <span id="thisYear"></span> UnCruise Adventures, All rights Reserved
+                        <?php echo footerContent(); ?>
                     </div>
                 </div>
             </div>

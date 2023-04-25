@@ -5,17 +5,18 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\admin\UserModel;
-use Illuminate\Support\Facades\DB;
+use App\Models\admin\AdminModel;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Config;
 
 class UserController extends Controller
 {
     // DB Instance
     private $user_model;
+    private $admin_model;
 
     public function __construct(){
         $this->user_model = new UserModel();
+        $this->admin_model = new AdminModel();
     }
 
     private function loadview($view, $data = NULL){
@@ -54,6 +55,34 @@ class UserController extends Controller
         }else{
             return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
         }
+    }
+
+    // ------------------------- Send Notification To All ------------------------------
+    public function notification(Request $request){
+        $data['user_id'] = $request->post('user_id');
+        $htmlwrapper = view('admin/users/notification', $data)->render();
+        return response()->json(['result' => 1, 'htmlwrapper' => $htmlwrapper]);
+    }
+
+    public function sendNotification(Request $request){
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, $rules = [
+            'subject' => 'required',
+            'message' => 'required|min:6',
+        ], $messages = [
+            'required' => 'The :attribute field is required.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()]);
+            return false;
+        }
+        $user_id = $request->post('user_id');
+        $message = strip_tags($request->post('message'));
+        $subject = strip_tags($request->post('subject'));
+        foreach($user_id as $id){
+            $this->admin_model->sendNotification($id, $message, $subject);
+        }
+        return response()->json(['result' => 1, 'msg' => 'Notification sent successfully', 'url' => route('admin/users')]);
     }
 
 }

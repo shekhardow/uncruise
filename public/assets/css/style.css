@@ -32,7 +32,7 @@
 
 .userDetailsPage .form-group label:first-child {
     font-weight: 700;
-    color: #444444c2;
+    color: #222121c2;
 }
 
 .signInHeading {
@@ -62,7 +62,7 @@
     opacity: 0;
 }
 
-.newTdClass {
+.new-checkbox-class {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -103,5 +103,9 @@
 }
 
 .centerImg img {
-    width: 200px;
+    width: 150px;
+}
+
+.checkbox-area input[type="checkbox"]:not(:checked)+span {
+    border: 1px solid #718096; /* Set your desired border color and size */
 }

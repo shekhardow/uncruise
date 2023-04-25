@@ -37,14 +37,14 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::get('change-password',[AdminController::class,'changePassword'])->name('admin/changePassword');
     Route::post('update-password',[AdminController::class,'updatePassword'])->name('admin/updatePassword');
 
+    /* Users Start */
     Route::get('users',[UserController::class,'users'])->name('admin/users');
     Route::get('user-details/{user_id}',[UserController::class,'userDetails'])->name('admin/userDetails');
     Route::post('change-user-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_user_status'])->name('admin/change_user_status');
     
-    /* Notification Start */
-    Route::post('notification',[AdminController::class,'notification'])->name('admin/notification');
-    Route::post('send-notification',[AdminController::class,'sendNotification'])->name('admin/sendNotification');
-    /* Notification End */
+    Route::post('notification',[UserController::class,'notification'])->name('admin/notification');
+    Route::post('send-notification',[UserController::class,'sendNotification'])->name('admin/sendNotification');
+    /* Users End */
 
     Route::get('surveys',[SurveyController::class,'surveys'])->name('admin/surveys');
     Route::get('survey-details/{survey_id}',[SurveyController::class,'surveyDetails'])->name('admin/surveyDetails');

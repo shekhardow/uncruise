@@ -9,13 +9,13 @@
     <link rel="icon" type="image/png" href="<?php echo !empty($admin_detail->favicon) ? url('public/assets/admin/adminimages/' . $admin_detail->favicon) : url('public/assets/images/logo/favicon.svg'); ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="<?php echo url('public/assets/css/rt-plugins.css'); ?>">
-    <link href="https://unpkg.com/aos@2.3.0/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.0/dist/aos.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
     <link rel="stylesheet" href="<?php echo url('public/assets/css/app.css'); ?>">
     <link rel="stylesheet" href="<?php echo url('public/assets/css/style.css'); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
     <script src="<?php echo url('public/assets/js/settings.js'); ?>" sync></script>
 </head>
 
@@ -34,7 +34,7 @@
             </div>
             <div class="right-column relative">
                 <div class="inner-content h-full flex flex-col bg-white dark:bg-slate-800">
-                    <div class="top-right">                       
+                    <div class="top-right">
                         @if (session('status'))
                         <div class="alert py-[18px] px-6 font-normal font-Inter text-sm rounded-md bg-danger-500 text-white dark:bg-danger-500 dark:text-slate-300">
                             <div class="flex items-start space-x-3 rtl:space-x-reverse">
@@ -61,13 +61,13 @@
                         {{-- START: Login Form --}}
                         <form class="space-y-4" id="common-form" action="<?php echo route('admin/check_login'); ?>" method="POST">
 							<div class="error_msg" id="error_msg"></div>
-                            <div class="fromGroup">
+                            <div class="from-group">
                                 <label class="block capitalize form-label">email</label>
                                 <div class="relative">
                                     <input type="email" name="email" id="email" class="form-control py-2" placeholder="example@gmail.com">
                                 </div>
                             </div>
-                            <div class="fromGroup">
+                            <div class="from-group">
                                 <label class="block capitalize form-label">passwrod</label>
                                 <div class="relative togglePasswordBox" id="passwordInputField">
 									<input type="password" name="password" id="password" class="form-control py-2 passwordfield text-sm font-Inter font-normal text-slate-600 block w-full py-3 px-4 pr-9 focus:!outline-none
@@ -89,12 +89,12 @@
                                     href="<?php echo route('admin/forgot_password'); ?>">Forgot Password?
                                 </a>
                             </div>
-                            <button type="submit" class="btn btn-dark block w-full text-center">Sign in</button>
+                            <button type="submit" id="submit-btn" class="btn btn-dark block w-full text-center">Sign in</button>
                         </form>
                         {{-- END: Login Form --}}
                     </div>
                     <div class="auth-footer text-center">
-                        Copyright © <span id="thisYear"></span> UnCruise Adventures, All rights Reserved
+                        <?php echo footerContent(); ?>
                     </div>
                 </div>
             </div>
@@ -109,19 +109,25 @@
 	<script src="<?php echo url('public/assets/admin/event.js')?>"></script>
 
     <script>
-        const alertBox = document.querySelector('.alert');
-        const closeIcon = document.querySelector('.close-icon');
-        setTimeout(() => {
-            alertBox.classList.add('hide');
-            setTimeout(() => {
-                alertBox.remove();
-            }, 500);
-        }, 5000);
-        closeIcon.addEventListener('click', () => {
-            alertBox.classList.add('hide');
-            setTimeout(() => {
-                alertBox.remove();
-            }, 500);
+        document.addEventListener('DOMContentLoaded', () => {
+            const alertBox = document.querySelector('.alert');
+            const closeIcon = document.querySelector('.close-icon');
+            if (alertBox) {
+                setTimeout(() => {
+                    alertBox.classList.add('hide');
+                    setTimeout(() => {
+                        alertBox.remove();
+                    }, 500);
+                }, 5000);
+                if (closeIcon) {
+                    closeIcon.addEventListener('click', () => {
+                        alertBox.classList.add('hide');
+                        setTimeout(() => {
+                            alertBox.remove();
+                        }, 500);
+                    });
+                }
+            }
         });
     </script>
 </body>

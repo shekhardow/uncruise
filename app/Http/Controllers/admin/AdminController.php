@@ -34,6 +34,10 @@ class AdminController extends Controller
     }
 
     // ------------------------- Login ------------------------------
+    /**
+     * Login function
+     * @return void
+     */
     public function login(){
         $data['title'] ='Login';
         $data['admin_detail'] = $this->admin_model->getAdminDetails();
@@ -57,7 +61,7 @@ class AdminController extends Controller
             return response()->json(['result' => -1, 'msg' => 'Please Enter Valid Password']);
         }else{
             $request->session()->put(['admin_id' => $admin_detail->id]);
-            return response()->json(['result' => 1, 'msg' => 'Loading... Please Wait', 'url' => redirect()->route('admin/dashboard')->with('status', 'Logged in successfully')->getTargetUrl()]);
+            return response()->json(['result' => 1, 'msg' => 'Loading... Please Wait', 'url' => route('admin/dashboard')]);
         }
     }
 
@@ -269,7 +273,13 @@ class AdminController extends Controller
             return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }
     }
-    
+
+    /**
+     * Delete  function
+     *
+     * @param int $id
+     * @return void
+     */
     public function deleteFaq($id){
         $result = DB::table('faqs')->where('faq_id', $id)->delete();
         if($result){
@@ -359,34 +369,6 @@ class AdminController extends Controller
         }
     }
 
-    // ------------------------- Send Notification To All ------------------------------
-    public function notification(Request $request){
-        $data['user_id'] = $request->post('user_id');
-        $htmlwrapper = view('admin/users/notification', $data)->render();
-        return response()->json(['result' => 1, 'htmlwrapper' => $htmlwrapper]);
-    }
-
-    public function sendNotification(Request $request){
-        $requestData = $request->all();
-        $validator = Validator::make($requestData, $rules = [
-            'subject' => 'required',
-            'message' => 'required|min:6',
-        ], $messages = [
-            'required' => 'The :attribute field is required.',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['result' => 0, 'errors' => $validator->errors()]);
-            return false;
-        }
-        $user_id = $request->post('user_id');
-        $message = strip_tags($request->post('message'));
-        $subject = strip_tags($request->post('subject'));
-        foreach($user_id as $id){
-            $this->admin_model->sendNotification($id, $message, $subject);
-        }
-        return response()->json(['result' => 1, 'msg' => 'Notification sent successfully', 'url' => route('admin/users')]);
-    }
-
     // ------------------------- Forgot Password ------------------------------
     public function forgot_password(){
         $data['title'] = "Forgot Password";
@@ -410,14 +392,15 @@ class AdminController extends Controller
             $maildata['name'] = $admin_detail->name;
             $maildata['email'] = $admin_detail->email;
             $maildata['address'] = $admin_detail->address;
+            $maildata['support_email'] = $admin_detail->support_email;
             $maildata['message'] = 'Your Otp for forget password is ' . $otp;
             $sendmailotp = $this->sendpasswordResetMail($maildata);
             // if($sendmailotp){
-            //     return response()->json(['result' => 1, 'msg' => 'OTP has been sent to your email-id', 'url' => route('admin/login')]);
+            //     return response()->json(['result' => 1, 'msg' => 'OTP sent to your email-id', 'url' => redirect()->route('admin/reset_password')->with('status', 'Check your Email for OTP')->getTargetUrl()]);
             // }else{
             //     return response()->json((['result' => -1, 'msg' => 'Failed to send otp!']));
             // }
-            return response()->json(['result' => 1, 'msg' => 'OTP has been sent to your email-id', 'url' => redirect()->route('admin/reset_password')->with('status', 'Check your Email for OTP')->getTargetUrl()]);
+            return response()->json(['result' => 1, 'msg' => 'OTP sent to your email-id', 'url' => redirect()->route('admin/reset_password')->with('status', 'Check your Email for OTP')->getTargetUrl()]);
         }else{
             return response()->json((['result' => -1, 'msg' => 'Something went wrong!']));
         }
@@ -437,7 +420,7 @@ class AdminController extends Controller
             return response()->json((['result' => -1, 'msg' => 'New password is required!']));
         }
         if(empty($confirm_new_password)){
-            return response()->json((['result' => -1, 'msg' => 'Please confirm new password!']));
+            return response()->json((['result' => -1, 'msg' => 'Confirm password is required!']));
         }
         $old_password = DB::table('admin')->select('password')->first();
         if($old_password !== $new_password){
@@ -449,19 +432,19 @@ class AdminController extends Controller
                 if($changed){
                     return response()->json(['result' => 1, 'url' => route('admin/login'), 'msg' => 'Password changed successfully']);
                 }else{
-                    return response()->json(['result' => -1, 'msg' => 'Password change process failed!']);
+                    return response()->json(['result' => -1, 'msg' => "Couldn't change password!"]);
                 }
             }else{
-                return response()->json(['result' => -1, 'msg' => 'Please verify password with confirm password!']);
+                return response()->json(['result' => -1, 'msg' => 'Confirm with new password!']);
             }
         }else{
-            return response()->json(['result' => -1, 'msg' => "Old password and new password shouldn't be same!"]);
+            return response()->json(['result' => -1, 'msg' => "New password shouldn't be same as old!"]);
         }
     }
 
     public function sendpasswordResetMail($data){
         $htmlContent = view('admin/mail/send_otp_mail', $data)->render();
-        $from = "support@uncruise.com";
+        $from = $data['support_email'];
         $to = $data['email'];
         $subject = "[UnCruise Admin] Forgot Password";
         $headers = 'MIME-Version: 1.0' . "\r\n";

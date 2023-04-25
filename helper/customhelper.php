@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Request;
         return 123456;
     }
 
+    function footerContent(){
+        return "Copyright © ".date('Y')." UnCruise Adventures, All Rights Reserved";
+    }
+
     // For Id Encryption 
     function encryptionID($id){
         $result = substr(uniqid(), 0, 10).$id.substr(uniqid(), 0, 10);

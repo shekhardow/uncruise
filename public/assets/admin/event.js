@@ -23,6 +23,7 @@ var Events = function () {
 	this.commonForm = function () {
 		$(document).on("submit", "#common-form", function (e) {
 			e.preventDefault();
+			$("#submit-btn").attr("disabled", true);
 			var url = $(this).attr("action");
 			var postdata = $(this).serialize();
 			$.post(url, postdata, function (out) {
@@ -34,29 +35,19 @@ var Events = function () {
 						$("#" + i).parents(".form-group").append('<span class="text-sm text-red-500">' + out.errors[i] + "</span>");
 						$("#" + i).focus();
 					}
+					$("#submit-btn").attr("disabled", false);
+					return false;
 				}
 				if (out.result === 1) {
-					var message = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-					$(".error_msg")
-						.removeClass("alert-danger alert-danger")
-						.addClass("alert alert-success alert-dismissable")
-						.show();
-					$(".error_msg").html(message + out.msg);
-					$(".error_msg").fadeOut(1000);
-					if (out.url !== undefined) {
-						window.setTimeout(function () {
-							window.location.href = out.url;
-						}, 1000);
-					}
+					toastr.remove();
+					toastr.success(out.msg);
+					window.location.href = out.url;
 				}
 				if (out.result === -1) {
-					var message = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-					$(".error_msg")
-						.removeClass("alert-danger alert-success")
-						.addClass("alert alert-danger alert-dismissable")
-						.show();
-					$(".error_msg").html(message + out.msg);
-					$(".error_msg").fadeOut(2000);
+					toastr.remove();
+					toastr.error(out.msg);
+					$("#submit-btn").attr("disabled", false);
+					return false;
 				}
 			});
 		});
@@ -87,9 +78,7 @@ var Events = function () {
 					if (out.result === 1) {
 						toastr.remove();
 						toastr.success(out.msg);
-						window.setTimeout(function () {
-							window.location.href = out.url;
-						}, 1000);
+						window.location.href = out.url;
 					}
 					if (out.result === -1) {
 						toastr.remove();
