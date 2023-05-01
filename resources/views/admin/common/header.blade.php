@@ -82,7 +82,7 @@
                                             </div> --}}
                                         </a>
                                     </li>
-                                    
+
                                     <li class="menu-item-has-children">
                                         <a href="<?php echo route('admin/users'); ?>">
                                             <div class="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">

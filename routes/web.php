@@ -33,7 +33,7 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
 
     Route::get('profile',[AdminController::class,'profile'])->name('admin/profile');
     Route::post('update-profile',[AdminController::class,'updateProfile'])->name('admin/updateProfile');
-    
+
     Route::get('change-password',[AdminController::class,'changePassword'])->name('admin/changePassword');
     Route::post('update-password',[AdminController::class,'updatePassword'])->name('admin/updatePassword');
 
@@ -41,7 +41,7 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::get('users',[UserController::class,'users'])->name('admin/users');
     Route::get('user-details/{user_id}',[UserController::class,'userDetails'])->name('admin/userDetails');
     Route::post('change-user-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_user_status'])->name('admin/change_user_status');
-    
+
     Route::post('notification',[UserController::class,'notification'])->name('admin/notification');
     Route::post('send-notification',[UserController::class,'sendNotification'])->name('admin/sendNotification');
     /* Users End */
@@ -64,7 +64,7 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('delete-faq/{faq_id}',[AdminController::class,'deleteFaq'])->name('admin/deleteFaq');
     Route::post('change-faq-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_faq_status'])->name('admin/change_faq_status');
     /* FAQ End */
-    
+
     /* Social Start */
     Route::get('social',[AdminController::class,'social'])->name('admin/social');
     Route::post('update-social-link',[AdminController::class,'update_social_link'])->name('admin/update-social-link');
@@ -77,7 +77,8 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     /* Contact End */
 
     Route::fallback(function () {
-        return response()->view('errors.404', [], 404);
+        $data['admin_detail'] = admin_detail();
+        return response()->view('errors.admin-404', $data, 404);
     });
 
 });

@@ -109,3 +109,7 @@
 .checkbox-area input[type="checkbox"]:not(:checked)+span {
     border: 1px solid #718096; /* Set your desired border color and size */
 }
+
+#notFoundImage{
+    max-width: 25% !important;
+}

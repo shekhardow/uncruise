@@ -25,7 +25,7 @@
                             </ul>
                         </div>
                         <div class="flex sm:space-x-4 space-x-2 sm:justify-end items-center rtl:space-x-reverse">
-                            <button class="openModel btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal" 
+                            <button class="openModel btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal"
                             data-url="<?php echo route('admin/openFaqForm'); ?>" data-tippy-content="Add New FAQ" data-tippy-placement="left">
                                 <span class="flex items-center">
                                     <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light" icon="heroicons-outline:plus"></iconify-icon>
@@ -70,7 +70,7 @@
                                                             $change_to = "Active";
                                                         } ?>
                                                         <td class="table-td">
-                                                            <a href="<?php echo url('admin/change-faq-status/' . $faq->faq_id . '/' . $change_to . '/faqs/faq_id/status'); ?>" status-type="<?php echo $change_to; ?>" 
+                                                            <a href="<?php echo url('admin/change-faq-status/' . $faq->faq_id . '/' . $change_to . '/faqs/faq_id/status'); ?>" status-type="<?php echo $change_to; ?>"
                                                                 class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php echo $class; ?>"
                                                                 data-tippy-content="Change status to {{$change_to}}" data-tippy-placement="top">
                                                                 <?php echo $status ?>

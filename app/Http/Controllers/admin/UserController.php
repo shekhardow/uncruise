@@ -34,7 +34,7 @@ class UserController extends Controller
         $data['users'] = $this->user_model->getAllUsers();
         return $this->loadview('users/user', $data);
     }
-    
+
     public function userDetails($user_id) {
         $data['title'] ='User Details';
         $user_id = decryptionID($user_id);

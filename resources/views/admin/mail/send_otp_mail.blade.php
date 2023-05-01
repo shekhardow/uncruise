@@ -40,7 +40,7 @@
 <body>
     <div class="container">
         <p style="margin-top: 10px">Hi <?php echo !empty($name) ? $name : null; ?>,</p>
-        <p style="margin-top: 30px"><?php echo !empty($message) ? $message : null; ?></p> 
+        <p style="margin-top: 30px"><?php echo !empty($message) ? $message : null; ?></p>
         <p style="margin-top: 40px">
             Regards, <br />
             The UnCruise Adventures Team

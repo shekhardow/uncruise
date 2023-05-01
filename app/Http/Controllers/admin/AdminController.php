@@ -38,7 +38,10 @@ class AdminController extends Controller
      * Login function
      * @return void
      */
-    public function login(){
+    public function login(Request $request){
+        if($request->session()->has('admin_id')){
+            return back();
+        }
         $data['title'] ='Login';
         $data['admin_detail'] = $this->admin_model->getAdminDetails();
         return view('admin/login', $data);
@@ -52,6 +55,13 @@ class AdminController extends Controller
         }
         if(empty($form_data['password'])){
             return response()->json((['result' => -1, 'msg' => 'Password is required!']));
+        }
+        if($form_data['rememberPswd'] == 'on'){
+            setcookie('login_email', $form_data['email'], time()+60*60*24*100);
+            setcookie('login_password', $form_data['password'], time()+60*60*24*100);
+        }else{
+            setcookie('login_email', $form_data['email'], 100);
+            setcookie('login_password', $form_data['password'], 100);
         }
         if($admin_detail->email != $form_data['email'] && $admin_detail->password != hash('sha256', $form_data['password'])){
             return response()->json(['result' => -1, 'msg' => 'Please Enter Valid Email and Password']);
@@ -70,7 +80,7 @@ class AdminController extends Controller
         $request->session()->forget('admin_id');
         return response()->json(['result' => 1, 'url' => redirect()->route('admin/login')->with('status', 'Logged out!')->getTargetUrl()]);
     }
-    
+
     // ------------------------- Dashboard ------------------------------
     public function dashboard(){
         $data['title'] ='Dashboard';
@@ -405,13 +415,13 @@ class AdminController extends Controller
             return response()->json((['result' => -1, 'msg' => 'Something went wrong!']));
         }
     }
-    
+
     public function reset_password(){
-        $data['title'] = "Reset Password";     
+        $data['title'] = "Reset Password";
         $data['admin_detail'] = $this->admin_model->getAdminDetails();
         return view('admin/reset_password',$data);
     }
-    
+
     public function doResetPassword(Request $request){
         $new_password = $request->post('new_password');
         $confirm_new_password = $request->post('confirm_new_password');

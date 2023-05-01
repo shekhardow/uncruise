@@ -61,6 +61,15 @@
                         {{-- START: Login Form --}}
                         <form class="space-y-4" id="common-form" action="<?php echo route('admin/check_login'); ?>" method="POST">
 							<div class="error_msg" id="error_msg"></div>
+                            <?php if(isset($_COOKIE['login_email']) && isset($_COOKIE['login_password'])){
+                                $login_email = $_COOKIE['login_email'];
+                                $login_password  = $_COOKIE['login_password'];
+                                $is_remember = "checked='checked'";
+                            }else{
+                                $login_email = '';
+                                $login_password  = '';
+                                $is_remember = '';
+                            } ?>
                             <div class="from-group">
                                 <label class="block capitalize form-label">email</label>
                                 <div class="relative">
@@ -81,15 +90,22 @@
                             </div>
                             <div class="flex justify-between">
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" class="hiddens">
-                                    <span class="text-slate-500 dark:text-slate-400 text-sm leading-6 capitalize">
-                                        Keep me signed in</span>
+                                    <div class="checkbox-area">
+                                        <label class="inline-flex items-center cursor-pointer">
+                                            <input type="hidden" name="rememberPswd" value="no">
+                                            <input type="checkbox" id="rememberPswd" name="rememberPswd" <?php echo !empty($is_remember) ? $is_remember : null; ?> class="hidden check" >
+                                            <span class="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
+                                                <img src="<?php echo url('public/assets/images/icon/ck-white.svg'); ?>" alt="" class="h-[10px] w-[10px] block m-auto opacity-0"></span>
+                                            <span class="text-slate-500 dark:text-slate-400 text-sm leading-6"></span>
+                                        </label>
+                                    </div>
+                                    <span class="text-slate-500 dark:text-slate-400 text-sm leading-6 capitalize">Keep me signed in</span>
                                 </label>
-                                <a class="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium"
-                                    href="<?php echo route('admin/forgot_password'); ?>">Forgot Password?
+                                <a class="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium" href="<?php echo route('admin/forgot_password'); ?>">
+                                    Forgot Password?
                                 </a>
                             </div>
-                            <button type="submit" id="submit-btn" class="btn btn-dark block w-full text-center">Sign in</button>
+                            <button type="submit" class="btn btn-dark block w-full text-center">Sign in</button>
                         </form>
                         {{-- END: Login Form --}}
                     </div>

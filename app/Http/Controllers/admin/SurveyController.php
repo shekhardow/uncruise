@@ -33,7 +33,7 @@ class SurveyController extends Controller
         $data['surveys'] = $this->survey_model->getAllSurveys();
         return $this->loadview('surveys/survey', $data);
     }
-    
+
     public function surveyDetails($survey_id){
         $data['title'] ='Survey Details';
         $survey_id = decryptionID($survey_id);

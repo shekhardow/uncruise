@@ -61,7 +61,7 @@ class AdminModel extends Model
     public function do_reset_password($email,$password) {
         return  DB::table('admin')->where('email', $email)->update(['password' => $password]);
     }
-    
+
     public function forgetPasswordLinkValidity($admin_id) {
         $data = array(
             'admin_id'  => $admin_id,
@@ -71,13 +71,13 @@ class AdminModel extends Model
         $id = DB::getPdo()->lastInsertId();
         return DB::table('forgot_password')->where('forgot_password_id',$id)->get()->first();
     }
-    
+
     public function linkValidity($admin_id) {
         return DB::table('admin')->where('admin_id' ,$admin_id)->update(['status' => '1']);
     }
-    
-    public function getLinkValidity($admin_id){  
-        return DB::table('forgot_password')->where('admin_id',$admin_id)->orderByDesc('forgot_password_id');    
+
+    public function getLinkValidity($admin_id){
+        return DB::table('forgot_password')->where('admin_id',$admin_id)->orderByDesc('forgot_password_id');
     }
 
     public function sendOtp($otp, $admin_id){
@@ -88,7 +88,7 @@ class AdminModel extends Model
     public function verifyOtp($otp, $admin_id){
         return DB::table('admin')->where('id', $admin_id)->where('otp', $otp)->get()->first();
     }
-    
+
     public function do_fogot_password($id,$newpassword) {
         return DB::table('admin')->where('admin_id',$id)->update(['password' => $newpassword]);
     }
@@ -106,12 +106,12 @@ class AdminModel extends Model
         $affected_row = DB::table('contact_details')->update($data);
         return $affected_row;
     }
-    
+
     public function sendNotification($id, $message, $subject){
         $data = array(
             'user_id' => $id,
             'message' => $message,
-            'title' => $subject 
+            'title' => $subject
         );
         DB::table('notification')->insert($data);
         return true;
@@ -120,9 +120,9 @@ class AdminModel extends Model
     public function getAllFaqs(){
         return DB::table('faqs')->select('*')->where('status', '!=', 'Deleted')->orderBy('faq_id', 'desc')->get();
     }
-    
+
     public function getFaqById($faq_id){
         return DB::table('faqs')->where('faq_id', $faq_id)->get()->first();
     }
-    
+
 }
