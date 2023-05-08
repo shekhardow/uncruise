@@ -207,7 +207,7 @@ class AdminController extends Controller
         ];
         $key = $form_data['type'];
         $result = DB::table('settings')->where('type', $key)->update($update_data);
-        if($key == 'terms'){
+        if($key == 'Terms'){
             $url = route('admin/siteSetting',['key' => 'terms-condition']);
             $title = 'Terms & Condition';
         }elseif($key == 'Privacy'){

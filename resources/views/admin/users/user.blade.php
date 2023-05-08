@@ -1,12 +1,12 @@
 @extends('admin/layout')
 @section('content')
     <div class="content-wrapper transition-all duration-150 ltr:ml-[248px] rtl:mr-[248px]" id="content_wrapper">
-        <div class="page-content mainBodyNewPadding">
+        <div class="page-content mainBodyNewPadding mainBodyTopPadding">
             <div class="transition-all duration-150 container-fluid" id="page_layout">
                 <div id="content_layout">
 
                     {{-- START: Breadcrumb --}}
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="flex justify-between items-center mb-3">
                         <div class="mb-5 breadcrumb">
                             <ul class="m-0 p-0 list-none">
                                 <li class="inline-block relative top-[3px] text-base text-primary-500 font-Inter">

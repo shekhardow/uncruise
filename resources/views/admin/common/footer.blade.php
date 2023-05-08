@@ -68,9 +68,9 @@
 </main>
 <!-- scripts -->
 <script src="<?php echo url('public/assets/js/jquery-3.6.0.min.js'); ?>"></script>
-<script src="https://cdn.tiny.cloud/1/y6pj0v7um6np2c00xqdn7ciro6mknhd4wgz34ntahykr67cq/tinymce/6/tinymce.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/tinymce.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.5/sweetalert2.min.js"></script>
 <script src="<?php echo url('public/assets/js/rt-plugins.js'); ?>"></script>
 <script src="<?php echo url('public/assets/js/step-form.js'); ?>"></script>
 <script src="<?php echo url('public/assets/admin/event.js')?>"></script>
@@ -86,7 +86,18 @@
     tinymce.init({
         selector: 'textarea.tinymice', // Replace this CSS selector to match the placeholder element for TinyMCE
         plugins: 'code table lists',
-        toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+        toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table',
+        height: 300
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $(window).on("load", function(){
+            // setTimeout(function(){
+            $(".loderBody").fadeOut('slow');
+            // },500)
+        });
     });
 </script>
 

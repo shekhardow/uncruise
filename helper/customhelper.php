@@ -1,31 +1,41 @@
-<?php 
+<?php
 
-// Here You Can Write Your Custom Helper
+/**
+ * Here You Can Write Your Custom Helper
+ */
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
     function admin_detail(){
         return DB::table('admin')->where('id', session()->get('admin_id'))->first();
     }
 
     function generateOtp(){
-        // return rand(111111, 999999);
-        return 123456;
+        // return rand(1111, 9999);
+        return 1234;
+    }
+
+    // For generating random token
+    function genrateToken(){
+        $token = openssl_random_pseudo_bytes(16);
+        $token = bin2hex($token);
+        return $token;
     }
 
     function footerContent(){
         return "Copyright © ".date('Y')." UnCruise Adventures, All Rights Reserved";
     }
 
-    // For Id Encryption 
+    // For Id Encryption
     function encryptionID($id){
         $result = substr(uniqid(), 0, 10).$id.substr(uniqid(), 0, 10);
         return $result;
     }
 
-   // For Id Decryption 
+   // For Id Decryption
     function decryptionID($result_id){
         $id = substr($result_id, 10);
         $result_id = substr($id, 0, -10);
@@ -59,7 +69,7 @@ use Illuminate\Support\Facades\Request;
         return $affected_row;
     }
 
-    // Common function to Change The Multiple data 
+    // Common function to Change The Multiple data
     function change_status_version2($id,$status,$table,$wherecondition,$status_variable){
         $data = array(
             $status_variable    =>  $status,
@@ -108,9 +118,9 @@ use Illuminate\Support\Facades\Request;
 
     // Common function to Calculate Days b/w Two Date
     function dayBytwodates($date){
-        $date=strtotime($date);       
+        $date=strtotime($date);
         $date2=time();
-        $datediff=$date2-$date; 
+        $datediff=$date2-$date;
         $days=floor(($datediff)/(60*60*24));
         if($days<0){
             return 0;
@@ -127,7 +137,7 @@ use Illuminate\Support\Facades\Request;
         $total_minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
         return $total_minutes;
     }
-    
+
 
     function startWithNumber($str){
         return preg_match("~^(\d+)~", $str, $m)===1;
@@ -179,10 +189,10 @@ use Illuminate\Support\Facades\Request;
     }
 
     // Encryption String
-    function encryptionString($string){ 
+    function encryptionString($string){
         $ciphering = "AES-128-CTR";
         $iv_length = openssl_cipher_iv_length($ciphering);
-        $options   = 0;  
+        $options   = 0;
         $encryption_iv = '1234567891011121';
         $encryption_key = "DESIGNOWEB";
         $encryption = openssl_encrypt($string, $ciphering, $encryption_key, $options, $encryption_iv);
@@ -191,7 +201,7 @@ use Illuminate\Support\Facades\Request;
 
     // Decryption String
     function decryptionString($encryption){
-        $options   = 0;  
+        $options   = 0;
         $ciphering = "AES-128-CTR";
         $decryption_iv = '1234567891011121';
         $decryption_key = "DESIGNOWEB";
@@ -204,7 +214,7 @@ use Illuminate\Support\Facades\Request;
         $m = date("m"); $de= date("d"); $y= date("Y");
         $dateArray = array();
         for($i=0; $i<=$days-1; $i++){
-            $dateArray[] = date($format, mktime(0,0,0,$m,($de-$i),$y)); 
+            $dateArray[] = date($format, mktime(0,0,0,$m,($de-$i),$y));
         }
         return array_reverse($dateArray);
     }
@@ -221,7 +231,7 @@ use Illuminate\Support\Facades\Request;
 
     // Date Validation
     function validateDate($mystring){
-        $invaliddate = "1970"; 
+        $invaliddate = "1970";
         if(strpos($mystring, $invaliddate) !== false){
            return true;
         } else{
@@ -237,8 +247,8 @@ use Illuminate\Support\Facades\Request;
     function singleAwsUpload($request, $file_name, $path){
         if ($request->hasfile($file_name)) {
             $imageName = time() . '.' . $request->file($file_name)->extension();
-            $path = Storage::disk('s3')->put('images', $request->file($file_name));
-            $path = Storage::disk('s3')->url($path);
+            $path = \Storage::disk('s3')->put('images', $request->file($file_name));
+            $path = \Storage::disk('s3')->url($path);
             if (!empty($path)) {
                 return $path;
             } else {
@@ -302,7 +312,29 @@ use Illuminate\Support\Facades\Request;
         $diff = $today->diff(new DateTime($birthdate));
         return $diff->y;
     }
-      
-    
+
+    function singleCloudinaryUpload($request, $file_name){
+        if ($request->hasfile($file_name)) {
+            $fileName = $request->file($file_name);
+            $uploadedFileUrl = Cloudinary::upload($fileName->getRealPath())->getSecurePath();
+            return $uploadedFileUrl;
+        }else{
+            return false;
+        }
+    }
+
+    function multipleCloudinaryUploads($request, $file_name){
+        if ($request->hasFile($file_name)) {
+            $uploadedFileUrl = []; // initialize the variable here
+            foreach ($request->file($file_name) as $file){
+                $uploadedFileUrl[] = Cloudinary::upload($file->getRealPath(), array("quality" => "auto"))->getSecurePath();
+            }
+            return $uploadedFileUrl;
+        } else {
+            return false;
+        }
+    }
+
+
 
 ?>

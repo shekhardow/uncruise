@@ -176,7 +176,7 @@ var Events = function () {
 			}
 		});
 	}
-	$(document).on('click', '#closeModal', function () {
+	$(document).on('click', '.closeModal', function () {
 		reloadDataTable();
 	});
 
@@ -374,43 +374,24 @@ var Events = function () {
 	}
 
 	this.deleteImages = function () {
-		$(document).on('click', '.delete-image', function (e) {
-			e.preventDefault();
-			$(".loader-admin").fadeIn("slow");
-			var url = $(this).attr('href');
-			$.post(url, function (out) {
-				$(".loader-admin").fadeOut("slow");
-				if (out.result === 1) {
-					$('#form-page').html(out.form);
-					//-------------- Summer Note Start -------------------
-					$('.summernote').summernote({
-						tabsize: 2,
-						height: 300
-					});
-					//-------------- Summer Note End -------------------
-
-					//-------------- Date Picker Start -------------------
-					var t;
-					t = mUtil.isRTL() ? {
-						leftArrow: '<i class="la la-angle-right"></i>',
-						rightArrow: '<i class="la la-angle-left"></i>'
-					} : {
-						leftArrow: '<i class="la la-angle-left"></i>',
-						rightArrow: '<i class="la la-angle-right"></i>'
-					};
-					$(".datepicker").datepicker({
-						rtl: mUtil.isRTL(),
-						todayBtn: "linked",
-						clearBtn: !0,
-						todayHighlight: !0,
-						templates: t
-					})
-					//-------------- Date Picker End -------------------
-				}
-			});
-
-		});
-	};
+        $(document).on('click', '.delete-image', function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            $.post(url, function (out) {
+                if (out.result === 1) {
+                    toastr.remove();
+                    toastr.success(out.msg);
+                    $(this).prev('img').remove(); // remove the image element
+                    $(this).remove(); // remove the delete button element
+                }
+                if (out.result === -1) {
+                    toastr.remove();
+                    toastr.error(out.msg);
+                    return false;
+                }
+            }.bind(this));
+        });
+    };
 
 	this.previewImage = function () {
 		$(document).on('change', '.imagepreview', function (e) {

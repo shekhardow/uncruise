@@ -5,6 +5,7 @@ use App\Http\Middleware\AdminAuth;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\SurveyController;
+use App\Http\Controllers\admin\DestinationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +47,18 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('send-notification',[UserController::class,'sendNotification'])->name('admin/sendNotification');
     /* Users End */
 
+    /* Surveys Start */
     Route::get('surveys',[SurveyController::class,'surveys'])->name('admin/surveys');
     Route::get('survey-details/{survey_id}',[SurveyController::class,'surveyDetails'])->name('admin/surveyDetails');
+    /* Surveys End */
+
+    /* Destinations Start */
+    Route::get('destinations',[DestinationController::class,'destinations'])->name('admin/destinations');
+    Route::any('destination-form/{id?}',[DestinationController::class,'destinationForm'])->name('admin/destinationForm');
+    Route::post('add-destination',[DestinationController::class,'addDestination'])->name('admin/addDestination');
+    Route::post('update-destination/{id}',[DestinationController::class,'updateDestination'])->name('admin/updateDestination');
+    Route::post('delete-destination/{id}',[DestinationController::class,'deleteDestination'])->name('admin/deleteDestination');
+    /* Destinations End */
 
     /* Site Setting Start */
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');

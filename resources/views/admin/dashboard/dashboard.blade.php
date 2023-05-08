@@ -7,8 +7,7 @@
 
                     <div>
                         <div class="flex justify-between flex-wrap items-center mb-6">
-                            <h4
-                                class="font-medium lg:text-2xl text-xl capitalize text-slate-900 inline-block ltr:pr-4 rtl:pl-4 mb-4 sm:mb-0 flex space-x-3 rtl:space-x-reverse">
+                            <h4 class="font-medium lg:text-2xl text-xl capitalize text-slate-900 inline-block ltr:pr-4 rtl:pl-4 mb-4 sm:mb-0 flex space-x-3 rtl:space-x-reverse">
                                 Dashboard
                             </h4>
                             <div class="flex sm:space-x-4 space-x-2 sm:justify-end items-center rtl:space-x-reverse">
@@ -26,62 +25,90 @@
                                 </button> --}}
                             </div>
                         </div>
-                        <div class="space-y-8">
-                            <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5">
-                                <div class="bg-no-repeat bg-cover bg-center p-5 rounded-[6px] relative"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-2.png'); ?>)">
-                                    <div class="max-w-[180px]">
-                                        <h4 class="text-xl font-medium text-white mb-2">
-                                            <span class="block font-normal">
-                                                <?php
-                                                date_default_timezone_set('Asia/Kolkata');
-                                                $h = date('G');
-                                                if ($h >= 5 && $h <= 11) {
-                                                    echo 'Good Morning,';
-                                                } elseif ($h >= 12 && $h <= 15) {
-                                                    echo 'Good Afternoon,';
-                                                } else {
-                                                    echo 'Good Evening,';
-                                                }
-                                                ?></span>
-                                            <span class="block"><?php echo !empty($admin_detail->name) ? $admin_detail->name : 'User'; ?></span>
-                                        </h4>
-                                        <p class="text-sm text-white font-normal">
-                                            Welcome to admin panel
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-6.png'); ?>)">
-                                    <div class="flex-1">
-                                        <div class="max-w-[180px]">
-                                            <h4 class="text-2xl font-medium text-white mb-2">
-                                                <span class="block text-sm">Total Users,</span>
-                                                <span class="block">
-                                                    <?php echo !empty($total_users) ? number_format($total_users) : '0'; ?>
-                                                </span>
-                                            </h4>
+
+                        <div class="space-y-5">
+                            <div class="card p-6">
+                                <div class="grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5 place-content-center">
+
+                                    <div class="xl:col-span-8 col-span-12">
+                                        <div class="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-3">
+
+                                            <div class="rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50">
+                                                <div class="flex space-x-4 h-full items-center rtl:space-x-reverse">
+                                                    <div class="flex-none">
+                                                        <div class="h-20 w-20 rounded-full">
+                                                            <img src="<?php echo !empty($admin_detail->profile_pic) ? url('public/assets/admin/adminimages/' . $admin_detail->profile_pic) : url('public/assets/images/all-img/main-user.png'); ?>" alt="" class="w-full h-full profile-image">
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-1">
+                                                        <h4 class="text-xl font-medium mb-2">
+                                                            <span class="block font-light">
+                                                                <?php
+                                                                date_default_timezone_set('Asia/Kolkata');
+                                                                $h = date('G');
+                                                                if ($h >= 5 && $h <= 11) {
+                                                                    echo 'Good Morning,';
+                                                                } elseif ($h >= 12 && $h <= 15) {
+                                                                    echo 'Good Afternoon,';
+                                                                } else {
+                                                                    echo 'Good Evening,';
+                                                                }
+                                                                ?>
+                                                            </span>
+                                                            <span class="block"><?php echo !empty($admin_detail->name) ? $admin_detail->name : 'User'; ?></span>
+                                                        </h4>
+                                                        <p class="text-sm dark:text-slate-300">Welcome to Admin Panel</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <a href="<?php echo route('admin/users'); ?>">
+                                                <div class=" bg-info-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
+                                                    <div class="text-info-500 mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
+                                                        {{-- <iconify-icon icon="heroicons-outline:menu-alt-1"></iconify-icon> --}}
+                                                        <iconify-icon icon="heroicons-outline:user-group"></iconify-icon>
+                                                    </div>
+                                                    <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">
+                                                        Total Users
+                                                    </span>
+                                                    <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
+                                                        <?php echo !empty($total_users) ? number_format($total_users) : '0'; ?>
+                                                    </span>
+                                                </div>
+                                            </a>
+
+                                            <a href="<?php echo route('admin/surveys'); ?>">
+                                                <div class=" bg-warning-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
+                                                    <div class="text-warning-500 mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
+                                                        {{-- <iconify-icon icon="heroicons-outline:chart-pie"></iconify-icon> --}}
+                                                        <iconify-icon icon="ri:survey-line"></iconify-icon>
+                                                    </div>
+                                                    <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">
+                                                        Total Surveys
+                                                    </span>
+                                                    <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
+                                                        <?php echo !empty($total_surveys) ? number_format($total_surveys) : '0'; ?>
+                                                    </span>
+                                                </div>
+                                            </a>
+
+                                            <a href="<?php echo route('admin/destinations'); ?>">
+                                                <div class=" bg-primary-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
+                                                    <div class="text-primary-500 mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
+                                                        <iconify-icon icon="material-symbols:location-on-outline"></iconify-icon>
+                                                    </div>
+                                                    <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">
+                                                        Total Destinations
+                                                    </span>
+                                                    <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
+                                                        <?php echo !empty($blockedusers) ? number_format($blockedusers) : '0'; ?>
+                                                    </span>
+                                                </div>
+                                            </a>
+
                                         </div>
                                     </div>
-                                    <div class="flex-none">
-                                        <a href="<?php echo route('admin/users'); ?>" class="btn-light bg-white btn-sm btn">View details</a>
-                                    </div>
-                                </div>
-                                <div class="bg-no-repeat bg-cover bg-center px-5 py-8 rounded-[6px] relative flex items-center"
-                                    style="background-image: url(<?php echo url('public/assets/images/all-img/widget-bg-7.png'); ?>)">
-                                    <div class="flex-1">
-                                        <div class="max-w-[180px]">
-                                            <h4 class="text-2xl font-medium text-slate-900 mb-2">
-                                                <span class="block text-sm dark:text-slate-800">Total Surveys,</span>
-                                                <span class="block dark:text-slate-800">
-                                                    <?php echo !empty($total_surveys) ? number_format($total_surveys) : '0'; ?>
-                                                </span>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="flex-none">
-                                        <a href="<?php echo route('admin/surveys'); ?>" class="btn-light bg-white btn-sm btn">View details</a>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

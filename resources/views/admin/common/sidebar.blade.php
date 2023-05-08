@@ -54,8 +54,32 @@
             <li>
                 <a href="<?php echo route('admin/surveys'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Surveys') ? 'active' : ''; ?>">
                     <span class="flex items-center">
-                        <iconify-icon class="nav-icon" icon="ri:survey-fill"></iconify-icon>
+                        <iconify-icon class="nav-icon" icon="ri:survey-line"></iconify-icon>
                         <span>Surveys</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="javasript:void(0)" class="navItem ">
+                    <span class="flex items-center">
+                        <iconify-icon class="nav-icon" icon="icon-park-outline:cruise"></iconify-icon>
+                        <span>Cruise</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo route('admin/destinations'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Destinations' || $title == 'Add Destination' || $title == 'Edit Destination') ? 'active' : ''; ?>">
+                    <span class="flex items-center">
+                        <iconify-icon class="nav-icon" icon="material-symbols:location-on-outline"></iconify-icon>
+                        <span>Destinations</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="javasript:void(0)" class="navItem ">
+                    <span class="flex items-center">
+                        <iconify-icon class="nav-icon" icon="solar:emoji-funny-square-broken"></iconify-icon>
+                        <span>Adventures</span>
                     </span>
                 </a>
             </li>

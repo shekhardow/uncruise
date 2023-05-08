@@ -18,11 +18,14 @@
     <link rel="stylesheet" href="<?php echo url('public/assets/css/app.css'); ?>">
     <link rel="stylesheet" href="<?php echo url('public/assets/css/style.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.5/sweetalert2.min.css" />
     <script src="<?php echo url('public/assets/js/settings.js'); ?>" sync></script>
 </head>
 
-<body class=" font-inter dashcode-app" id="body_class">
+<body class="font-inter dashcode-app" id="body_class">
+    <div class="loderBody">
+        <div class="ring">Loading<span class="loaderspan"></span></div>
+    </div>
     <main class="app-wrapper">
         <div class="flex flex-col justify-between min-h-screen">
             <div>
