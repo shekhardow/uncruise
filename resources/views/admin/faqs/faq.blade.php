@@ -70,7 +70,7 @@
                                                             $change_to = "Active";
                                                         } ?>
                                                         <td class="table-td">
-                                                            <a href="<?php echo url('admin/change-faq-status/' . $faq->faq_id . '/' . $change_to . '/faqs/faq_id/status'); ?>" status-type="<?php echo $change_to; ?>"
+                                                            <a href="<?php echo url('admin/change-status/' . $faq->faq_id . '/' . $change_to . '/faqs/faq_id/status'); ?>" status-type="<?php echo $change_to; ?>"
                                                                 class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php echo $class; ?>"
                                                                 data-tippy-content="Change status to {{$change_to}}" data-tippy-placement="top">
                                                                 <?php echo $status ?>
@@ -81,7 +81,7 @@
                                                                 <a class="action-btn openModel" data-url="<?php echo route('admin/openFaqForm'); ?>" data-id="<?php echo $faq->faq_id; ?>" href="javascript:void(0)" data-tippy-content="Edit FAQ" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:pencil-square"></iconify-icon>
                                                                 </a>
-                                                                <a href="<?php echo url('admin/change-faq-status/'.$faq->faq_id.'/Deleted/faqs/faq_id/status'); ?>" class="status action-btn" data-tippy-content="Delete FAQ" data-tippy-placement="top">
+                                                                <a href="<?php echo url('admin/change-status/'.$faq->faq_id.'/Deleted/faqs/faq_id/status'); ?>" class="status action-btn" data-tippy-content="Delete FAQ" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:trash"></iconify-icon>
                                                                 </a>
                                                             </div>

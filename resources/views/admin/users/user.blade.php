@@ -101,7 +101,7 @@
                                                             $change_to = "Active";
                                                         } ?>
                                                         <td class="table-td">
-                                                            <a href="<?php echo url('admin/change-faq-status/' . $user->user_id . '/' . $change_to . '/users/user_id/status'); ?>" status-type="<?php echo $change_to; ?>"
+                                                            <a href="<?php echo url('admin/change-status/' . $user->user_id . '/' . $change_to . '/users/user_id/status'); ?>" status-type="<?php echo $change_to; ?>"
                                                                 class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php echo $class; ?>"
                                                                 data-tippy-content="Change status to {{$change_to}}" data-tippy-placement="top">
                                                                 <?php echo $status ?>

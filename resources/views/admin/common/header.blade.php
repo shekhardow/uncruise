@@ -23,9 +23,10 @@
 </head>
 
 <body class="font-inter dashcode-app" id="body_class">
-    <div class="loderBody">
+    <div class="loader-admin"></div>
+    {{-- <div class="loderBody">
         <div class="ring">Loading<span class="loaderspan"></span></div>
-    </div>
+    </div> --}}
     <main class="app-wrapper">
         <div class="flex flex-col justify-between min-h-screen">
             <div>

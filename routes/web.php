@@ -5,7 +5,9 @@ use App\Http\Middleware\AdminAuth;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\SurveyController;
+use App\Http\Controllers\admin\CruiseController;
 use App\Http\Controllers\admin\DestinationController;
+use App\Http\Controllers\admin\AdventureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,10 +40,11 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::get('change-password',[AdminController::class,'changePassword'])->name('admin/changePassword');
     Route::post('update-password',[AdminController::class,'updatePassword'])->name('admin/updatePassword');
 
+    Route::post('change-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_status'])->name('admin/change_status');
+
     /* Users Start */
     Route::get('users',[UserController::class,'users'])->name('admin/users');
     Route::get('user-details/{user_id}',[UserController::class,'userDetails'])->name('admin/userDetails');
-    Route::post('change-user-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_user_status'])->name('admin/change_user_status');
 
     Route::post('notification',[UserController::class,'notification'])->name('admin/notification');
     Route::post('send-notification',[UserController::class,'sendNotification'])->name('admin/sendNotification');
@@ -52,6 +55,14 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::get('survey-details/{survey_id}',[SurveyController::class,'surveyDetails'])->name('admin/surveyDetails');
     /* Surveys End */
 
+    /* Cruise Start */
+    Route::get('cruise',[CruiseController::class,'cruise'])->name('admin/cruise');
+    Route::any('cruise-form/{id?}',[CruiseController::class,'cruiseForm'])->name('admin/cruiseForm');
+    Route::post('add-cruise',[CruiseController::class,'addCruise'])->name('admin/addCruise');
+    Route::post('update-cruise/{id}',[CruiseController::class,'updateCruise'])->name('admin/updateCruise');
+    Route::post('delete-cruise/{id}',[CruiseController::class,'deleteCruise'])->name('admin/deleteCruise');
+    /* Cruise End */
+
     /* Destinations Start */
     Route::get('destinations',[DestinationController::class,'destinations'])->name('admin/destinations');
     Route::any('destination-form/{id?}',[DestinationController::class,'destinationForm'])->name('admin/destinationForm');
@@ -59,6 +70,14 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('update-destination/{id}',[DestinationController::class,'updateDestination'])->name('admin/updateDestination');
     Route::post('delete-destination/{id}',[DestinationController::class,'deleteDestination'])->name('admin/deleteDestination');
     /* Destinations End */
+
+    /* Adventure Start */
+    Route::get('adventures',[AdventureController::class,'adventures'])->name('admin/adventures');
+    Route::any('adventure-form/{id?}',[AdventureController::class,'adventureForm'])->name('admin/adventureForm');
+    Route::post('add-adventure',[AdventureController::class,'addAdventure'])->name('admin/addAdventure');
+    Route::post('update-adventure/{id}',[AdventureController::class,'updateAdventure'])->name('admin/updateAdventure');
+    Route::post('delete-adventure/{id}',[AdventureController::class,'deleteAdventure'])->name('admin/deleteAdventure');
+    /* Adventure End */
 
     /* Site Setting Start */
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');
@@ -73,7 +92,6 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('add-faq',[AdminController::class,'addFaq'])->name('admin/addFaq');
     Route::post('update-faq/{faq_id}',[AdminController::class,'updateFaq'])->name('admin/updateFaq');
     Route::post('delete-faq/{faq_id}',[AdminController::class,'deleteFaq'])->name('admin/deleteFaq');
-    Route::post('change-faq-status/{id}/{status}/{table}/{wherecol}/{statusvariable}',[AdminController::class,'change_faq_status'])->name('admin/change_faq_status');
     /* FAQ End */
 
     /* Social Start */

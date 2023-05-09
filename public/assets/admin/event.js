@@ -57,6 +57,7 @@ var Events = function () {
 		$(document).on("submit", "#submit-form", function (e) {
 			e.preventDefault();
 			$("#submit-btn").attr("disabled", true);
+            $(".loader-admin").fadeIn("slow");
 			$.ajax({
 				url: $(this).attr("action"),
 				type: "post",
@@ -64,6 +65,7 @@ var Events = function () {
 				processData: false,
 				contentType: false,
 				success: function (out) {
+                    $(".loader-admin").fadeOut("slow");
 					if (out.result === 0) {
 						// Remove existing error messages
 						$('.form-group').find('.text-red-500').empty();

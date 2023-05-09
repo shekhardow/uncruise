@@ -51,16 +51,16 @@
                     </span>
                 </a>
             </li>
-            <li>
-                <a href="<?php echo route('admin/surveys'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Surveys') ? 'active' : ''; ?>">
+            {{-- <li>
+                <a href="<?php //echo route('admin/surveys'); ?>" class="navItem <?php //echo (!empty($title) && $title == 'Surveys') ? 'active' : ''; ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="ri:survey-line"></iconify-icon>
                         <span>Surveys</span>
                     </span>
                 </a>
-            </li>
+            </li> --}}
             <li>
-                <a href="javasript:void(0)" class="navItem ">
+                <a href="<?php echo route('admin/cruise'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Cruise' || $title == 'Add Cruise' || $title == 'Edit Cruise') ? 'active' : ''; ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="icon-park-outline:cruise"></iconify-icon>
                         <span>Cruise</span>
@@ -76,7 +76,7 @@
                 </a>
             </li>
             <li>
-                <a href="javasript:void(0)" class="navItem ">
+                <a href="<?php echo route('admin/adventures'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Adventures' || $title == 'Add Adventure' || $title == 'Edit Adventure') ? 'active' : ''; ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="solar:emoji-funny-square-broken"></iconify-icon>
                         <span>Adventures</span>

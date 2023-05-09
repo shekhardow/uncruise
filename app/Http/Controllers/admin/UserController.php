@@ -42,21 +42,6 @@ class UserController extends Controller
         return $this->loadview('users/user_details', $data);
     }
 
-    public function change_user_status(Request $request, $id, $status, $table, $wherecol, $status_variable){
-        $delete_user = change_status($id, $status, $table, $wherecol, $status_variable, '=');
-        $status_type = $request->post('status_type');
-        if($status_type != null){
-            $message = 'Status changed successfully';
-        }else{
-            $message = 'User deleted successfully';
-        }
-        if(!empty($delete_user)){
-            return response()->json(['result' => 1, 'msg' => $message]);
-        }else{
-            return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
-        }
-    }
-
     // ------------------------- Send Notification To All ------------------------------
     public function notification(Request $request){
         $data['user_id'] = $request->post('user_id');

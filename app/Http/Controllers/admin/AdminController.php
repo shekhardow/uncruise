@@ -34,10 +34,6 @@ class AdminController extends Controller
     }
 
     // ------------------------- Login ------------------------------
-    /**
-     * Login function
-     * @return void
-     */
     public function login(Request $request){
         if($request->session()->has('admin_id')){
             return back();
@@ -284,33 +280,12 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     * Delete  function
-     *
-     * @param int $id
-     * @return void
-     */
     public function deleteFaq($id){
         $result = DB::table('faqs')->where('faq_id', $id)->delete();
         if($result){
             return response()->json(['result' => 1, 'url' => route('admin/faqs'), 'msg' => 'Faq deleted successfully']);
         }else{
             return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
-        }
-    }
-
-    public function change_faq_status(Request $request, $id, $status, $table, $wherecol, $status_variable){
-        $delete_faq = change_status($id, $status, $table, $wherecol, $status_variable, '=');
-        $status_type = $request->post('status_type');
-        if($status_type != null){
-            $message = 'Status changed successfully';
-        }else{
-            $message = 'FAQ deleted successfully';
-        }
-        if(!empty($delete_faq)){
-            return response()->json(['result' => 1, 'msg' => $message]);
-        }else{
-            return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
         }
     }
 
@@ -462,6 +437,24 @@ class AdminController extends Controller
         $headers .= 'From: ' . $from . "\r\n";
         @mail($to, $subject, $htmlContent, $headers);
         return false;
+    }
+
+    public function change_status(Request $request, $id, $status, $table, $wherecol, $status_variable){
+        $delete_faq = change_status($id, $status, $table, $wherecol, $status_variable, '=');
+        if(substr($table, -1) === "s"){
+            $table = substr($table, 0, -1);
+        }
+        $status_type = $request->post('status_type');
+        if($status_type != null){
+            $message = 'Status changed successfully';
+        }else{
+            $message = ucfirst($table).' deleted successfully';
+        }
+        if(!empty($delete_faq)){
+            return response()->json(['result' => 1, 'msg' => $message]);
+        }else{
+            return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
+        }
     }
 
 }
