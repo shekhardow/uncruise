@@ -84,6 +84,14 @@
                 </a>
             </li>
             <li>
+                <a href="<?php echo route('admin/journeys'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Journeys' || $title == 'Add Journey' || $title == 'Edit Journey') ? 'active' : ''; ?>">
+                    <span class="flex items-center">
+                        <iconify-icon class="nav-icon" icon="gis:earth-atlantic-o"></iconify-icon>
+                        <span>Journeys</span>
+                    </span>
+                </a>
+            </li>
+            <li>
                 <a href="<?php echo route('admin/reviews'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Reviews' || $title == 'Review Details') ? 'active' : ''; ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="material-symbols:rate-review-outline-rounded"></iconify-icon>

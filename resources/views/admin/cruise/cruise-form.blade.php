@@ -58,7 +58,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1 mt-5">
-                                        <label for="thumbnail_image" class="form-label">Thumbnail Image :</label>
+                                        <label for="thumbnail_image" class="form-label">Banner Image :</label>
                                         <div class="multiFilePreview">
                                             <label>
                                                 <input type="file" name="thumbnail_image" class="w-full hidden" accept=".jpg, .jpeg, .png, .svg, .webp">

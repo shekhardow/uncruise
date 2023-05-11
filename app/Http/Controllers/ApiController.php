@@ -60,6 +60,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
         }
+
         $identifier = $requestData['identifier'];
         $type = $requestData['type'];
         if ($type === 'email' && !filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
@@ -68,6 +69,7 @@ class ApiController extends Controller
         if ($type === 'phone' && !preg_match('/^[0-9]{10,}$/', $identifier)) {
             return response()->json(['result' => 0, 'errors' => 'Invalid phone number']);
         }
+
         $otp = generateOtp();
         $user = $this->api_model->getUserByIdentifier($identifier, $type);
         if (!empty($user)) {
@@ -80,10 +82,18 @@ class ApiController extends Controller
             }
         } else {
             // If user does not exist, insert data into database
+            if ($request->hasfile('profile_image')) {
+                $profile_image = singleCloudinaryUpload($request, 'profile_image');
+            }
             $insertData = [
                 $type => $identifier,
                 'otp' => $otp,
-                'status' => 'Process',
+                'profile_image' => $profile_image,
+                'first_name' => $requestData['first_name'],
+                'last_name' => $requestData['last_name'],
+                'gender' => $requestData['gender'],
+                'age' => $requestData['age'],
+                'country' => $requestData['country'],
             ];
             $deviceType = $requestData['device_type'];
             $deviceId = $requestData['device_id'];
@@ -94,6 +104,7 @@ class ApiController extends Controller
                 return response()->json(['result' => -1, 'msg' => 'Something went wrong', 'data' => null]);
             }
         }
+
         // Verification OTP mail
         $mailData = [
             'name' => 'Hi User!',
@@ -128,6 +139,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
         }
+
         $identifier = $requestData['identifier'];
         $type = $requestData['type'];
         $otp = $requestData['otp'];
@@ -137,6 +149,7 @@ class ApiController extends Controller
         if ($type === 'phone' && !preg_match('/^[0-9]{10,}$/', $identifier)) {
             return response()->json(['result' => 0, 'errors' => 'Invalid phone number']);
         }
+
         $user = null;
         if ($type === 'email') {
             $user = $this->api_model->getUserByIdentifier($identifier, 'email');
@@ -150,9 +163,11 @@ class ApiController extends Controller
                 return response()->json(['result' => 2, 'msg' => 'OTP has been sent to your registered phone', 'data' => null]);
             }
         }
+
         if (!$user) {
             return response()->json(['result' => -1, 'msg' => "No account found with this $type!"]);
         }
+
         if ($user->is_verified == 'no') {
             // Verification OTP Mail
             $maildata['name'] = $user->name;
@@ -166,81 +181,73 @@ class ApiController extends Controller
             header('HTTP/1.1 402 User Account ' . strtolower($user->status) . '.', true, 402);
             return response()->json(['result' => -2, 'msg' => 'Your account has been ' . strtolower($user->status) . '!'], 401);
         }
+
         // Verify OTP
         if ($otp != $user->otp) {
             return response()->json(['result' => -1, 'msg' => 'Invalid OTP!']);
         }
+
         // Update user token
         $this->api_model->updateToken($user->user_id, genrateToken());
+
         // Get user data and return response
         $result = $this->api_model->getUserByID($user->user_id);
         return response()->json(['result' => 1, 'msg' => 'Login Successfully', 'data' => $result]);
         return false;
     }
 
-    public function personalDetails(Request $request){
+
+
+    /*
+    Update User Profile API (Required User ID)
+    */
+    public function updateProfile(Request $request){
         $requestData = $request->all();
         $validator = Validator::make($requestData, [
             'user_id' => 'required',
-            'name' => 'required',
-            'gender' => 'required',
-            'date_of_birth' => 'required',
-            'relationship_status' => 'required',
-            'education' => 'required',
-            'country' => 'required',
-            'city' => 'required',
-            //'bio' => 'required',
         ], [
-            'required' => 'The :Attribute field is Required',
+            'required' => 'The :attribute field is required',
         ]);
         if ($validator->fails()) {
             return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
-            return false;
         }
 
-        $user_id = $requestData['user_id'];
+        // Get user data
+        $user_id = $request->input('user_id');
         $user = $this->api_model->getUserByID($user_id);
-        $image_url = @$user->profile_image;
-        //profile picture upload
-        if ($request->hasfile('profile_image')) {
-            $image_url = singleAwsUpload($request, 'profile_image', 'images');
+        if (!$user) {
+            return response()->json(['result' => -1, "msg" => "User not found", 'data' => null]);
         }
-        $updatedata = array(
-            'name' => @$requestData['name'],
-            'gender' => @$requestData['gender'],
-            'date_of_birth' => @$requestData['date_of_birth'],
-            'relationship_status' => @$requestData['relationship_status'],
-            'education' => @$requestData['education'],
-            'country' => @$requestData['country'],
-            'city' => @$requestData['city'],
-            'bio' => @$requestData['bio'],
-            'is_step' => 'more_about',
-            'profile_image' => $image_url,
-            'age' => @calculateAge(@$requestData['date_of_birth']),
-            'status' => 'Active',
-        );
 
-        $key = $request->post('key');
-        if (!empty($key)) {
-            if ($key == 'update') {
-                unset($updatedata['is_step']);
+        // Upload profile image
+        $profile_image = @$user->profile_image;
+        if ($request->hasFile('profile_image')) {
+            $profile_image = singleCloudinaryUpload($request, 'profile_image');
+            if (!$profile_image) {
+                return response()->json(['result' => -1, "msg" => "Error uploading image", 'data' => null]);
             }
         }
-        $result = update('users', 'user_id', $user_id, $updatedata);
 
-        if ($result = true) {
-            //for the first time profile images
-            $image_id=insert('users_images',['user_id'=>$user_id,'image_url'=>@$image_url]);
-            update('users', 'user_id', $user_id, ['profile_image_id'=>$image_id]);
-            //user details
-            $user = $this->api_model->getUserByID($user_id);
-            return response()->json(['result' => 1, "msg" => "Personal Details Updated", 'data' => $user]);
-        } else {
-            return response()->json(['result' => -1, "msg" => "Something went Wrong", 'data' => null]);
+        // Prepare update data
+        $updateData = [
+            'first_name' => @$requestData['first_name'],
+            'last_name' => @$requestData['last_name'],
+            'profile_image' => @$profile_image,
+        ];
+
+        // Update user data
+        if (!update('users', 'user_id', $user_id, $updateData)) {
+            return response()->json(['result' => -1, "msg" => "Error updating user data", 'data' => null]);
         }
 
+        // Update profile image
+        if ($profile_image !== $user->profile_image) {
+            update('users', 'user_id', $user_id, ['profile_image' => $profile_image]);
+        }
+
+        // Get updated user data
+        $user = $this->api_model->getUserByID($user_id);
+        return response()->json(['result' => 1, "msg" => "Personal details updated", 'data' => $user]);
     }
-
-
 
 }

@@ -52,7 +52,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1 mt-5">
-                                        <label for="thumbnail_image" class="form-label">Thumbnail Image :</label>
+                                        <label for="thumbnail_image" class="form-label">Banner Image :</label>
                                         <div class="multiFilePreview">
                                             <label>
                                                 <input type="file" name="thumbnail_image" class="w-full hidden" accept=".jpg, .jpeg, .png, .svg, .webp">
@@ -74,7 +74,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1 mt-5">
+                                    <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1 mt-5">
                                         <label for="other_iamges" class="form-label">Other Images :</label>
                                         <div class="multiFilePreview_favicon">
                                             <label>
@@ -104,7 +104,7 @@
                                                 <?php } ?>
                                             </div>
                                         </div>
-                                    </div> --}}
+                                    </div>
                                     <div class="flex items-center justify-end p-6 space-x-2 border-slate-200 rounded-b dark:border-slate-600">
                                         <a href="<?php echo route('admin/adventures'); ?>" class="btn inline-flex justify-center btn-outline-dark">Cancel</a>
                                         <button type="submit" id="submit-btn" class="btn inline-flex justify-center text-white bg-black-500">

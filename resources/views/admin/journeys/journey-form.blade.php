@@ -14,11 +14,11 @@
                                 </a>
                             </li>
                             <li class="inline-block relative text-sm text-primary-500 font-Inter">
-                                Destinations
+                                Journeys
                                 <iconify-icon icon="heroicons-outline:chevron-right" class="relative top-[3px] text-slate-500 rtl:rotate-180"></iconify-icon>
                             </li>
                             <li class="inline-block relative text-sm text-slate-500 font-Inter dark:text-white">
-                                <?php echo !empty($destination_detail) ? 'Edit' : 'Add'; ?> Destination
+                                <?php echo !empty($journey_details) ? 'Edit' : 'Add'; ?> Journey
                             </li>
                         </ul>
                     </div>
@@ -27,20 +27,57 @@
                     <div class="space-y-5">
                         <div class="card">
                             <div class="card-body p-6">
-                                <form method="post" id="submit-form" action="<?php echo !empty($destination_detail) ? route('admin/updateDestination', ['id' => encryptionID($destination_detail->destination_id)]) : route('admin/addDestination'); ?>" enctype="multipart/form-data">
+                                <form method="post" id="submit-form" action="<?php echo !empty($journey_details) ? route('admin/updateJourney', ['id' => encryptionID($journey_details->journey_id)]) : route('admin/addJourney'); ?>" enctype="multipart/form-data">
                                     <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5">
                                         <div class="form-group input-area">
-                                            <label for="name" class="form-label">Destination Name :</label>
-                                            <input type="text" name="name" id="name" value="<?php echo !empty($destination_detail->name) ? $destination_detail->name : null; ?>" class="form-control">
+                                            <label for="name" class="form-label">Journey Name :</label>
+                                            <input type="text" name="name" id="name" value="<?php echo !empty($journey_details->journey) ? $journey_details->journey : null; ?>" class="form-control">
                                         </div>
                                         <div class="form-group input-area">
-                                            <label for="location" class="form-label">Location :</label>
-                                            <input type="text" name="location" id="location" value="<?php echo !empty($destination_detail->location) ? $destination_detail->location : null; ?>" class="form-control">
+                                            <label for="journey_date" class="form-label">Journey Date :</label>
+                                            <input type="date" name="journey_date" id="journey_date" value="<?php echo !empty($journey_details->journey_date) ? date('Y-m-d', strtotime($journey_details->journey_date)) : null; ?>" class="form-control">
+                                        </div>
+                                        <div class="form-group input-area">
+                                            <label for="duration" class="form-label">Journey Duration :</label>
+                                            <input type="text" name="duration" id="duration" value="<?php echo !empty($journey_details->duration) ? $journey_details->duration : null; ?>" class="form-control">
+                                        </div>
+                                        <div class="form-group input-area">
+                                            <label for="cruise" class="form-label">Cruise :</label>
+                                            <select name="cruise" id="cruise" class="form-control">
+                                                <option value="" selected disabled>Select Cruise Type</option>
+                                                <?php if(!empty($cruise_details)){ foreach($cruise_details as $cruise){ ?>
+                                                <option value="<?php echo $cruise->cruise_id; ?>" <?php echo (@$journey_details->cruise_id == $cruise->cruise_id) ? 'selected' : null; ?>>
+                                                    <?php echo $cruise->cruise_name; ?>
+                                                </option>
+                                                <?php }} ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group input-area">
+                                            <label for="destination" class="form-label">Destination :</label>
+                                            <select name="destination" id="destination" class="form-control">
+                                                <option value="" selected disabled>Select Destination Type</option>
+                                                <?php if(!empty($destination_details)){ foreach($destination_details as $destination){ ?>
+                                                <option value="<?php echo $destination->destination_id; ?>" <?php echo (@$journey_details->destination_id == $destination->destination_id) ? 'selected' : null; ?>>
+                                                    <?php echo $destination->name; ?>
+                                                </option>
+                                                <?php }} ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group input-area">
+                                            <label for="adventure" class="form-label">Adventure:</label>
+                                            <select name="adventure[]" id="adventure" class="form-control" multiple>
+                                                <option value="" selected disabled>Select Adventure Type</option>
+                                                <?php if(!empty($adventure_details)){ foreach($adventure_details as $adventure){ ?>
+                                                <option value="<?php echo $adventure->adventure_id; ?>" <?php echo (in_array($adventure->adventure_id, json_decode($journey_details->adventure_id))) ? 'selected' : null; ?>>
+                                                    <?php echo $adventure->adventure_name; ?>
+                                                </option>
+                                                <?php }} ?>
+                                            </select>
                                         </div>
                                         <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1">
                                             <label for="description" class="form-label">Description :</label>
                                             <textarea rows="3" name="description" id="description" class="tinymice block w-full py-2 px-3 border border-gray-300 rounded-md">
-                                                <?php echo !empty($destination_detail->description) ? $destination_detail->description : null; ?>
+                                                <?php echo !empty($journey_details->description) ? $journey_details->description : null; ?>
                                             </textarea>
                                         </div>
                                     </div>
@@ -61,8 +98,8 @@
                                                 </span>
                                             </label>
                                             <div id="file_preview_profile_pic">
-                                                <?php if(!empty($destination_detail->thumbnail_image)){ ?>
-                                                <img src="<?php echo $destination_detail->thumbnail_image; ?>">
+                                                <?php if(!empty($journey_details->thumbnail_image)){ ?>
+                                                <img src="<?php echo $journey_details->thumbnail_image; ?>">
                                                 <?php } ?>
                                             </div>
                                         </div>
@@ -87,11 +124,11 @@
 
                                             </div>
                                             <div id="oldFilePreview">
-                                                <?php if (!empty($destination_images)) { ?>
-                                                <?php foreach ($destination_images as $value) { ?>
+                                                <?php if (!empty($journey_images)) { ?>
+                                                <?php foreach ($journey_images as $value) { ?>
                                                 <div class="relative inline-block previewImages">
                                                     <img src="<?php echo !empty($value->image_url) ? $value->image_url : null; ?>" class="preview-img">
-                                                    <a href="<?php echo route('admin/deleteDestination', ['id' => encryptionID($value->id)]); ?>" class="delete-image cross-btn" data-tippy-content="Delete Image" data-tippy-placement="left">X</a>
+                                                    <a href="<?php echo route('admin/deleteJourney', ['id' => encryptionID($value->id)]); ?>" class="delete-image cross-btn" data-tippy-content="Delete Image" data-tippy-placement="left">X</a>
                                                 </div>
                                                 <?php } ?>
                                                 <?php } ?>
@@ -99,9 +136,9 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-end p-6 space-x-2 border-slate-200 rounded-b dark:border-slate-600">
-                                        <a href="<?php echo route('admin/destinations'); ?>" class="btn inline-flex justify-center btn-outline-dark">Cancel</a>
+                                        <a href="<?php echo route('admin/journeys'); ?>" class="btn inline-flex justify-center btn-outline-dark">Cancel</a>
                                         <button type="submit" id="submit-btn" class="btn inline-flex justify-center text-white bg-black-500">
-                                            <?php echo !empty($destination_detail) ? 'Update' : 'Submit'; ?>
+                                            <?php echo !empty($journey_details) ? 'Update' : 'Submit'; ?>
                                         </button>
                                     </div>
                                 </form>
