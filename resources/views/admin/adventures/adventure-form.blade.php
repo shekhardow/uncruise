@@ -74,7 +74,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1 mt-5">
+                                    {{-- <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1 mt-5">
                                         <label for="other_iamges" class="form-label">Other Images :</label>
                                         <div class="multiFilePreview_favicon">
                                             <label>
@@ -98,13 +98,13 @@
                                                 <?php foreach ($destination_images as $value) { ?>
                                                 <div class="relative inline-block">
                                                     <img src="<?php echo !empty($value->image_url) ? $value->image_url : null; ?>" style="width: 150px; height: 150px; float:left; margin:10px 0px 0px 10px">
-                                                    <a href="<?php echo route('admin/deleteDestination', ['id' => $value->id]); ?>" class="delete-image absolute top-0 right-0 p-1 rounded-full bg-red-500 text-white">X</a>
+                                                    <a href="<?php echo route('admin/deleteAdventure', ['id' => encryptionID($value->id)]); ?>" class="delete-image absolute top-0 right-0 p-1 rounded-full bg-red-500 text-white">X</a>
                                                 </div>
                                                 <?php } ?>
                                                 <?php } ?>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="flex items-center justify-end p-6 space-x-2 border-slate-200 rounded-b dark:border-slate-600">
                                         <a href="<?php echo route('admin/adventures'); ?>" class="btn inline-flex justify-center btn-outline-dark">Cancel</a>
                                         <button type="submit" id="submit-btn" class="btn inline-flex justify-center text-white bg-black-500">

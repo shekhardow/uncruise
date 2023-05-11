@@ -59,9 +59,9 @@
                                                     <?php $i=1; if(!empty($adventures)){ foreach($adventures as $adventure){ ?>
                                                     <tr>
                                                         <td class="table-td"><?php echo $i; ?></td>
-                                                        <td class="table-td"><?php echo !empty($adventure->adventure_name) ? $adventure->adventure_name : null; ?></td>
-                                                        <td class="table-td"><?php echo !empty($adventure->destination_id) ? $adventure->destination_id : null; ?></td>
-                                                        <td class="table-td"><?php echo !empty($adventure->description) ? $adventure->description : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($adventure->adventure_name) ? $adventure->adventure_name : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($adventure->destination_name) ? $adventure->destination_name : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($adventure->description) ? limitWords($adventure->description, 10) : null; ?></td>
                                                         <td class="table-td">
                                                             <?php if($adventure->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
                                                             }else{ $class = "text-danger-500 bg-danger-500"; $status = "Inactive"; $change_to = "Active"; } ?>

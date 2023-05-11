@@ -62,7 +62,7 @@
             <li>
                 <a href="<?php echo route('admin/cruise'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Cruise' || $title == 'Add Cruise' || $title == 'Edit Cruise') ? 'active' : ''; ?>">
                     <span class="flex items-center">
-                        <iconify-icon class="nav-icon" icon="icon-park-outline:cruise"></iconify-icon>
+                        <iconify-icon class="nav-icon" icon="tabler:ship"></iconify-icon>
                         <span>Cruise</span>
                     </span>
                 </a>
@@ -78,8 +78,24 @@
             <li>
                 <a href="<?php echo route('admin/adventures'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Adventures' || $title == 'Add Adventure' || $title == 'Edit Adventure') ? 'active' : ''; ?>">
                     <span class="flex items-center">
-                        <iconify-icon class="nav-icon" icon="solar:emoji-funny-square-broken"></iconify-icon>
+                        <iconify-icon class="nav-icon" icon="gis:earth-atlantic-o"></iconify-icon>
                         <span>Adventures</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo route('admin/reviews'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Reviews' || $title == 'Review Details') ? 'active' : ''; ?>">
+                    <span class="flex items-center">
+                        <iconify-icon class="nav-icon" icon="material-symbols:rate-review-outline-rounded"></iconify-icon>
+                        <span>User Reviews</span>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo route('admin/testimonials'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Testimonials' || $title == 'Testimonial Details') ? 'active' : ''; ?>">
+                    <span class="flex items-center">
+                        <iconify-icon class="nav-icon" icon="bi:chat-quote"></iconify-icon>
+                        <span>Testimonials</span>
                     </span>
                 </a>
             </li>

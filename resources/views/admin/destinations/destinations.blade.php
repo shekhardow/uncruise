@@ -59,9 +59,9 @@
                                                     <?php $i=1; if(!empty($destinations)){ foreach($destinations as $destination){ ?>
                                                     <tr>
                                                         <td class="table-td"><?php echo $i; ?></td>
-                                                        <td class="table-td"><?php echo !empty($destination->name) ? $destination->name : null; ?></td>
-                                                        <td class="table-td"><?php echo !empty($destination->location) ? $destination->location : null; ?></td>
-                                                        <td class="table-td"><?php echo !empty($destination->description) ? $destination->description : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($destination->name) ? $destination->name : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($destination->location) ? $destination->location : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($destination->description) ? limitWords($destination->description, 10) : null; ?></td>
                                                         <td class="table-td">
                                                             <?php if($destination->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
                                                             }else{ $class = "text-danger-500 bg-danger-500"; $status = "Inactive"; $change_to = "Active"; } ?>

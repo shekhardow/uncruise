@@ -99,12 +99,12 @@
                                             <div id="file_preview_favicon">
 
                                             </div>
-                                            <div id="oldFilePreview"    >
+                                            <div id="oldFilePreview">
                                                 <?php if (!empty($cruise_images)) { ?>
                                                 <?php foreach ($cruise_images as $value) { ?>
                                                 <div class="relative inline-block previewImages">
                                                     <img src="<?php echo !empty($value->image_url) ? $value->image_url : null; ?>" class="preview-img">
-                                                    <a href="<?php echo route('admin/deleteCruise', ['id' => $value->id]); ?>" class="delete-image cross-btn" data-tippy-content="Delete Image" data-tippy-placement="left">X</a>
+                                                    <a href="<?php echo route('admin/deleteCruise', ['id' => encryptionID($value->id)]); ?>" class="delete-image cross-btn" data-tippy-content="Delete Image" data-tippy-placement="left">X</a>
                                                 </div>
                                                 <?php } ?>
                                                 <?php } ?>

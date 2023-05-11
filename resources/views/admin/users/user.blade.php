@@ -79,7 +79,7 @@
                                                               </div>
                                                         </td>
                                                         <td class="table-td"><?php echo $i; ?></td>
-                                                        <td class="table-td">
+                                                        <td class="table-td smallText">
                                                             <span class="flex">
                                                                 <span class="w-7 h-7 rounded-full ltr:mr-3 rtl:ml-3 flex-none">
                                                                     <img src="<?php echo url('public/assets/images/all-img/customer_1.png'); ?>" alt="1" class="object-cover w-full h-full rounded-full">
@@ -87,20 +87,13 @@
                                                                 <span class="text-sm text-slate-600 dark:text-slate-300 capitalize"><?php echo !empty($user) ? $user->first_name.' '.$user->last_name : null; ?></span>
                                                             </span>
                                                         </td>
-                                                        <td class="table-td"><?php echo !empty($user->email) ? $user->email : null; ?></td>
-                                                        <td class="table-td">
-                                                            <div><?php echo !empty($user->contact_no) ? $user->country_code.' '.$user->contact_no : null; ?></div>
+                                                        <td class="table-td smallText"><?php echo !empty($user->email) ? $user->email : null; ?></td>
+                                                        <td class="table-td smallText">
+                                                            <div><?php echo !empty($user->phone) ? $user->country_code.' '.$user->phone : null; ?></div>
                                                         </td>
-                                                        <?php if($user->status == 'Active'){
-                                                            $class = "text-success-500 bg-success-500";
-                                                            $status = "Active";
-                                                            $change_to = "Inactive";
-                                                        }else{
-                                                            $class = "text-danger-500 bg-danger-500";
-                                                            $status = "Inactive";
-                                                            $change_to = "Active";
-                                                        } ?>
                                                         <td class="table-td">
+                                                            <?php if($user->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
+                                                            }else{ $class = "text-danger-500 bg-danger-500"; $status = "Inactive"; $change_to = "Active"; } ?>
                                                             <a href="<?php echo url('admin/change-status/' . $user->user_id . '/' . $change_to . '/users/user_id/status'); ?>" status-type="<?php echo $change_to; ?>"
                                                                 class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php echo $class; ?>"
                                                                 data-tippy-content="Change status to {{$change_to}}" data-tippy-placement="top">

@@ -77,14 +77,13 @@
                                                 </div>
                                             </a>
 
-                                            <a href="<?php echo route('admin/surveys'); ?>">
+                                            <a href="<?php echo route('admin/cruise'); ?>">
                                                 <div class=" bg-warning-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
                                                     <div class="text-warning-500 mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
-                                                        {{-- <iconify-icon icon="heroicons-outline:chart-pie"></iconify-icon> --}}
-                                                        <iconify-icon icon="ri:survey-line"></iconify-icon>
+                                                        <iconify-icon icon="tabler:ship"></iconify-icon>
                                                     </div>
                                                     <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">
-                                                        Total Surveys
+                                                        Cruise
                                                     </span>
                                                     <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
                                                         <?php echo !empty($total_surveys) ? number_format($total_surveys) : '0'; ?>
@@ -98,10 +97,53 @@
                                                         <iconify-icon icon="material-symbols:location-on-outline"></iconify-icon>
                                                     </div>
                                                     <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">
-                                                        Total Destinations
+                                                        Destinations
                                                     </span>
                                                     <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
                                                         <?php echo !empty($blockedusers) ? number_format($blockedusers) : '0'; ?>
+                                                    </span>
+                                                </div>
+                                            </a>
+
+                                            <a href="<?php echo route('admin/adventures'); ?>">
+                                                <div class="greenColor rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
+                                                    <div class="mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
+                                                        <iconify-icon icon="gis:earth-atlantic-o" class="textGreen"></iconify-icon>
+                                                    </div>
+                                                    <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">
+                                                        Adventures
+                                                    </span>
+                                                    <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
+                                                        <?php echo !empty($blockedusers) ? number_format($blockedusers) : '0'; ?>
+                                                    </span>
+                                                </div>
+                                            </a>
+
+                                            <a href="<?php echo route('admin/reviews'); ?>">
+                                                <div class="blueColor rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
+                                                    <div class="mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
+                                                        <iconify-icon icon="material-symbols:rate-review-outline-rounded" class="textBlue"></iconify-icon>
+                                                    </div>
+                                                    <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">
+                                                        Reviews
+                                                    </span>
+                                                    <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
+                                                        <?php echo !empty($blockedusers) ? number_format($blockedusers) : '0'; ?>
+                                                    </span>
+                                                </div>
+                                            </a>
+
+                                            <a href="<?php echo route('admin/testimonials'); ?>">
+                                                <div class=" bg-info-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
+                                                    <div class="text-info-500 mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
+                                                        {{-- <iconify-icon icon="heroicons-outline:menu-alt-1"></iconify-icon> --}}
+                                                        <iconify-icon icon="bi:chat-quote"></iconify-icon>
+                                                    </div>
+                                                    <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">
+                                                        Testimonials
+                                                    </span>
+                                                    <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
+                                                        <?php echo !empty($total_users) ? number_format($total_users) : '0'; ?>
                                                     </span>
                                                 </div>
                                             </a>

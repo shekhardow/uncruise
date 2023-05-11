@@ -64,10 +64,6 @@ class AdventureController extends Controller
             return response()->json(['result' => -1, 'msg' => 'Please add Thumbnail Image']);
             return false;
         }
-        if(empty($request->hasfile('other_images'))){
-            return response()->json(['result' => -1, 'msg' => 'Please add atleast one other Image']);
-            return false;
-        }
         if(!empty($thumbnail_image)){
             $thumbnail_image = singleCloudinaryUpload($request, 'thumbnail_image');
         }
@@ -101,11 +97,8 @@ class AdventureController extends Controller
             return response()->json(['result' => 0, 'errors' => $validator->errors()]);
             return false;
         }
-        $destination_detail = $this->adventure_model->getDestinationDetail($adventure_id);
+        $destination_detail = $this->adventure_model->getAdventureDetail($adventure_id);
         $other_images = $this->adventure_model->getAdventureImages($adventure_id);
-        if (!$request->hasfile('other_images') && $other_images->isEmpty()) {
-            return response()->json(['result' => -1, 'msg' => 'Please upload at least one other image.']);
-        }
         if(empty($destination_detail->thumbnail_image)){
             return response()->json(['result' => -1, 'msg' => 'Please add Thumbnail Image']);
             return false;
@@ -131,6 +124,7 @@ class AdventureController extends Controller
     }
 
     public function deleteAdventure($id){
+        $id = decryptionID($id);
         DB::table('destination_images')->where('id', $id)->delete();
         if(true){
             return response()->json(['result' => 1, 'msg' => 'Image deleted successfully']);
@@ -138,4 +132,5 @@ class AdventureController extends Controller
             return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
         }
     }
+
 }

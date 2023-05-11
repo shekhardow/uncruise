@@ -266,3 +266,23 @@ body{
     text-decoration: none;
     z-index: 1;
 }
+
+.smallText{
+    text-transform: none;
+}
+
+.greenColor{
+    background-color: #7fef7f7d;
+}
+
+.blueColor{
+    background-color: #8b7fef7d;
+}
+
+.textGreen{
+    color: rgba(0, 128, 0, 0.5);
+}
+
+.textBlue{
+    color: rgba(0, 0, 255, 0.5);
+}

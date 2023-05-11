@@ -11,7 +11,9 @@ class AdventureModel extends Model
     use HasFactory;
 
     public function getAllAdventures(){
-        return DB::table('adventures')->select('*')->where('status','!=','Deleted')->orderByDesc('adventure_id')->get();
+        return DB::table('adventures')->select('adventures.*', 'destinations.name as destination_name')
+        ->leftJoin('destinations', 'destinations.destination_id', '=', 'adventures.destination_id')
+        ->where('adventures.status','!=','Deleted')->orderByDesc('adventures.adventure_id')->get();
     }
 
     public function getAllDestinationsName(){

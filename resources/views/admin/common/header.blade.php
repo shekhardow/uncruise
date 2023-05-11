@@ -191,32 +191,25 @@
                                 <!-- END: Language Dropdown -->
 
                                 <!-- BEGIN: Toggle Theme -->
-                                <div>
-                                    <button id="themeMood"
-                                        class="h-[28px] w-[28px] lg:h-[32px] lg:w-[32px] lg:bg-gray-500-f7 bg-slate-50 dark:bg-slate-900 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center">
-                                        <iconify-icon class="text-slate-800 dark:text-white text-xl dark:block hidden"
-                                            id="moonIcon" icon="line-md:sunny-outline-to-moon-alt-loop-transition">
-                                        </iconify-icon>
-                                        <iconify-icon class="text-slate-800 dark:text-white text-xl dark:hidden block"
-                                            id="sunIcon" icon="line-md:moon-filled-to-sunny-filled-loop-transition">
-                                        </iconify-icon>
+                                <!-- <div>
+                                    <button id="themeMood" class="h-[28px] w-[28px] lg:h-[32px] lg:w-[32px] lg:bg-gray-500-f7 bg-slate-50 dark:bg-slate-900 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center">
+                                        <iconify-icon class="text-slate-800 dark:text-white text-xl dark:block hidden" id="moonIcon" icon="line-md:sunny-outline-to-moon-alt-loop-transition"></iconify-icon>
+                                        <iconify-icon class="text-slate-800 dark:text-white text-xl dark:hidden block" id="sunIcon" icon="line-md:moon-filled-to-sunny-filled-loop-transition"></iconify-icon>
                                     </button>
-                                </div>
+                                </div> -->
                                 <!-- END: TOggle Theme -->
 
                                 <!-- BEGIN: gray-scale Dropdown -->
-                                <div>
-                                    <button id="grayScale"
-                                        class="lg:h-[32px] lg:w-[32px] lg:bg-slate-100 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center">
-                                        <iconify-icon class="text-slate-800 dark:text-white text-xl"
-                                            icon="mdi:paint-outline"></iconify-icon>
+                                <!-- <div>
+                                    <button id="grayScale" class="lg:h-[32px] lg:w-[32px] lg:bg-slate-100 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center">
+                                        <iconify-icon class="text-slate-800 dark:text-white text-xl" icon="mdi:paint-outline"></iconify-icon>
                                     </button>
-                                </div>
+                                </div> -->
                                 <!-- END: gray-scale Dropdown -->
 
                                 <!-- BEGIN: Message Dropdown -->
                                 <!-- Mail Dropdown -->
-                                {{-- <div class="relative md:block hidden">
+                                <!-- <div class="relative md:block hidden">
                                     <button
                                         class="lg:h-[32px] lg:w-[32px] lg:bg-slate-100 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center"
                                         type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -225,9 +218,9 @@
                                         <span
                                             class="absolute -right-1 lg:top-0 -top-[6px] h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center justify-center rounded-full text-white z-[45]">
                                             10</span>
-                                    </button>
+                                    </button> -->
                                     <!-- Mail Dropdown -->
-                                    <div
+                                    <!-- <div
                                         class="dropdown-menu z-10 hidden bg-white divide-y divide-slate-100 dark:divide-slate-700 shadow w-[335px] dark:bg-slate-800 border dark:border-slate-700 !top-[23px] rounded-md overflow-hidden lrt:origin-top-right rtl:origin-top-left">
                                         <div class="flex items-center justify-between py-4 px-4">
                                             <h3 class="text-sm font-Inter font-medium text-slate-700 dark:text-white">
@@ -325,12 +318,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div> --}}
+                                </div> -->
                                 <!-- END: Message Dropdown -->
 
                                 <!-- BEGIN: Notification Dropdown -->
                                 <!-- Notifications Dropdown area -->
-                                <div class="relative md:block hidden">
+                                <!-- <div class="relative md:block hidden">
                                     <button
                                         class="lg:h-[32px] lg:w-[32px] lg:bg-slate-100 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center"
                                         type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -339,9 +332,9 @@
                                         <span
                                             class="absolute -right-1 lg:top-0 -top-[6px] h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center justify-center rounded-full text-white z-[99]">
                                             4</span>
-                                    </button>
+                                    </button> -->
                                     <!-- Notifications Dropdown -->
-                                    <div
+                                    <!-- <div
                                         class="dropdown-menu z-10 hidden bg-white shadow w-[335px] dark:bg-slate-800 border dark:border-slate-700 !top-[23px] rounded-md overflow-hidden lrt:origin-top-right rtl:origin-top-left">
                                         <div class="flex items-center justify-between py-4 px-4">
                                             <h3 class="text-sm font-Inter font-medium text-slate-700 dark:text-white">
@@ -438,7 +431,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- END: Notification Dropdown -->
 
                                 <!-- BEGIN: Profile Dropdown -->

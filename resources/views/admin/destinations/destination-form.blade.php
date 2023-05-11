@@ -86,12 +86,12 @@
                                             <div id="file_preview_favicon">
 
                                             </div>
-                                            <div id="oldfile">
+                                            <div id="oldFilePreview">
                                                 <?php if (!empty($destination_images)) { ?>
                                                 <?php foreach ($destination_images as $value) { ?>
-                                                <div class="relative inline-block">
-                                                    <img src="<?php echo !empty($value->image_url) ? $value->image_url : null; ?>" style="width: 150px; height: 150px; float:left; margin:10px 0px 0px 10px">
-                                                    <a href="<?php echo route('admin/deleteDestination', ['id' => $value->id]); ?>" class="delete-image absolute top-0 right-0 p-1 rounded-full bg-red-500 text-white">X</a>
+                                                <div class="relative inline-block previewImages">
+                                                    <img src="<?php echo !empty($value->image_url) ? $value->image_url : null; ?>" class="preview-img">
+                                                    <a href="<?php echo route('admin/deleteDestination', ['id' => encryptionID($value->id)]); ?>" class="delete-image cross-btn" data-tippy-content="Delete Image" data-tippy-placement="left">X</a>
                                                 </div>
                                                 <?php } ?>
                                                 <?php } ?>

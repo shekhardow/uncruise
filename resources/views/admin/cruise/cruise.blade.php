@@ -59,9 +59,9 @@
                                                     <?php $i=1; if(!empty($cruises)){ foreach($cruises as $cruise){ ?>
                                                     <tr>
                                                         <td class="table-td"><?php echo $i; ?></td>
-                                                        <td class="table-td"><?php echo !empty($cruise->cruise_name) ? $cruise->cruise_name : null; ?></td>
-                                                        <td class="table-td"><?php echo !empty($cruise->cruise_type) ? $cruise->cruise_type : null; ?></td>
-                                                        <td class="table-td"><?php echo !empty($cruise->brief_description) ? $cruise->brief_description : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($cruise->cruise_name) ? $cruise->cruise_name : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($cruise->cruise_type) ? $cruise->cruise_type : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($cruise->brief_description) ? $cruise->brief_description : null; ?></td>
                                                         <td class="table-td">
                                                             <?php if($cruise->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
                                                             }else{ $class = "text-danger-500 bg-danger-500"; $status = "Inactive"; $change_to = "Active"; } ?>

@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\SurveyController;
 use App\Http\Controllers\admin\CruiseController;
 use App\Http\Controllers\admin\DestinationController;
 use App\Http\Controllers\admin\AdventureController;
+use App\Http\Controllers\admin\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +79,13 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('update-adventure/{id}',[AdventureController::class,'updateAdventure'])->name('admin/updateAdventure');
     Route::post('delete-adventure/{id}',[AdventureController::class,'deleteAdventure'])->name('admin/deleteAdventure');
     /* Adventure End */
+
+    /* Reviews & Testimonials Start */
+    Route::get('reviews',[ReviewController::class,'reviews'])->name('admin/reviews');
+    Route::any('review-details/{id}',[ReviewController::class,'reviewDetails'])->name('admin/reviewDetails');
+    Route::get('testimonials',[ReviewController::class,'testimonials'])->name('admin/testimonials');
+    Route::any('testimonial-details/{id}',[ReviewController::class,'testimonialDetails'])->name('admin/testimonialDetails');
+    /* Reviews & Testimonials End */
 
     /* Site Setting Start */
     Route::get('site-setting/{key}',[AdminController::class,'siteSetting'])->name('admin/siteSetting');

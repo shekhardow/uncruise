@@ -137,6 +137,7 @@ class DestinationController extends Controller
     }
 
     public function deleteDestination($id){
+        $id = decryptionID($id);
         DB::table('destination_images')->where('id', $id)->delete();
         if(true){
             return response()->json(['result' => 1, 'msg' => 'Image deleted successfully']);

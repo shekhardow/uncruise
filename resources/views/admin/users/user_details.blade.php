@@ -40,7 +40,7 @@
                                     </div>
                                     <div class="form-group m-form__group row">
                                         <label class="bold-label">Contact No :</label>
-                                        <label><?php echo !empty($user_details->contact_no) ? $user_details->country_code.' '.$user_details->contact_no : null; ?></label>
+                                        <label><?php echo !empty($user_details->phone) ? $user_details->country_code.' '.$user_details->phone : null; ?></label>
                                     </div>
                                     <div class="form-group m-form__group row">
                                         <label class="bold-label">Gender :</label>

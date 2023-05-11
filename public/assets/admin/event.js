@@ -216,13 +216,19 @@ var Events = function () {
 			var status_type = $(this).attr("status-type");
 			var text = '';
 			if (status_type == 'Active') {
-				text = 'Are you sure you want to change the status to ' + status_type.toLowerCase() + ' ?';
+				text = 'Are you sure you want to change the status to ' + status_type + ' ?';
 			}
 			if (status_type == 'Inactive') {
-				text = 'Are you sure you want to change the status to ' + status_type.toLowerCase() + ' ?';
+				text = 'Are you sure you want to change the status to ' + status_type + ' ?';
 			}
 			if (status_type == 'Blocked') {
-				text = 'Are you sure you want to change the status to ' + status_type.toLowerCase() + ' ?';
+				text = 'Are you sure you want to change the status to ' + status_type + ' ?';
+			}
+			if (status_type == 'Testimonial') {
+				text = 'Are you sure you want to mark as ' + status_type + ' ?';
+			}
+			if (status_type == 'No') {
+				text = 'Are you sure you want to remove as Testimonial' + ' ?';
 			}
 			if (!status_type) {
 				text = 'Are you sure you want to delete?';

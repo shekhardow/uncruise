@@ -136,6 +136,7 @@ class CruiseController extends Controller
     }
 
     public function deleteCruise($id){
+        $id = decryptionID($id);
         DB::table('cruise_images')->where('id', $id)->delete();
         if(true){
             return response()->json(['result' => 1, 'msg' => 'Image deleted successfully']);
