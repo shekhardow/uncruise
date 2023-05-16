@@ -80,7 +80,7 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('update-adventure/{id}',[AdventureController::class,'updateAdventure'])->name('admin/updateAdventure');
     Route::post('delete-adventure/{id}',[AdventureController::class,'deleteAdventure'])->name('admin/deleteAdventure');
     /* Adventure End */
-    
+
     /* Journey Start */
     Route::get('journeys',[JourneyController::class,'journeys'])->name('admin/journeys');
     Route::any('journey-form/{id?}',[JourneyController::class,'journeyForm'])->name('admin/journeyForm');
@@ -121,11 +121,9 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('open-contact-form',[AdminController::class,'openContactForm'])->name('admin/openContactForm');
     Route::post('update-contact-details/{contact_detail_id}',[AdminController::class,'updateContactDetails'])->name('admin/updateContactDetails');
     /* Contact End */
-    
-    
-    // for toggle Switch
-    
-     Route::post('toggleStatus',[AdminController::class,'toggleStatus'])->name('toggleStatus');
+
+    // For Toggle Switch
+    Route::post('toggleStatus',[AdminController::class,'toggleStatus'])->name('toggleStatus');
 
     Route::fallback(function () {
         $data['admin_detail'] = admin_detail();

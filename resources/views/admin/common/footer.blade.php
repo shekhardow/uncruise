@@ -18,7 +18,7 @@
 <!-- END: Footer For Desktop and tab -->
 
 <div class="bg-white bg-no-repeat custom-dropshadow footer-bg dark:bg-slate-700 flex justify-around items-center backdrop-filter backdrop-blur-[40px] fixed left-0 bottom-0 w-full z-[9999] bothrefm-0 py-[12px] px-4 md:hidden">
-    {{-- <a href="#">
+    <!-- <a href="#">
         <div>
             <span class="relative cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center mb-1 dark:text-white text-slate-900 ">
                 <iconify-icon icon="heroicons-outline:mail"></iconify-icon>
@@ -30,13 +30,13 @@
                 Messages
             </span>
         </div>
-    </a> --}}
+    </a> -->
     <a href="#" class="relative bg-white bg-no-repeat backdrop-filter backdrop-blur-[40px] rounded-full footer-bg dark:bg-slate-700 h-[65px] w-[65px] z-[-1] -mt-[40px] flex justify-center items-center">
         <div class="h-[50px] w-[50px] rounded-full relative left-[0px] hrefp-[0px] custom-dropshadow">
             <img src="<?php echo !empty($admin_detail->profile_pic) ? url('public/assets/admin/adminimages/' . $admin_detail->profile_pic) : url('public/assets/images/all-img/user.png'); ?>" alt="" class="w-full h-full rounded-full border-2 border-slate-100 profile-image">
         </div>
     </a>
-    {{-- <a href="#">
+    <!-- <a href="#">
         <div>
             <span class=" relative cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center mb-1 dark:text-white text-slate-900">
                 <iconify-icon icon="heroicons-outline:bell"></iconify-icon>
@@ -48,15 +48,14 @@
                 Notifications
             </span>
         </div>
-    </a> --}}
+    </a> -->
 </div>
 </div>
 
 {{-- START: Modal --}}
 <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto md:inset-0 h-modal
     !items-start md:h-full backdrop-blur-sm transition-all duration-300"
-    id="model_wrapper" tabindex="-1" aria-labelledby="model_wrapper" aria-hidden="true"
-    data-bs-backdrop="static" data-bs-keyboard="false">
+    id="model_wrapper" tabindex="-1" aria-labelledby="model_wrapper" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-xl top-0 !-translate-y-0 relative w-auto pointer-events-none">
         <div class="modal-content modelWrapper border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
 
@@ -73,7 +72,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.5/sweetalert2.min.js"></script>
 <script src="<?php echo url('public/assets/js/rt-plugins.js'); ?>"></script>
 <script src="<?php echo url('public/assets/js/step-form.js'); ?>"></script>
-<script src="<?php echo url('public/assets/admin/event.js')?>"></script>
+<script src="<?php echo url('public/assets/admin/event.js'); ?>"></script>
 <script src="<?php echo url('public/assets/js/app.js'); ?>"></script>
 
 <script src="https://unpkg.com/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -100,18 +99,23 @@
 </script>
 
 <script>
-    $(document).ready(function(){
-        $(window).on("load", function(){
+    $(document).ready(function() {
+        $(window).on("load", function() {
             // setTimeout(function(){
             $(".loderBody").fadeOut('slow');
             // },500)
         });
     });
-     $(".selecttag").select2({
-    tags: true,
-    placeholder:"Please Type..",
+</script>
 
-})
+<script>
+    $(document).ready(function() {
+        $('.selecttag').select2({
+            placeholder: 'Please type...',
+            dropdownAutoWidth : true,
+            // width: '100%'
+        });
+    });
 </script>
 
 </body>

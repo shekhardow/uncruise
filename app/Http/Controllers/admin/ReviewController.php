@@ -56,7 +56,7 @@ class ReviewController extends Controller
     // -------------------- Testimonials -------------------------
     public function testimonials() {
         $data['title'] = "Testimonials";
-        $data['testimonials'] = $this->review_model->getAllTestimonials();
+        $data['testimonials'] = $this->review_model->getAllReviews();
         if(($data['testimonials']->isNotEmpty())){
             foreach($data['testimonials'] as $row){
                 $row->review = @select('review_details',['review'],[['journey_review_id','=',$row->journey_review_id]])->first()->review;

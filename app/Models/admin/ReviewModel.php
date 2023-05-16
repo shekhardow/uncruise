@@ -21,7 +21,7 @@ class ReviewModel extends Model
     }
 
     public function getAllTestimonials(){
-        return DB::table('journey_reviews')->select('*')->where('status', '!=', 'Deleted')->orderByDesc('journey_review_id')->get();
+        return DB::table('journey_reviews')->select('*')->where('mark_as_testimonial', '=', 'Yes')->where('status', '!=', 'Deleted')->orderByDesc('journey_review_id')->get();
     }
 
 }

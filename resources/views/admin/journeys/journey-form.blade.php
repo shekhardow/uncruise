@@ -28,7 +28,7 @@
                         <div class="card">
                             <div class="card-body p-6">
                                 <form method="post" id="submit-form" action="<?php echo !empty($journey_details) ? route('admin/updateJourney', ['id' => encryptionID($journey_details->journey_id)]) : route('admin/addJourney'); ?>" enctype="multipart/form-data">
-                                    <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                                         <div class="form-group input-area">
                                             <label for="name" class="form-label">Journey Name :</label>
                                             <input type="text" name="name" id="name" value="<?php echo !empty($journey_details->journey) ? $journey_details->journey : null; ?>" class="form-control">
@@ -43,10 +43,9 @@
                                         </div>
                                         <div class="form-group input-area">
                                             <label for="cruise" class="form-label">Cruise :</label>
-                                            <select name="cruise[]" id="cruise" class="form-control selecttag"  multiple="multiple">
-                                              
+                                            <select name="cruise[]" id="cruise" class="form-control selecttag select2Style"  multiple="multiple">
                                                 <?php if(!empty($cruise_details)){ foreach($cruise_details as $cruise){ ?>
-                                                <option value="<?php echo $cruise->cruise_id; ?>"  <?php echo (@in_array( $cruise->cruise_id,$seleted_crew))?"selected":""; ?>>
+                                                <option value="<?php echo $cruise->cruise_id; ?>" <?php echo (@in_array(@$cruise->cruise_id, $seleted_crew)) ? "selected" : ""; ?>>
                                                     <?php echo $cruise->cruise_name; ?>
                                                 </option>
                                                 <?php }} ?>
@@ -55,9 +54,8 @@
                                         <div class="form-group input-area">
                                             <label for="destination" class="form-label">Destination :</label>
                                             <select name="destination[]" id="destination" class="form-control selecttag"  multiple="multiple">
-                                                
                                                 <?php if(!empty($destination_details)){ foreach($destination_details as $destination){ ?>
-                                                <option value="<?php echo $destination->destination_id; ?>" <?php echo (@in_array($destination->destination_id,$seleted_destination))?"selected":""; ?>>
+                                                <option value="<?php echo $destination->destination_id; ?>" <?php echo (@in_array(@$destination->destination_id, $seleted_destination)) ? "selected" : ""; ?>>
                                                     <?php echo $destination->name; ?>
                                                 </option>
                                                 <?php }} ?>
@@ -66,9 +64,8 @@
                                         <div class="form-group input-area">
                                             <label for="adventure" class="form-label">Adventure:</label>
                                             <select name="adventure[]" id="adventure" class="form-control selecttag" multiple>
-                                                
                                                 <?php if(!empty($adventure_details)){ foreach($adventure_details as $adventure){ ?>
-                                                <option value="<?php echo $adventure->adventure_id; ?>" <?php echo (@in_array($adventure->adventure_id,$seleted_adventures))?"selected":""; ?>>
+                                                <option value="<?php echo $adventure->adventure_id; ?>" <?php echo (@in_array(@$adventure->adventure_id, $seleted_adventures)) ? "selected" : ""; ?>>
                                                     <?php echo $adventure->adventure_name; ?>
                                                 </option>
                                                 <?php }} ?>
