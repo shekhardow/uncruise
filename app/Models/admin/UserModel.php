@@ -11,7 +11,7 @@ class UserModel extends Model
     use HasFactory;
 
     public function getAllUsers(){
-        return DB::table('users')->select('*')->orderByDesc('user_id')->get();
+        return DB::table('users')->select('*')->where('status', '!=', 'Deleted')->orderByDesc('user_id')->get();
     }
 
     public function getUserByUserId($user_id){

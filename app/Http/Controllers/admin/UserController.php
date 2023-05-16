@@ -34,7 +34,7 @@ class UserController extends Controller
         $data['users'] = $this->user_model->getAllUsers();
          if(($data['users']->isNotEmpty())){
             foreach($data['users'] as $row){
-               $row->reviewcount=count(select('reviews',['review_id'],[['user_id','=',$row->user_id]]));
+               $row->reviewcount=count(select('journey_reviews',['journey_review_id'],[['user_id','=',$row->user_id]]));
             }
         }
         return $this->loadview('users/user', $data);

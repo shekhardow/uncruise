@@ -266,8 +266,8 @@ var Events = function () {
 				}
 			});
 		});
-		$(document).on("click", ".toggleStatus", function (e) {
-			e.preventDefault();
+
+		$(document).on("click", ".toggleStatus", function () {
 			var url = $(this).data("url");
 			var value = $(this).val();
 			var changevalue = $(this).data('changevalue');
@@ -275,17 +275,14 @@ var Events = function () {
             var wherevalue =  $(this).data('wherevalue');
             var table =  $(this).data('table');
             var wherecolumn =  $(this).data('wherecolumn');
-		
 			$.post(url, {value,changevalue,column_name,wherevalue,table,wherecolumn}, function (out) {
-					if (out.result === 1) {
-						location.reload();
-						toastr.remove()
-					    toastr.success(out.msg);
-					}
-				});
-		
+                if (out.result === 1) {
+                    // location.reload();
+                    toastr.remove()
+                    toastr.success(out.msg);
+                }
+            });
 		});
-		
 	};
 
 	this.logout = function () {

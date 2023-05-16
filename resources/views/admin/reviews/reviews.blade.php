@@ -36,41 +36,40 @@
                                             <table id="myTable" class="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 data-table">
                                                 <thead class=" bg-slate-200 dark:bg-slate-700">
                                                     <tr>
-                                                        <th scope="col" class="table-th">S/N</th>
+                                                        <th scope="col" class="table-th table-centers">Status</th>
+                                                        <th scope="col" class="table-th">User</th>
                                                         <th scope="col" class="table-th">Post</th>
-                                                        <th scope="col" class="table-th">Destination Name</th>
-                                                        <th scope="col" class="table-th table-centers">Set as Testimonial</th>
-                                                        <th scope="col" class="table-th">Status</th>
-                                                        <th scope="col" class="table-th">Action</th>
+                                                        <th scope="col" class="table-th">Journey Name</th>
+                                                        <th scope="col" class="table-th">Journey Date</th>
+                                                        <th scope="col" class="table-th">Booking ID</th>
+                                                        <th scope="col" class="table-th">Personal ID</th>
+                                                        {{-- <th scope="col" class="table-th">Action</th> --}}
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                                                    <?php $i=1; if(!empty($reviews)){ foreach($reviews as $review){ ?>
+                                                    <?php $i=1; if(!empty($reviews)){ foreach($reviews as $review){ //dd($review); ?>
                                                     <tr>
-                                                        <td class="table-td"><?php echo $i; ?></td>
-                                                        <td class="table-td smallText"><?php echo !empty($review->review) ? limitWords($review->review, 10) : null; ?></td>
-                                                        <td class="table-td smallText"><?php echo !empty($review->review_type) ? $review->review_name : null; ?></td>
                                                         <td class="table-td text-center">
-                                                           <div class="customSwitchBox">
-                                                                <input type="checkbox" class="toggleStatus"  <?php echo @($review->mark_as_testimonial=='Testimonial')?"Checked":"" ?> id="customSwitch_<?php echo $i ?>" data-table="reviews" data-changevalue="<?php echo @($review->mark_as_testimonial=='Testimonial')?"No":"Testimonial" ?>" data-column_name='mark_as_testimonial' data-wherecolumn="review_id" data-wherevalue="<?php echo @$review->review_id; ?>" data-url="<?php echo route('toggleStatus'); ?>"  name="customSwitch" value="<?php echo @$review->mark_as_testimonial ?>"/>
-                                                                <label for="customSwitch_<?php echo $i ?>"></label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="table-td">
                                                             <?php if($review->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
                                                             }else{ $class = "text-danger-500 bg-danger-500"; $status = "Inactive"; $change_to = "Active"; } ?>
-                                                            <a href="<?php echo url('admin/change-status/' . $review->review_id . '/' . $change_to . '/reviews/review_id/status'); ?>" status-type="<?php echo $change_to; ?>"
-                                                                class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php echo $class; ?>">
-                                                                <?php echo $status ?>
-                                                            </a>
+                                                            <div class="customSwitchBox">
+                                                                <input type="checkbox" class="toggleStatus" <?php echo (@$review->status == 'Active') ? "Checked" : ""; ?> id="customSwitch_<?php echo $i; ?>" data-table="journey_reviews" data-changevalue="<?php echo @$change_to; ?>" data-column_name="status" data-wherecolumn="journey_review_id" data-wherevalue="<?php echo @$review->journey_review_id; ?>" data-url="<?php echo route('toggleStatus'); ?>" name="customSwitch" value="<?php echo @$review->status; ?>"/>
+                                                                <label for="customSwitch_<?php echo $i; ?>"></label>
+                                                            </div>
                                                         </td>
-                                                        <td class="table-td">
+                                                        <td class="table-td smallText"><?php echo !empty($review->first_name) ? $review->first_name. ' ' . $review->last_name : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($review->review) ? limitWords($review->review, 5) : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($review->journey) ? $review->journey : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($review->journey_date) ? date('d M, Y', strtotime($review->journey_date)) : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($review->booking_id) ? $review->booking_id : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($review->personal_id) ? $review->personal_id : null; ?></td>
+                                                        {{-- <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">
-                                                                <a href="<?php echo route('admin/reviewDetails',['id' => encryptionID($review->review_id)]); ?>" class="action-btn" data-tippy-content="View Review details" data-tippy-placement="top">
+                                                                <a href="<?php //echo route('admin/reviewDetails',['id' => encryptionID($review->journey_review_id)]); ?>" class="action-btn" data-tippy-content="View Review details" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:eye"></iconify-icon>
                                                                 </a>
                                                             </div>
-                                                        </td>
+                                                        </td> --}}
                                                     </tr>
                                                     <?php $i++; }} ?>
                                                 </tbody>

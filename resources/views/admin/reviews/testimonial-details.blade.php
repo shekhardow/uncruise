@@ -40,9 +40,9 @@
                                             }else{ echo 'Adventure Name'; } ?> :
                                         </label>
                                         <label>
-                                            <?php if(@$review_details->review_type == 'Destination'){ echo $review_details->destination_name;
-                                            }elseif(@$review_details->review_type == 'Cruise'){ echo $review_details->cruise_name;
-                                            }else{ echo $review_details->adventure_name; } ?>
+                                            <?php if(@$review_details->review_type == 'Destination'){ echo @$review_details->destination_name;
+                                            }elseif(@$review_details->review_type == 'Cruise'){ echo @$review_details->cruise_name;
+                                            }else{ echo @$review_details->adventure_name; } ?>
                                         </label>
                                     </div>
                                     <div class="form-group lg:col-span-3 md:col-span-2 col-span-1">

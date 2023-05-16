@@ -89,6 +89,14 @@
         toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table',
         height: 300
     });
+
+    tinymce.init({
+        selector: 'textarea.amenities',
+        height: 150,
+        menubar: false,
+        plugins: 'link', // Include the 'link' plugin
+        toolbar: 'undo redo | bold italic underline | numlist bullist | link', // Add the 'link' button
+    });
 </script>
 
 <script>
@@ -102,7 +110,7 @@
      $(".selecttag").select2({
     tags: true,
     placeholder:"Please Type..",
-   
+
 })
 </script>
 

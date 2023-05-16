@@ -42,7 +42,7 @@
                 </a>
             </li>
             <!-- Apps Area -->
-            <li class="sidebar-menu-title">COMPONENTS</li>
+            <!-- <li class="sidebar-menu-title">COMPONENTS</li> -->
             <li>
                 <a href="<?php echo route('admin/users'); ?>" class="navItem <?php echo (!empty($title) && ($title == 'Users' || $title == 'User Details')) ? 'active' : ''; ?>">
                     <span class="flex items-center">

@@ -57,7 +57,7 @@
                                                             </span>
                                                             <span class="block"><?php echo !empty($admin_detail->name) ? $admin_detail->name : 'User'; ?></span>
                                                         </h4>
-                                                        <p class="text-sm dark:text-slate-300">Welcome to Admin Panel</p>
+                                                        <!--<p class="text-sm dark:text-slate-300">Welcome to Admin Panel</p>-->
                                                     </div>
                                                 </div>
                                             </div>
@@ -86,7 +86,7 @@
                                                         Cruise
                                                     </span>
                                                     <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
-                                                        <?php echo !empty($total_surveys) ? number_format($total_surveys) : '0'; ?>
+                                                        <?php echo !empty($total_cruises) ? number_format($total_cruises) : '0'; ?>
                                                     </span>
                                                 </div>
                                             </a>
@@ -100,7 +100,7 @@
                                                         Destinations
                                                     </span>
                                                     <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
-                                                        <?php echo !empty($blockedusers) ? number_format($blockedusers) : '0'; ?>
+                                                        <?php echo !empty($total_destinations) ? number_format($total_destinations) : '0'; ?>
                                                     </span>
                                                 </div>
                                             </a>
@@ -114,7 +114,7 @@
                                                         Adventures
                                                     </span>
                                                     <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
-                                                        <?php echo !empty($blockedusers) ? number_format($blockedusers) : '0'; ?>
+                                                        <?php echo !empty($total_adventures) ? number_format($total_adventures) : '0'; ?>
                                                     </span>
                                                 </div>
                                             </a>
@@ -128,7 +128,7 @@
                                                         Journeys
                                                     </span>
                                                     <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
-                                                        <?php echo !empty($blockedusers) ? number_format($blockedusers) : '0'; ?>
+                                                        <?php echo !empty($total_journeys) ? number_format($total_journeys) : '0'; ?>
                                                     </span>
                                                 </div>
                                             </a>
@@ -142,11 +142,11 @@
                                                         Reviews
                                                     </span>
                                                     <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
-                                                        <?php echo !empty($total_users) ? number_format($total_users) : '0'; ?>
+                                                        <?php echo !empty($total_reviews) ? number_format($total_reviews) : '0'; ?>
                                                     </span>
                                                 </div>
                                             </a>
-                                            
+
                                             <a href="<?php echo route('admin/testimonials'); ?>">
                                                 <div class="bg-warning-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
                                                     <div class="text-warning-500 mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
@@ -156,7 +156,7 @@
                                                         Testimonials
                                                     </span>
                                                     <span class="block mb- text-2xl text-slate-900 dark:text-white font-medium">
-                                                        <?php echo !empty($total_surveys) ? number_format($total_surveys) : '0'; ?>
+                                                        <?php echo !empty($total_testimonials) ? number_format($total_testimonials) : '0'; ?>
                                                     </span>
                                                 </div>
                                             </a>

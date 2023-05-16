@@ -29,17 +29,19 @@ class ReviewController extends Controller
     public function reviews() {
         $data['title'] = "Reviews";
         $data['reviews'] = $this->review_model->getAllReviews();
-         if(($data['reviews']->isNotEmpty())){
+        if(($data['reviews']->isNotEmpty())){
             foreach($data['reviews'] as $row){
-                if($row->review_type == 'Destination'){
-                     $row->review_name = @select('destinations',['name'],[['destination_id','=',$row->destination_id]])->first()->name;
-                }elseif($row->review_type == 'Cruise'){
-                    $row->review_name = @select('cruises',['cruise_name as name'],[['cruise_id','=',$row->cruise_id]])->first()->name;
-                }else{
-                    $row->review_name='';
-                }
+                $row->review = @select('review_details',['review'],[['journey_review_id','=',$row->journey_review_id]])->first()->review;
+                $row->review_type = @select('review_details',['review_type'],[['journey_review_id','=',$row->journey_review_id]])->first()->review_type;
+                $row->first_name = @select('users',['first_name'],[['user_id','=',$row->user_id]])->first()->first_name;
+                $row->last_name = @select('users',['last_name'],[['user_id','=',$row->user_id]])->first()->last_name;
+                $row->journey = @select('journeys',['journey'],[['journey_id','=',$row->journey_id]])->first()->journey;
+                $row->journey_date = @select('journeys',['journey_date'],[['journey_id','=',$row->journey_id]])->first()->journey_date;
+                $row->booking_id = @select('review_document_verification',['booking_id'],[['journey_id','=',$row->journey_id]])->first()->booking_id;
+                $row->personal_id = @select('review_document_verification',['personal_id'],[['journey_id','=',$row->journey_id]])->first()->personal_id;
             }
         }
+        // dd($data['reviews']);
         return $this->loadview('reviews/reviews', $data);
     }
 
@@ -57,15 +59,11 @@ class ReviewController extends Controller
         $data['testimonials'] = $this->review_model->getAllTestimonials();
         if(($data['testimonials']->isNotEmpty())){
             foreach($data['testimonials'] as $row){
-                if($row->review_type == 'Destination'){
-                     $row->review_name = @select('destinations',['name'],[['destination_id','=',$row->destination_id]])->first()->name;
-                }elseif($row->review_type == 'Cruise'){
-                    $row->review_name = @select('cruises',['cruise_name as name'],[['cruise_id','=',$row->cruise_id]])->first()->name;
-                }else{
-                    $row->review_name='';
-                }
+                $row->review = @select('review_details',['review'],[['journey_review_id','=',$row->journey_review_id]])->first()->review;
+                $row->review_type = @select('review_details',['review_type'],[['journey_review_id','=',$row->journey_review_id]])->first()->review_type;
             }
         }
+        // dd($data['testimonials']);
         return $this->loadview('reviews/testimonials', $data);
     }
 

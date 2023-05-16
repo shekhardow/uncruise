@@ -11,20 +11,17 @@ class ReviewModel extends Model
     use HasFactory;
 
     public function getAllReviews(){
-        return DB::table('reviews')->select('*')->where('status','!=','Deleted')->orderByDesc('review_id')->get();
+        return DB::table('journey_reviews')->select('*')->where('status','!=','Deleted')->orderByDesc('journey_review_id')->get();
     }
 
     public function getReviewDetails($id){
-        return DB::table('reviews')->select('reviews.*','destinations.name as destination_name','cruises.cruise_name','adventures.adventure_name')
-        ->leftJoin('destinations', 'destinations.destination_id', '=', 'reviews.destination_id')
-        ->leftJoin('cruises', 'cruises.cruise_id', '=', 'reviews.cruise_id')
-        ->leftJoin('adventures', 'adventures.adventure_id', '=', 'reviews.adventures')
-        ->where('reviews.review_id', $id)->get()->first();
+        return DB::table('journey_reviews')->select('journey_reviews.*','review_details.*')
+        ->leftJoin('review_details', 'review_details.journey_review_id', '=', 'journey_reviews.journey_review_id')
+        ->where('journey_reviews.journey_review_id', $id)->get()->first();
     }
 
     public function getAllTestimonials(){
-        return DB::table('reviews')->select('*')
-        ->where('status', '!=', 'Deleted')->orderByDesc('review_id')->get();
+        return DB::table('journey_reviews')->select('*')->where('status', '!=', 'Deleted')->orderByDesc('journey_review_id')->get();
     }
 
 }

@@ -4,25 +4,37 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\admin\AdminModel;
-use App\Models\admin\UserModel;
-use App\Models\admin\SurveyModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
+use App\Models\admin\AdminModel;
+use App\Models\admin\UserModel;
+use App\Models\admin\CruiseModel;
+use App\Models\admin\DestinationModel;
+use App\Models\admin\AdventureModel;
+use App\Models\admin\JourneyModel;
+use App\Models\admin\ReviewModel;
 
 class AdminController extends Controller
 {
     // DB Instance
     private $admin_model;
     private $user_model;
-    private $survey_model;
+    private $cruise_model;
+    private $destination_model;
+    private $adventure_model;
+    private $journey_model;
+    private $review_model;
 
     public function __construct(){
         $this->admin_model = new AdminModel();
         $this->user_model = new UserModel();
-        $this->survey_model = new SurveyModel();
+        $this->cruise_model = new CruiseModel();
+        $this->destination_model = new DestinationModel();
+        $this->adventure_model = new AdventureModel();
+        $this->journey_model = new JourneyModel();
+        $this->review_model = new ReviewModel();
     }
 
     private function loadview($view, $data = NULL){
@@ -81,7 +93,12 @@ class AdminController extends Controller
     public function dashboard(){
         $data['title'] ='Dashboard';
         $data['total_users'] = count($this->user_model->getAllUsers());
-        $data['total_surveys'] = count($this->survey_model->getAllSurveys());
+        $data['total_cruises'] = count($this->cruise_model->getAllCruises());
+        $data['total_destinations'] = count($this->destination_model->getAllDestinations());
+        $data['total_adventures'] = count($this->adventure_model->getAllAdventures());
+        $data['total_journeys'] = count($this->journey_model->getAllJourneys());
+        $data['total_reviews'] = count($this->review_model->getAllReviews());
+        $data['total_testimonials'] = count($this->review_model->getAllTestimonials());
         return $this->loadview('dashboard/dashboard',$data);
     }
 
@@ -215,7 +232,7 @@ class AdminController extends Controller
         }elseif($key=='contact-us'){
             $type = 'Contact';
              $url = route('admin/siteSetting',['key' => 'contact-us']);
-         
+
             $title = 'Contact Us';
         }
         else{
@@ -465,9 +482,8 @@ class AdminController extends Controller
             return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
         }
     }
-    
-    //toggle status change 
-    
+
+    // Toggle status change
     public function toggleStatus(Request $request){
         $change_status = $request->post('changevalue');
         $change_column_name = $request->post('column_name');
@@ -475,8 +491,7 @@ class AdminController extends Controller
         $table = $request->post('table');
         $wherecolumn = $request->post('wherecolumn');
         update($table,$wherecolumn,$wherevalue,[$change_column_name=>$change_status]);
-        return response()->json(['result' => 1, 'msg' => 'Status Changed']);
-        
+        return response()->json(['result' => 1, 'msg' => 'Status Changed Successfully']);
     }
 
 }

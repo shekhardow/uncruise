@@ -48,37 +48,40 @@
                                                         foreach($adventures as $adventure){?>
                                                                 <option  value="<?php echo $adventure->adventure_id;  ?>" <?php echo (@in_array($adventure->adventure_id,$seleted_adventures))?"selected":""; ?> class=" inline-block font-Inter font-normal text-sm text-slate-600"><?php echo  @$adventure->adventure_name ?></option>
                                                         <?php }
-                                                    } ?> 
-                                                </select>  
+                                                    } ?>
+                                                </select>
                                             </div>
-                                            
                                         </div>
-                                        <div id="container" class="space-y-3">
+                                        <div id="container" class="space-y-3 mt-5">
                                             <label for="location" class="form-label">Amenities :</label>
-                                         <?php if($seleted_amenities->isNotEmpty()){
-                                            $i=0;
-                                            foreach($seleted_amenities as $sa){ ?>   
-                                            <div class="flex items-center">
-                                                <input type="text" name="title[]" class="input-field form-control w-full mr-2" placeholder="Title" value="<?php echo @$sa->amenitie_title; ?>">
-                                                <input type="text" name="subtitle[]" class="input-field form-control w-full" placeholder="Description" value="<?php echo @$sa->amenitie_descriptions; ?>">
-                                                <?php if($i==0){ ?>
-                                                <span class="add-row cursor-pointer ml-2 text-lg text-green-500">+</span>
-                                                <?php }else{?>
-                                                    <span class="exist-row cursor-pointer ml-2 text-lg text-red-500">-</span>
-                                                <?php } ?>
-                                            </div>
-                                        <?php  $i++; } }else{?>
-                                            <div class="flex items-center">
-                                                <input type="text" name="title[]" class="input-field form-control w-full mr-2" placeholder="Title" value="">
-                                                <input type="text" name="subtitle[]" class="input-field form-control w-full" placeholder="Description" value="">
-                                                <span class="add-row cursor-pointer ml-2 text-lg text-green-500">+</span>
-                                            </div>
-
-                                        <?php } ?>
+                                            <?php if($seleted_amenities->isNotEmpty()){ $i=0; foreach($seleted_amenities as $sa){ ?>
+                                                <div class="flex items-center amenitiesBox">
+                                                    <div class="w-1/2 mr-2">
+                                                        <textarea type="text" name="title[]" class="amenities input-field form-control w-full" placeholder="Enter Title"><?php echo @$sa->amenitie_title; ?></textarea>
+                                                    </div>
+                                                    <div class="w-1/2">
+                                                        <textarea type="text" name="subtitle[]" class="amenities input-field form-control w-full" placeholder="Write Description Here"><?php echo @$sa->amenitie_descriptions; ?></textarea>
+                                                    </div>
+                                                    <?php if($i==0){ ?>
+                                                        <span class="add-row cursor-pointer ml-2 text-lg text-green-500">+</span>
+                                                    <?php }else{?>
+                                                        <span class="exist-row cursor-pointer ml-2 text-lg text-red-500">-</span>
+                                                    <?php } ?>
+                                                </div>
+                                            <?php  $i++; } }else{?>
+                                                <div class="flex items-center amenitiesBox">
+                                                    <div class="w-1/2 mr-2">
+                                                        <textarea type="text" name="title[]" class="amenities input-field form-control w-full" placeholder="Title" value=""></textarea>
+                                                    </div>
+                                                    <div class="w-1/2">
+                                                        <textarea type="text" name="subtitle[]" class="amenities input-field form-control w-full" placeholder="Description"></textarea>
+                                                    </div>
+                                                    <span class="add-row cursor-pointer ml-2 text-lg text-green-500">+</span>
+                                                </div>
+                                            <?php } ?>
                                         </div>
 
-                                                
-                                        <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1">
+                                        <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1 mt-5">
                                             <label for="description" class="form-label">Description :</label>
                                             <textarea rows="3" name="description" id="description" class="tinymice block w-full py-2 px-3 border border-gray-300 rounded-md"><?php echo !empty($destination_detail->description) ? $destination_detail->description : null; ?></textarea>
                                         </div>
@@ -152,58 +155,78 @@
             </div>
         </div>
     </div>
+
     <script>
         // Function to add a new row
-function addRow() {
-  var container = document.getElementById('container');
-  var row = document.createElement('div');
-  row.classList.add('flex', 'items-center');
-  
-  var input1 = document.createElement('input');
-  input1.type = 'text';
-  input1.name = 'title[]';
-  input1.placeholder ="Title";
-  input1.classList.add('input-field','form-control','mr-2');
-  
-  var input2 = document.createElement('input');
-  input2.type = 'text';
-  input2.name = 'subtitle[]';
-  input2.placeholder ="Description";
-  input2.classList.add('input-field','form-control');
-  
-  var addBtn = document.createElement('span');
-//   addBtn.classList.add('add-row', 'cursor-pointer', 'ml-2', 'text-lg', 'text-green-500');
-//   addBtn.textContent = '+';
-  
-  var removeBtn = document.createElement('span');
-  removeBtn.classList.add('remove-row', 'cursor-pointer', 'ml-2', 'text-lg', 'text-red-500');
-  removeBtn.textContent = '-';
-  
-  addBtn.addEventListener('click', addRow);
-  removeBtn.addEventListener('click', function() {
-    container.removeChild(row);
-  });
-  
+        function addRow() {
+            var container = document.getElementById('container');
+            var row = document.createElement('div');
+            row.classList.add('flex', 'items-center', 'amenitiesBox');
 
-  
-  row.appendChild(input1);
-  row.appendChild(input2);
-  row.appendChild(addBtn);
-  row.appendChild(removeBtn);
-  
-  container.appendChild(row);
-}
+            var inputContainer = document.createElement('div');
+            inputContainer.classList.add('flex', 'w-full');
+            // inputContainer.classList.add( 'flex', ' items-center', 'w-1/2', 'mr-2');
 
-document.addEventListener('click', function(event) {
-  if (event.target.classList.contains('exist-row')) {
-    var row = event.target.parentNode;
-    row.parentNode.removeChild(row);
-  }
-});
-// Attach event listener to the initial add row button
-var initialAddBtn = document.querySelector('.add-row');
-initialAddBtn.addEventListener('click', addRow);
+            var inputContainerChild = document.createElement('div');
+            inputContainerChild.classList.add('w-1/2', 'mr-2');
+
+            var inputContainerChild2 = document.createElement('div');
+            inputContainerChild2.classList.add('w-1/2');
 
 
+            var input1 = document.createElement('textarea');
+            input1.name = 'title[]';
+            input1.placeholder = "Title";
+            input1.classList.add('input-field', 'amenities', 'form-control', 'w-1/6');
+
+            var input2 = document.createElement('textarea');
+            input2.name = 'subtitle[]';
+            input2.placeholder = "Description";
+            input2.classList.add('input-field', 'amenities', 'form-control', 'w-1/6');
+
+            var addBtn = document.createElement('span');
+            addBtn.classList.add('add-row', 'cursor-pointer', 'ml-2', 'text-lg', 'text-green-500');
+            addBtn.textContent = '+';
+
+            var removeBtn = document.createElement('span');
+            removeBtn.classList.add('remove-row', 'cursor-pointer', 'ml-2', 'text-lg', 'text-red-500');
+            removeBtn.textContent = '-';
+
+            addBtn.addEventListener('click', addRow);
+            removeBtn.addEventListener('click', function() {
+                container.removeChild(row);
+            });
+
+            inputContainer.appendChild(inputContainerChild);
+            inputContainer.appendChild(inputContainerChild2);
+
+            inputContainerChild.appendChild(input1);
+            inputContainerChild2.appendChild(input2);
+
+            row.appendChild(inputContainer);
+            row.appendChild(addBtn);
+            row.appendChild(removeBtn);
+
+            container.appendChild(row);
+
+            tinymce.init({
+                selector: 'textarea.amenities',
+                height: 150,
+                menubar: false,
+                plugins: 'link',
+                toolbar: 'undo redo | bold italic underline | numlist bullist | link',
+            });
+        }
+
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('exist-row')) {
+                var row = event.target.parentNode;
+                row.parentNode.removeChild(row);
+            }
+        });
+
+        // Attach event listener to the initial add row button
+        var initialAddBtn = document.querySelector('.add-row');
+        initialAddBtn.addEventListener('click', addRow);
     </script>
 @endsection
