@@ -68,7 +68,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo route('admin/adventures'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Adventures' || $title == 'Add Adventure' || $title == 'Edit Adventure') ? 'active' : ''; ?>">
+                <a href="<?php echo route('admin/activities'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Activities' || $title == 'Add Activity' || $title == 'Edit Activity') ? 'active' : ''; ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="gis:earth-atlantic-o"></iconify-icon>
                         <span>Activities</span>
@@ -76,7 +76,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo route('admin/journeys'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Journeys' || $title == 'Add Journey' || $title == 'Edit Journey') ? 'active' : ''; ?>">
+                <a href="<?php echo route('admin/adventures'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Adventures' || $title == 'Add Adventure' || $title == 'Edit Adventure') ? 'active' : ''; ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="ic:outline-travel-explore"></iconify-icon>
                         <span>Adventures</span>
@@ -101,7 +101,7 @@
             </li>
             <!-- Pages Area -->
             <li class="sidebar-menu-title">APP MANAGEMENT</li>
-            
+
             <li>
                 <a href="<?php echo route('admin/siteSetting',['key' => 'contact-us']); ?>" class="navItem <?php echo (!empty($title) && $title == 'Contact Us') ? 'active' : ''; ?>">
                     <span class="flex items-center">
@@ -151,7 +151,7 @@
                         <a href="<?php //echo route('admin/siteSetting',['key' => 'about-us']); ?>"class="<?php //if((!empty($title)) && ($title == 'About Us')){echo 'active';} ?>">
                             About
                         </a>
-                    </li> 
+                    </li>
                 </ul>
             </li>
             <li>

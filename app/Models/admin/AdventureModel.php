@@ -11,16 +11,10 @@ class AdventureModel extends Model
     use HasFactory;
 
     public function getAllAdventures(){
-        return DB::table('adventures')->select('adventures.*')
-        // ->leftJoin('destinations', 'destinations.destination_id', '=', 'adventures.destination_id')
-        ->where('adventures.status','!=','Deleted')->orderByDesc('adventures.adventure_id')->get();
+        return DB::table('adventures')->select('*')->where('status','!=','Deleted')->orderByDesc('adventure_id')->get();
     }
 
-    public function getAllDestinationsName(){
-        return DB::table('destinations')->select('name', 'destination_id')->where('status','!=','Deleted')->get();
-    }
-
-    public function getAdventureDetail($id){
+    public function getAdventureDetails($id){
         return DB::table('adventures')->where('adventure_id', $id)->get()->first();
     }
 
@@ -30,8 +24,12 @@ class AdventureModel extends Model
 
     public function addAdventure($requestdata, $thumbnail_image) {
         $data = array(
-            'adventure_name'  => $requestdata['adventure_name'],
+            'journey'  => $requestdata['name'],
+            'journey_date'    => date( 'Y-m-d H:i:s', strtotime($requestdata['journey_date'])),
+            'duration'    => $requestdata['duration'],
+            // 'cruise_id'    => $requestdata['cruise'],
             // 'destination_id'    => $requestdata['destination'],
+            // 'adventure_id'    => json_encode($requestdata['adventure']),
             'description'    => $requestdata['description'],
             'thumbnail_image'    => $thumbnail_image,
         );
@@ -41,8 +39,12 @@ class AdventureModel extends Model
 
     public function updateAdventure($requestdata, $thumbnail_image, $id) {
         $data = array(
-            'adventure_name'  => $requestdata['adventure_name'],
+            'journey'  => $requestdata['name'],
+            'journey_date'    => date('Y-m-d H:i:s', strtotime($requestdata['journey_date'])),
+            'duration'    => $requestdata['duration'],
+            // 'cruise_id'    => $requestdata['cruise'],
             // 'destination_id'    => $requestdata['destination'],
+            // 'adventure_id'    => json_encode($requestdata['adventure']),
             'description'    => $requestdata['description'],
             'thumbnail_image'    => $thumbnail_image,
         );

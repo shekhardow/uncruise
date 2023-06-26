@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Models\ApiModel;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,162 +24,202 @@ class ApiController extends Controller
         }
     }
 
-    public function uniqueId(){
-        $str = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNIPQRSTUVWXYZ';
-        $nstr = str_shuffle($str);
-        $unique_id = substr($nstr, 0, 10);
-        return $unique_id;
-    }
 
-    public function sendMail($data, $view){
-        $htmlContent = view('mail/' . $view, $data)->render();
-        $from = "admin@scalie.io";
-        $to = $data['email'];
-        $subject = $data['subject'];
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $headers .= 'From: ' . $from . "\r\n";
-        @mail($to, $subject, $htmlContent, $headers);
-        return false;
-    }
+    /* User Registration API */
 
-
-
-    /*
-    User Registration API (By Email/Phone)
-    */
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         $requestData = $request->all();
         $validator = Validator::make($requestData, [
-            'identifier' => 'required',
-            'type' => 'required|in:email,phone',
-            // 'device_id' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'gender' => 'required',
+            'age' => 'required',
+            'country' => 'required',
+            'country_code' => 'required',
+            'phone' => ['required', 'digits_between:10,15', 'unique:users'],
+            'email' => 'required|email',
+            'profile_image' => 'image|mimes:jpeg,png,jpg|max:2048',
         ], [
-            'required' => 'This :Attribute is Required',
-            'in' => 'The :Attribute field must be either email or phone.',
+            'required' => 'This :attribute is required',
+            'email' => 'Invalid email address',
+            'digits_between' => 'The :attribute must be between :min and :max digits',
+            'unique' => 'The Phone Number has already been taken',
+            'image' => 'The :Attribute must be an image',
+            'mimes' => 'The :Attribute must be a file of type: :values',
+            'max' => 'The :Attribute must not exceed :max kilobytes',
         ]);
+
         if ($validator->fails()) {
-            return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
+            return response()->json(['result' => 0, 'errors' => $validator->errors()->first()], Response::HTTP_BAD_REQUEST);
         }
-        $identifier = $requestData['identifier'];
-        $type = $requestData['type'];
-        if ($type === 'email' && !filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-            return response()->json(['result' => 0, 'errors' => 'Invalid email address']);
+
+        $name = $requestData['first_name'].' '.$requestData['last_name'];
+        $deviceType = $requestData['device_type'];
+        $deviceId = $requestData['device_id'];
+
+        // Profile Image Upload
+        if ($request->hasFile('profile_image')) {
+            $imagePath = singleCloudinaryUpload($request, 'profile_image');
         }
-        if ($type === 'phone' && !preg_match('/^[0-9]{10,}$/', $identifier)) {
-            return response()->json(['result' => 0, 'errors' => 'Invalid phone number']);
-        }
-        $otp = generateOtp();
-        $user = $this->api_model->getUserByIdentifier($identifier, $type);
-        if (!empty($user)) {
-            if ($user->is_verified == 'no') {
-                $message = "Already registered, We have sent you an OTP on your $type. Please verify yourself!";
-            } else {
-                update('users', 'user_id', $user->user_id, ['otp' => $otp]);
-                update('users_authentication', 'user_id', $user->user_id, ['device_id' => $requestData['device_id']]);
-                $message = "Already registered, We have sent you an OTP on your $type. Please verify yourself!";
-            }
-        } else {
-            // If user does not exist, insert data into database
-            $insertData = [
-                $type => $identifier,
-                'otp' => $otp,
-                'status' => 'Process',
-            ];
-            $deviceType = $requestData['device_type'];
-            $deviceId = $requestData['device_id'];
-            $result = $this->api_model->doRegister($insertData, $deviceType, $deviceId);
-            if ($result) {
-                $message = "Registration Successful. We have sent you an OTP on your $type. Please verify yourself!";
-            } else {
-                return response()->json(['result' => -1, 'msg' => 'Something went wrong', 'data' => null]);
-            }
-        }
-        // Verification OTP mail
-        $mailData = [
-            'name' => 'Hi User!',
-            'identifier' => $identifier,
-            'otp' => $otp,
-            'subject' => 'OTP Verification Mail!!'
+
+        // Insert data into database
+        $insertData = [
+            'first_name' => $requestData['first_name'],
+            'last_name' => $requestData['last_name'],
+            'gender' => $requestData['gender'],
+            'age' => $requestData['age'],
+            'country' => $requestData['country'],
+            'country_code' => $requestData['country_code'],
+            'phone' => $requestData['phone'],
+            'email' => $requestData['email'],
+            'profile_image' => !empty($imagePath) ? $imagePath : null,
         ];
-        if ($type == 'email') {
-            $mailData['email'] = $identifier;
-            $this->sendMail($mailData, 'otpmail');
+
+        $result = $this->api_model->doRegister($insertData, $deviceType, $deviceId);
+
+        if ($result) {
+            $message = "Registration Successful!";
+            return response()->json(['result' => 1, 'msg' => $message, 'data' => ['name' => $name]], Response::HTTP_OK);
         } else {
-            // Send SMS with OTP
+            return response()->json(['result' => -1, 'msg' => 'Something went wrong', 'data' => null], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        return response()->json(['result' => 1, 'msg' => $message, 'data' => ['identifier' => $identifier]]);
     }
 
 
 
-    /*
-    User Login API (By Email/Phone)
-    */
-    public function login(Request $request){
+    /* User Login API */
+
+    public function login(Request $request)
+    {
         $requestData = $request->all();
         $validator = Validator::make($requestData, [
-            'identifier' => 'required',
-            'type' => 'required|in:email,phone',
-            'otp' => 'required',
+            'phone' => 'required',
         ], [
-            'required' => 'This :Attribute is Required',
-            'in' => 'The :Attribute field must be either email or phone.',
+            'required' => 'This :attribute is required',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
         }
-        $identifier = $requestData['identifier'];
-        $type = $requestData['type'];
-        $otp = $requestData['otp'];
-        if ($type === 'email' && !filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-            return response()->json(['result' => 0, 'errors' => 'Invalid email address']);
+
+        $phone = $requestData['phone'];
+
+        $user = $this->api_model->getUserByPhone($phone);
+
+        if (empty($user)) {
+            return response()->json(['result' => -1, 'msg' => "No account found with this Phone Number"]);
         }
-        if ($type === 'phone' && !preg_match('/^[0-9]{10,}$/', $identifier)) {
-            return response()->json(['result' => 0, 'errors' => 'Invalid phone number']);
-        }
-        $user = null;
-        if ($type === 'email') {
-            $user = $this->api_model->getUserByIdentifier($identifier, 'email');
-        } else {
-            // Phone-based login
-            $user = $this->api_model->getUserByIdentifier($identifier, 'phone');
-            if (!empty($user)) {
-                // Send OTP to the phone number
-                $otp = generateOtp();
-                $this->api_model->updateOtp($user->user_id, $otp);
-                return response()->json(['result' => 2, 'msg' => 'OTP has been sent to your registered phone', 'data' => null]);
-            }
-        }
-        if (!$user) {
-            return response()->json(['result' => -1, 'msg' => "No account found with this $type!"]);
-        }
-        if ($user->is_verified == 'no') {
-            // Verification OTP Mail
-            $maildata['name'] = $user->name;
-            $maildata['email'] = $user->email;
-            $maildata['message'] = 'Your verification Otp is ' . generateOtp();
-            $maildata['subject'] = 'Otp Verifiation mail !!';
-            $this->sendMail($maildata, 'otpmail');
-            return response()->json(['result' => -2, 'msg' => 'Please verify yourself. We have resent the verification link to your email id. Please check your mail!'], 401);
-        }
+
         if (in_array($user->status, ['Deleted', 'Blocked', 'Inactive'])) {
-            header('HTTP/1.1 402 User Account ' . strtolower($user->status) . '.', true, 402);
             return response()->json(['result' => -2, 'msg' => 'Your account has been ' . strtolower($user->status) . '!'], 401);
         }
-        // Verify OTP
-        if ($otp != $user->otp) {
-            return response()->json(['result' => -1, 'msg' => 'Invalid OTP!']);
-        }
+
+        // Send OTP to the phone number
+        $otp = '1234';
+        // $otp = generateOtp();
+        $this->api_model->updateOTP($user->user_id, $otp);
+
         // Update user token
-        $this->api_model->updateToken($user->user_id, genrateToken());
+        $this->api_model->updateToken($user->user_id, generateToken());
+
         // Get user data and return response
         $result = $this->api_model->getUserByID($user->user_id);
-        return response()->json(['result' => 1, 'msg' => 'Login Successfully', 'data' => $result]);
-        return false;
+        if($result){
+            return response()->json(['result' => 1, 'msg' => 'OTP has been sent to your registered phone', 'data' => $result], Response::HTTP_OK);
+        }else{
+            return response()->json(['result' => -1, 'msg' => 'Something went wrong!', 'data' => null], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
-    public function personalDetails(Request $request){
+
+    /* Verify User Login By OTP API */
+
+    public function verifyLogin(Request $request)
+    {
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, [
+            'phone' => 'required',
+            'otp' => 'required',
+        ], [
+            'required' => 'This :attribute is required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
+        }
+
+        $phone = $requestData['phone'];
+        $otp = $requestData['otp'];
+
+        $user = $this->api_model->getUserByPhone($phone);
+
+        if (empty($user)) {
+            return response()->json(['result' => -1, 'msg' => "No account found with this Phone Number"]);
+        }
+
+        if ($user->otp !== $otp) {
+            return response()->json(['result' => -2, 'msg' => 'Invalid OTP']);
+        }
+
+        // Clear the OTP field in the database
+        $this->api_model->updateOTP($user->user_id, null);
+
+        // Update user token
+        $this->api_model->updateToken($user->user_id, generateToken());
+
+        // Get user data and return response
+        $result = $this->api_model->getUserByID($user->user_id);
+        if ($result) {
+            return response()->json(['result' => 1, 'msg' => 'OTP verification successful', 'data' => $result], Response::HTTP_OK);
+        } else {
+            return response()->json(['result' => -1, 'msg' => 'Something went wrong!', 'data' => null], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    public function resendOTP(Request $request)
+    {
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, [
+            'phone' => 'required',
+        ], [
+            'required' => 'The :attribute is required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
+        }
+
+        $phone = $requestData['phone'];
+
+        $user = $this->api_model->getUserByPhone($phone);
+
+        if (empty($user)) {
+            return response()->json(['result' => -1, 'msg' => "No account found with this Phone Number"]);
+        }
+
+        // // Check if the last OTP was sent less than 2 minutes ago
+        // $lastOTPSentAt = new DateTime($user->otp_sent_at);
+        // $currentTime = new DateTime();
+        // $timeDifference = $lastOTPSentAt->diff($currentTime)->format('%i');
+
+        // if ($timeDifference < 2) {
+        //     return response()->json(['result' => -2, 'msg' => 'Please wait for 2 minutes before requesting a new OTP']);
+        // }
+
+        // Generate and send a new OTP
+        $newOTP = generateOTP();
+        $this->api_model->updateOTP($user->user_id, $newOTP);
+
+        // Code to send the new OTP to the user (e.g., via SMS or email)
+
+        return response()->json(['result' => 1, 'msg' => 'New OTP sent successfully'], Response::HTTP_OK);
+    }
+
+
+    public function personalDetails(Request $request)
+    {
         $requestData = $request->all();
         $validator = Validator::make($requestData, [
             'user_id' => 'required',
@@ -203,7 +244,7 @@ class ApiController extends Controller
         $image_url = @$user->profile_image;
         //profile picture upload
         if ($request->hasfile('profile_image')) {
-            $image_url = singleAwsUpload($request, 'profile_image', 'images');
+            $image_url = singleUpload($request, 'profile_image', 'images');
         }
         $updatedata = array(
             'name' => @$requestData['name'],

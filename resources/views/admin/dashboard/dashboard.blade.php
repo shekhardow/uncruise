@@ -105,7 +105,7 @@
                                                 </div>
                                             </a>
 
-                                            <a href="<?php echo route('admin/adventures'); ?>">
+                                            <a href="<?php echo route('admin/activities'); ?>">
                                                 <div class="greenColor rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
                                                     <div class="mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
                                                         <iconify-icon icon="gis:earth-atlantic-o" class="textGreen"></iconify-icon>
@@ -119,7 +119,7 @@
                                                 </div>
                                             </a>
 
-                                            <a href="<?php echo route('admin/journeys'); ?>">
+                                            <a href="<?php echo route('admin/adventures'); ?>">
                                                 <div class="blueColor rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
                                                     <div class="mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
                                                         <iconify-icon icon="ic:outline-travel-explore" class="textBlue"></iconify-icon>
@@ -146,7 +146,7 @@
                                                     </span>
                                                 </div>
                                             </a>
-                                            
+
                                             <a href="<?php echo route('admin/testimonials'); ?>">
                                                 <div class="bg-warning-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
                                                     <div class="text-warning-500 mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">

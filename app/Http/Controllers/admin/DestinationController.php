@@ -40,7 +40,7 @@ class DestinationController extends Controller
 
     public function destinationForm($destination_id=null) {
         $destination_id = decryptionID($destination_id);
-        $data['adventures'] = $this->adventure_model->getAllAdventures();
+        $data['adventures'] = $this->adventure_model->getAllActivities();
         $data['seleted_adventures'] = @select('destinations_adventures',['adventure_id'],[['destination_id','=',$destination_id]])->map(function($item){return $item->adventure_id;})->toArray();
         $data['seleted_amenities'] = @select('destinations_amenities','*',[['destination_id','=',$destination_id]]);
         if(empty($destination_id)){
@@ -66,7 +66,7 @@ class DestinationController extends Controller
             return response()->json(['result' => 0, 'errors' => $validator->errors()]);
             return false;
         }
-        
+
         //adventures
         $adventures = $request->post('adventures');
         if(empty($adventures)){
@@ -77,7 +77,7 @@ class DestinationController extends Controller
         //Anemity
         $title    = $request->post('title');
         $subtitle = $request->post('subtitle');
-        
+
         if(empty(@$title[0])){
             return response()->json(['result' => -1, 'msg' => 'Title is required']);
             return false;
@@ -171,7 +171,7 @@ class DestinationController extends Controller
         //Anemity
         $title    = $request->post('title');
         $subtitle = $request->post('subtitle');
-        
+
         if(empty(@$title[0])){
             return response()->json(['result' => -1, 'msg' => 'Title is required']);
             return false;

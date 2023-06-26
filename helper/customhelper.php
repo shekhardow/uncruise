@@ -18,7 +18,7 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
     }
 
     // For generating random token
-    function genrateToken(){
+    function generateToken(){
         $token = openssl_random_pseudo_bytes(16);
         $token = bin2hex($token);
         return $token;
@@ -242,41 +242,6 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
         return "€ ";
     }
 
-    // For Single AWS Upload
-    function singleAwsUpload($request, $file_name, $path){
-        if ($request->hasfile($file_name)) {
-            $imageName = time() . '.' . $request->file($file_name)->extension();
-            $path = \Storage::disk('s3')->put('images', $request->file($file_name));
-            $path = \Storage::disk('s3')->url($path);
-            if (!empty($path)) {
-                return $path;
-            } else {
-                return FALSE;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    // For Multiple AWS Upload
-    function multipleAwsUploads($request, $file_name, $path){
-        if ($request->hasfile($file_name)) {
-            foreach ($request->file($file_name) as $file) {
-                $imageName = time() . '.' . $file->extension();
-                $path = Storage::disk('s3')->put('images', $file);
-                $path = Storage::disk('s3')->url($path);
-                $data[] = $path;
-            }
-            if (!empty($data)) {
-                return $data;
-            } else {
-                return FALSE;
-            }
-        } else {
-            return FALSE;
-        }
-    }
-
     // For Single Upload
     function singleUpload($request, $file_name, $path){
         if ($request->hasfile($file_name)) {
@@ -365,6 +330,25 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
         $limited_words = array_slice($words, 0, $max_words);  // Slice the array to the desired number of words
         $limited_description = implode($separator, $limited_words) . $ellipsis;  // Join the limited words back together with the specified ellipsis at the end
         return $limited_description;  // Return the limited string with the ellipsis appended to the end
+    }
+
+    function uniqueId(){
+        $str = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNIPQRSTUVWXYZ';
+        $nstr = str_shuffle($str);
+        $unique_id = substr($nstr, 0, 10);
+        return $unique_id;
+    }
+
+    function sendMail($data, $view){
+        $htmlContent = view('mail/' . $view, $data)->render();
+        $from = "admin@scalie.io";
+        $to = $data['email'];
+        $subject = $data['subject'];
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $headers .= 'From: ' . $from . "\r\n";
+        @mail($to, $subject, $htmlContent, $headers);
+        return false;
     }
 
 ?>

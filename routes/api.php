@@ -17,3 +17,5 @@ use App\Http\Controllers\ApiController;
 
 Route::post('register',[ApiController::class,'register']);
 Route::post('login',[ApiController::class,'login']);
+Route::post('verifyLogin',[ApiController::class,'verifyLogin']);
+Route::post('resendOTP',[ApiController::class,'resendOTP']);

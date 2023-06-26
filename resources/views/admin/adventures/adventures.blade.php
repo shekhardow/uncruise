@@ -16,7 +16,7 @@
                                     </a>
                                 </li>
                                 <li class="inline-block relative text-sm text-primary-500 font-Inter">
-                                    Activities
+                                    Adventures
                                     <iconify-icon icon="heroicons-outline:chevron-right" class="relative top-[3px] text-slate-500 rtl:rotate-180"></iconify-icon>
                                 </li>
                                 <li class="inline-block relative text-sm text-slate-500 font-Inter dark:text-white">
@@ -26,10 +26,10 @@
                         </div>
                         <div class="flex sm:space-x-4 space-x-2 sm:justify-end items-center rtl:space-x-reverse">
                             <a href="<?php echo route('admin/adventureForm'); ?>" class="btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal"
-                            data-tippy-content="Add New Activity" data-tippy-placement="left">
+                            data-tippy-content="Add New Adventure" data-tippy-placement="left">
                                 <span class="flex items-center">
                                     <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light" icon="heroicons-outline:plus"></iconify-icon>
-                                    <span>Add Activity</span>
+                                    <span>Add Adventure</span>
                                 </span>
                             </a>
                         </div>
@@ -48,38 +48,38 @@
                                                 <thead class=" bg-slate-200 dark:bg-slate-700">
                                                     <tr>
                                                         <th scope="col" class="table-th">S/N</th>
-                                                        <th scope="col" class="table-th">Activity</th>
-                                                        <!-- <th scope="col" class="table-th">Assigned Destination</th> -->
-                                                        <th scope="col" class="table-th">Description</th>
+                                                        <th scope="col" class="table-th">Adventure</th>
+                                                        <th scope="col" class="table-th">Adventure Date</th>
+                                                        <th scope="col" class="table-th">Duration</th>
                                                         <th scope="col" class="table-th">Status</th>
                                                         <th scope="col" class="table-th">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                                                    <?php $i=1; if(!empty($adventures)){ foreach($adventures as $adventure){ ?>
+                                                    <?php $i=1; if(!empty($adventures)){ foreach($adventures as $value){ ?>
                                                     <tr>
                                                         <td class="table-td"><?php echo $i; ?></td>
-                                                        <td class="table-td smallText"><?php echo !empty($adventure->adventure_name) ? $adventure->adventure_name : null; ?></td>
-                                                        <!-- <td class="table-td smallText"><?php //echo !empty($adventure->destination_name) ? $adventure->destination_name : null; ?></td> -->
-                                                        <td class="table-td smallText"><?php echo !empty($adventure->description) ? limitWords($adventure->description, 10) : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($value->journey) ? $value->journey : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($value->journey_date) ? date('d M, Y', strtotime($value->journey_date)) : null; ?></td>
+                                                        <td class="table-td smallText"><?php echo !empty($value->duration) ? $value->duration : null; ?></td>
                                                         <td class="table-td">
-                                                            <?php if($adventure->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
+                                                            <?php if($value->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
                                                             }else{ $class = "text-danger-500 bg-danger-500"; $status = "Inactive"; $change_to = "Active"; } ?>
-                                                            <!--<a href="<?php //echo url('admin/change-status/' . $adventure->adventure_id . '/' . $change_to . '/adventures/adventure_id/status'); ?>" status-type="<?php //echo $change_to; ?>"-->
+                                                            <!--<a href="<?php //echo url('admin/change-status/' . $value->adventure_id . '/' . $change_to . '/adventures/adventure_id/status'); ?>" status-type="<?php //echo $change_to; ?>"-->
                                                             <!--    class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php //echo $class; ?>">-->
-                                                            <!--    <?php //echo $status ?>-->
+                                                            <!--    <?php // echo $status ?>-->
                                                             <!--</a>-->
-                                                            <div class="customSwitchBox">
-                                                                <input type="checkbox" class="toggleStatus"  <?php echo @($adventure->status=='Active')?"Checked":"" ?> id="customSwitch_<?php echo $i ?>" data-table="adventures" data-changevalue="<?php echo @$change_to; ?>" data-column_name='status' data-wherecolumn="adventure_id" data-wherevalue="<?php echo @$adventure->adventure_id; ?>" data-url="<?php echo route('toggleStatus'); ?>"  name="customSwitch" value="<?php echo @$adventure->status ?>"/>
+                                                             <div class="customSwitchBox">
+                                                                <input type="checkbox" class="toggleStatus"  <?php echo @($value->status=='Active')?"Checked":"" ?> id="customSwitch_<?php echo $i ?>" data-table="adventures" data-changevalue="<?php echo @$change_to; ?>" data-column_name='status' data-wherecolumn="adventure_id" data-wherevalue="<?php echo @$value->adventure_id; ?>" data-url="<?php echo route('toggleStatus'); ?>"  name="customSwitch" value="<?php echo @$value->status ?>"/>
                                                                 <label for="customSwitch_<?php echo $i ?>"></label>
                                                             </div>
                                                         </td>
                                                         <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">
-                                                                <a class="action-btn" href="<?php echo route('admin/adventureForm', ['id' => encryptionID($adventure->adventure_id)]); ?>" data-tippy-content="Edit Activity" data-tippy-placement="top">
+                                                                <a class="action-btn" href="<?php echo route('admin/adventureForm', ['id' => encryptionID($value->adventure_id)]); ?>" data-tippy-content="Edit Adventure" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:pencil-square"></iconify-icon>
                                                                 </a>
-                                                                <a href="<?php echo url('admin/change-status/'.$adventure->adventure_id.'/Deleted/adventures/adventure_id/status'); ?>" class="status action-btn" data-tippy-content="Delete Activity" data-tippy-placement="top">
+                                                                <a href="<?php echo url('admin/change-status/'.$value->adventure_id.'/Deleted/adventures/adventure_id/status'); ?>" class="status action-btn" data-tippy-content="Delete Adventure" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:trash"></iconify-icon>
                                                                 </a>
                                                             </div>

@@ -10,11 +10,11 @@ class ApiModel extends Model
 {
     use HasFactory;
 
-    public function getUserByIdentifier($identifier, $type){
+    public function getUserByPhone($phone){
         return DB::table('users')
             ->select('users.*', 'users_authentication.user_token', 'users_authentication.firebase_token')
             ->join('users_authentication', 'users.user_id', '=', 'users_authentication.user_id')
-            ->where("users.$type", $identifier)->where('users.source', 'self')->get()->first();
+            ->where("users.phone", $phone)->where('users.source', 'self')->get()->first();
     }
 
     public function doRegister($data, $device_type=null, $device_id=null){
@@ -24,10 +24,10 @@ class ApiModel extends Model
             $id = DB::getPdo()->lastInsertId();
             if (!empty($id)) {
                 $token = array(
-                    'user_token' => genrateToken(),
                     'user_id' => $id,
-                    'device_id' => $device_id,
+                    'user_token' => generateToken(),
                     'device_type' => $device_type,
+                    'device_id' => $device_id,
                 );
                 DB::table('users_authentication')->insert($token);
             }
@@ -49,7 +49,7 @@ class ApiModel extends Model
             ->where('users.user_id', $user_id)->get()->first();
     }
 
-    public function updateOtp($user_id, $otp){
+    public function updateOTP($user_id, $otp){
         DB::table('users')->where('user_id', $user_id)->update(['otp' => $otp]);
         return true;
     }

@@ -7,8 +7,8 @@ use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\SurveyController;
 use App\Http\Controllers\admin\CruiseController;
 use App\Http\Controllers\admin\DestinationController;
+use App\Http\Controllers\admin\ActivityController;
 use App\Http\Controllers\admin\AdventureController;
-use App\Http\Controllers\admin\JourneyController;
 use App\Http\Controllers\admin\ReviewController;
 
 /*
@@ -73,21 +73,21 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     Route::post('delete-destination/{id}',[DestinationController::class,'deleteDestination'])->name('admin/deleteDestination');
     /* Destinations End */
 
-    /* Adventure Start */
+    /* Activities Start */
+    Route::get('activities',[ActivityController::class,'activities'])->name('admin/activities');
+    Route::any('activity-form/{id?}',[ActivityController::class,'activityForm'])->name('admin/activityForm');
+    Route::post('add-activity',[ActivityController::class,'addActivity'])->name('admin/addActivity');
+    Route::post('update-activity/{id}',[ActivityController::class,'updateActivity'])->name('admin/updateActivity');
+    Route::post('delete-activity/{id}',[ActivityController::class,'deleteActivity'])->name('admin/deleteActivity');
+    /* Activities End */
+
+    /* Adventures Start */
     Route::get('adventures',[AdventureController::class,'adventures'])->name('admin/adventures');
     Route::any('adventure-form/{id?}',[AdventureController::class,'adventureForm'])->name('admin/adventureForm');
     Route::post('add-adventure',[AdventureController::class,'addAdventure'])->name('admin/addAdventure');
     Route::post('update-adventure/{id}',[AdventureController::class,'updateAdventure'])->name('admin/updateAdventure');
-    Route::post('delete-adventure/{id}',[AdventureController::class,'deleteAdventure'])->name('admin/deleteAdventure');
-    /* Adventure End */
-
-    /* Journey Start */
-    Route::get('journeys',[JourneyController::class,'journeys'])->name('admin/journeys');
-    Route::any('journey-form/{id?}',[JourneyController::class,'journeyForm'])->name('admin/journeyForm');
-    Route::post('add-journeys',[JourneyController::class,'addJourney'])->name('admin/addJourney');
-    Route::post('update-journeys/{id}',[JourneyController::class,'updateJourney'])->name('admin/updateJourney');
-    Route::post('delete-journeys/{id}',[JourneyController::class,'deleteJourney'])->name('admin/deleteJourney');
-    /* Journey End */
+    Route::post('delete-adventure/{id}',[AdventureController::class,'deleteJourney'])->name('admin/deleteJourney');
+    /* Adventures End */
 
     /* Reviews & Testimonials Start */
     Route::get('reviews',[ReviewController::class,'reviews'])->name('admin/reviews');

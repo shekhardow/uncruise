@@ -12,8 +12,8 @@ use App\Models\admin\AdminModel;
 use App\Models\admin\UserModel;
 use App\Models\admin\CruiseModel;
 use App\Models\admin\DestinationModel;
+use App\Models\admin\ActivityModel;
 use App\Models\admin\AdventureModel;
-use App\Models\admin\JourneyModel;
 use App\Models\admin\ReviewModel;
 
 class AdminController extends Controller
@@ -23,8 +23,8 @@ class AdminController extends Controller
     private $user_model;
     private $cruise_model;
     private $destination_model;
+    private $activity_model;
     private $adventure_model;
-    private $journey_model;
     private $review_model;
 
     public function __construct(){
@@ -32,8 +32,8 @@ class AdminController extends Controller
         $this->user_model = new UserModel();
         $this->cruise_model = new CruiseModel();
         $this->destination_model = new DestinationModel();
+        $this->activity_model = new ActivityModel();
         $this->adventure_model = new AdventureModel();
-        $this->journey_model = new JourneyModel();
         $this->review_model = new ReviewModel();
     }
 
@@ -95,8 +95,8 @@ class AdminController extends Controller
         $data['total_users'] = count($this->user_model->getAllUsers());
         $data['total_cruises'] = count($this->cruise_model->getAllCruises());
         $data['total_destinations'] = count($this->destination_model->getAllDestinations());
-        $data['total_adventures'] = count($this->adventure_model->getAllAdventures());
-        $data['total_journeys'] = count($this->journey_model->getAllJourneys());
+        $data['total_adventures'] = count($this->activity_model->getAllActivities());
+        $data['total_journeys'] = count($this->adventure_model->getAllAdventures());
         $data['total_reviews'] = count($this->review_model->getAllReviews());
         $data['total_testimonials'] = count($this->review_model->getAllTestimonials());
         return $this->loadview('dashboard/dashboard',$data);
@@ -232,7 +232,7 @@ class AdminController extends Controller
         }elseif($key=='contact-us'){
             $type = 'Contact';
              $url = route('admin/siteSetting',['key' => 'contact-us']);
-         
+
             $title = 'Contact Us';
         }
         else{
@@ -482,7 +482,7 @@ class AdminController extends Controller
             return response()->json(['result' => -1, 'msg' => 'Something went wrong!']);
         }
     }
-    
+
     // Toggle status change
     public function toggleStatus(Request $request){
         $change_status = $request->post('changevalue');
