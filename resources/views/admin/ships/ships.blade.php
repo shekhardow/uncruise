@@ -25,7 +25,7 @@
                             </ul>
                         </div>
                         <div class="flex sm:space-x-4 space-x-2 sm:justify-end items-center rtl:space-x-reverse">
-                           <a href="<?php echo route('admin/cruiseForm'); ?>" class="btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal"
+                           <a href="<?php echo route('admin/shipForm'); ?>" class="btn leading-0 inline-flex justify-center bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 !font-normal"
                            data-tippy-content="Add New Ship" data-tippy-placement="left">
                                <span class="flex items-center">
                                    <iconify-icon class="text-xl ltr:mr-2 rtl:ml-2 font-light" icon="heroicons-outline:plus"></iconify-icon>
@@ -56,7 +56,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                                                    <?php $i=1; if(!empty($cruises)){ foreach($cruises as $cruise){ ?>
+                                                    <?php $i=1; if(!empty($ships)){ foreach($ships as $cruise){ ?>
                                                     <tr>
                                                         <td class="table-td"><?php echo $i; ?></td>
                                                         <td class="table-td smallText"><?php echo !empty($cruise->ship_name) ? $cruise->ship_name : null; ?></td>
@@ -65,21 +65,21 @@
                                                         <td class="table-td">
                                                             <?php if($cruise->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
                                                             }else{ $class = "text-danger-500 bg-danger-500"; $status = "Inactive"; $change_to = "Active"; } ?>
-                                                            <!--<a href="<?php //echo url('admin/change-status/' . $cruise->ship_id . '/' . $change_to . '/cruises/ship_id/status'); ?>" status-type="<?php //echo $change_to; ?>"-->
+                                                            <!--<a href="<?php //echo url('admin/change-status/' . $cruise->ship_id . '/' . $change_to . '/ships/ship_id/status'); ?>" status-type="<?php //echo $change_to; ?>"-->
                                                             <!--    class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php //echo $class; ?>">-->
                                                             <!--    <?php //echo $status ?>-->
                                                             <!--</a>-->
                                                              <div class="customSwitchBox">
-                                                                <input type="checkbox" class="toggleStatus"  <?php echo @($cruise->status=='Active')?"Checked":"" ?> id="customSwitch_<?php echo $i ?>" data-table="cruises" data-changevalue="<?php echo @$change_to; ?>" data-column_name='status' data-wherecolumn="ship_id" data-wherevalue="<?php echo @$cruise->ship_id; ?>" data-url="<?php echo route('toggleStatus'); ?>"  name="customSwitch" value="<?php echo @$cruise->status ?>"/>
+                                                                <input type="checkbox" class="toggleStatus"  <?php echo @($cruise->status=='Active')?"Checked":"" ?> id="customSwitch_<?php echo $i ?>" data-table="ships" data-changevalue="<?php echo @$change_to; ?>" data-column_name='status' data-wherecolumn="ship_id" data-wherevalue="<?php echo @$cruise->ship_id; ?>" data-url="<?php echo route('toggleStatus'); ?>"  name="customSwitch" value="<?php echo @$cruise->status ?>"/>
                                                                 <label for="customSwitch_<?php echo $i ?>"></label>
                                                             </div>
                                                         </td>
                                                         <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">
-                                                                <a class="action-btn" href="<?php echo route('admin/cruiseForm', ['id' => encryptionID($cruise->ship_id)]); ?>" data-tippy-content="Edit Ship" data-tippy-placement="top">
+                                                                <a class="action-btn" href="<?php echo route('admin/shipForm', ['id' => encryptionID($cruise->ship_id)]); ?>" data-tippy-content="Edit Ship" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:pencil-square"></iconify-icon>
                                                                 </a>
-                                                                <a href="<?php echo url('admin/change-status/'.$cruise->ship_id.'/Deleted/cruises/ship_id/status'); ?>" class="status action-btn" data-tippy-content="Delete Ship" data-tippy-placement="top">
+                                                                <a href="<?php echo url('admin/change-status/'.$cruise->ship_id.'/Deleted/ships/ship_id/status'); ?>" class="status action-btn" data-tippy-content="Delete Ship" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:trash"></iconify-icon>
                                                                 </a>
                                                             </div>

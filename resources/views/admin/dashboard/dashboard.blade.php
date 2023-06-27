@@ -77,7 +77,7 @@
                                                 </div>
                                             </a>
 
-                                            <a href="<?php echo route('admin/cruise'); ?>">
+                                            <a href="<?php echo route('admin/ships'); ?>">
                                                 <div class=" bg-warning-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center">
                                                     <div class="text-warning-500 mx-auto h-10 w-10 flex flex-col items-center justify-center rounded-full bg-white text-2xl mb-4">
                                                         <iconify-icon icon="tabler:ship"></iconify-icon>

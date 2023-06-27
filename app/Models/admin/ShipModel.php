@@ -26,7 +26,7 @@ class ShipModel extends Model
         return DB::table('ship_images')->where('ship_id', $id)->get();
     }
 
-    public function addCruise($requestdata, $thumbnail_image) {
+    public function addShip($requestdata, $thumbnail_image) {
         $data = array(
             'ship_name'  => $requestdata['ship_name'],
             // 'ship_type'    => $requestdata['ship_type'],
@@ -38,7 +38,7 @@ class ShipModel extends Model
         return DB::getPdo()->lastInsertId();
     }
 
-    public function updateCruise($requestdata, $thumbnail_image, $id) {
+    public function updateShip($requestdata, $thumbnail_image, $id) {
         $data = array(
             'ship_name'  => $requestdata['ship_name'],
             // 'ship_type'    => $requestdata['ship_type'],

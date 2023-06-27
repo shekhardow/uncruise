@@ -58,11 +58,11 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     /* Surveys End */
 
     /* Cruise Start */
-    Route::get('cruise',[ShipController::class,'cruise'])->name('admin/cruise');
-    Route::any('cruise-form/{id?}',[ShipController::class,'cruiseForm'])->name('admin/cruiseForm');
-    Route::post('add-cruise',[ShipController::class,'addCruise'])->name('admin/addCruise');
-    Route::post('update-cruise/{id}',[ShipController::class,'updateCruise'])->name('admin/updateCruise');
-    Route::post('delete-cruise/{id}',[ShipController::class,'deleteCruise'])->name('admin/deleteCruise');
+    Route::get('ships',[ShipController::class,'ships'])->name('admin/ships');
+    Route::any('ship-form/{id?}',[ShipController::class,'shipForm'])->name('admin/shipForm');
+    Route::post('add-ship',[ShipController::class,'addShip'])->name('admin/addShip');
+    Route::post('update-ship/{id}',[ShipController::class,'updateShip'])->name('admin/updateShip');
+    Route::post('delete-ship/{id}',[ShipController::class,'deleteShip'])->name('admin/deleteShip');
     /* Cruise End */
 
     /* Destinations Start */

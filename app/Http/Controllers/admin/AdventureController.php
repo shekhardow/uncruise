@@ -170,7 +170,7 @@ class AdventureController extends Controller
                     $this->adventure_model->insertAdventureImages($data);
                 }
             }
-            return response()->json(['result' => 1, 'url' => route('admin/adventures'), 'msg' => 'Journey added successfully']);
+            return response()->json(['result' => 1, 'url' => route('admin/adventures'), 'msg' => 'Adventure added successfully']);
         } else {
             return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
         }
@@ -280,7 +280,7 @@ class AdventureController extends Controller
                 }
             }
 
-            return response()->json(['result' => 1, 'url' => route('admin/adventures'), 'msg' => 'Journey updated successfully']);
+            return response()->json(['result' => 1, 'url' => route('admin/adventures'), 'msg' => 'Adventure updated successfully']);
         } else {
             return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }

@@ -33,13 +33,13 @@ class ShipController extends Controller
     }
 
     // ---------------------- Destinations ---------------------------
-    public function cruise() {
-        $data['title'] = "Cruise";
-        $data['cruises'] = $this->cruise_model->getAllCruises();
-        return $this->loadview('cruise/cruise', $data);
+    public function ships() {
+        $data['title'] = "Ships";
+        $data['ships'] = $this->cruise_model->getAllCruises();
+        return $this->loadview('ships/ships', $data);
     }
 
-    public function cruiseForm($ship_id=null) {
+    public function shipForm($ship_id=null) {
         $ship_id = decryptionID($ship_id);
         //$data['ship_types'] = $this->cruise_model->getCruiseTypes();
         $data['destinations'] = $this->destination_model->getAllDestinations();
@@ -49,17 +49,17 @@ class ShipController extends Controller
         $data['seleted_guest'] = @select('ship_details','*',[['ship_id','=',$ship_id],['ship_value_type','=','guest']])->map(function($item){return $item->ship_value;})->toArray();;
 
         if(empty($ship_id)){
-            $data['title'] = "Add Cruise";
+            $data['title'] = "Add Ship";
         }else{
-            $data['title'] = "Edit Cruise";
-            $data['cruise_detail'] = $this->cruise_model->getCruiseDetail($ship_id);
+            $data['title'] = "Edit Ship";
+            $data['ship_detail'] = $this->cruise_model->getCruiseDetail($ship_id);
             $data['ship_images'] = $this->cruise_model->getCruiseImages($ship_id);
         }
-        return $this->loadview('cruise/cruise-form', $data);
+        return $this->loadview('ships/ship-form', $data);
     }
 
 
-    public function addCruise(Request $request){
+    public function addShip(Request $request){
         $requestdata = $request->all();
         $validator = Validator::make($requestdata, $rules = [
             'ship_name' => 'required',
@@ -73,6 +73,29 @@ class ShipController extends Controller
             return response()->json(['result' => 0, 'errors' => $validator->errors()]);
             return false;
         }
+
+        // size and year
+        $size = $request->post('sizeyear');
+        if(empty($size)){
+            return response()->json(['result' => -1, 'msg' => 'Please add Size and Year Field']);
+            return false;
+        }
+        $guest = $request->post('guest');
+        if(empty($guest)){
+            return response()->json(['result' => -1, 'msg' => 'Please add Guest Field']);
+            return false;
+        }
+        $crew = $request->post('crew');
+        if(empty($crew)){
+            return response()->json(['result' => -1, 'msg' => 'Please add Crew Field']);
+            return false;
+        }
+        $destinatios = $request->post('destinatios');
+        if(empty($destinatios)){
+            return response()->json(['result' => -1, 'msg' => 'Please add destinatios Field']);
+            return false;
+        }
+
         $thumbnail_image = $request->hasfile('thumbnail_image');
         if(empty($thumbnail_image)){
             return response()->json(['result' => -1, 'msg' => 'Please add Thumbnail Image']);
@@ -85,30 +108,7 @@ class ShipController extends Controller
         if(!empty($thumbnail_image)){
             $thumbnail_image = singleCloudinaryUpload($request, 'thumbnail_image');
         }
-        // size and year
-        $size = $request->post('sizeyear');
-
-        if(empty($size)){
-            return response()->json(['result' => -1, 'msg' => 'Please add Size and Year Field']);
-            return false;
-        }
-        $guest = $request->post('guest');
-        if(empty($guest)){
-            return response()->json(['result' => -1, 'msg' => 'Please add Guest  Field']);
-            return false;
-        }
-        $crew = $request->post('crew');
-        if(empty($crew)){
-            return response()->json(['result' => -1, 'msg' => 'Please add Crew  Field']);
-            return false;
-        }
-        $destinatios = $request->post('destinatios');
-        if(empty($destinatios)){
-            return response()->json(['result' => -1, 'msg' => 'Please add destinatios  Field']);
-            return false;
-        }
-
-        $result = $this->cruise_model->addCruise($requestdata, $thumbnail_image);
+        $result = $this->cruise_model->addShip($requestdata, $thumbnail_image);
         if($result){
             if(!empty($size)){
                 $sizetemp = [];
@@ -159,13 +159,13 @@ class ShipController extends Controller
                     $this->cruise_model->insertCruiseImages($data);
                 }
             }
-            return response()->json(['result' => 1, 'url' => route('admin/cruise'), 'msg' => 'Cruise added successfully']);
+            return response()->json(['result' => 1, 'url' => route('admin/ships'), 'msg' => 'Ship added successfully']);
         }else{
             return response()->json(['result' => -1, 'msg' => 'Oops... Something went wrong!']);
         }
     }
 
-    public function updateCruise(Request $request, $ship_id){
+    public function updateShip(Request $request, $ship_id){
         $requestdata = $request->all();
         $ship_id = decryptionID($ship_id);
         $validator = Validator::make($requestdata, $rules = [
@@ -183,6 +183,28 @@ class ShipController extends Controller
         $destination_detail = $this->cruise_model->getCruiseDetail($ship_id);
         $other_images = $this->cruise_model->getCruiseImages($ship_id);
 
+        // size and year
+        $size = $request->post('sizeyear');
+        if(empty($size)){
+         return response()->json(['result' => -1, 'msg' => 'Please add Size and Year Field']);
+         return false;
+        }
+        $guest = $request->post('guest');
+        if(empty($guest)){
+         return response()->json(['result' => -1, 'msg' => 'Please add Guest  Field']);
+         return false;
+        }
+        $crew = $request->post('crew');
+        if(empty($crew)){
+         return response()->json(['result' => -1, 'msg' => 'Please add Crew  Field']);
+         return false;
+        }
+        $destinatios = $request->post('destinatios');
+        if(empty($destinatios)){
+         return response()->json(['result' => -1, 'msg' => 'Please add destinatios  Field']);
+         return false;
+        }
+
         if (!$request->hasfile('other_images') && $other_images->isEmpty()) {
             return response()->json(['result' => -1, 'msg' => 'Please upload at least one other image.']);
         }
@@ -194,29 +216,7 @@ class ShipController extends Controller
         }else{
             $thumbnail_image = $destination_detail->thumbnail_image;
         }
-         // size and year
-         $size = $request->post('sizeyear');
-
-         if(empty($size)){
-             return response()->json(['result' => -1, 'msg' => 'Please add Size and Year Field']);
-             return false;
-         }
-         $guest = $request->post('guest');
-         if(empty($guest)){
-             return response()->json(['result' => -1, 'msg' => 'Please add Guest  Field']);
-             return false;
-         }
-         $crew = $request->post('crew');
-         if(empty($crew)){
-             return response()->json(['result' => -1, 'msg' => 'Please add Crew  Field']);
-             return false;
-         }
-         $destinatios = $request->post('destinatios');
-         if(empty($destinatios)){
-             return response()->json(['result' => -1, 'msg' => 'Please add destinatios  Field']);
-             return false;
-         }
-        $result = $this->cruise_model->updateCruise($requestdata, $thumbnail_image, $ship_id);
+        $result = $this->cruise_model->updateShip($requestdata, $thumbnail_image, $ship_id);
         if($result){
             delete('ship_details','ship_id',$ship_id);
             if(!empty($size)){
@@ -268,13 +268,13 @@ class ShipController extends Controller
                     $this->cruise_model->insertCruiseImages($data);
                 }
             }
-            return response()->json(['result' => 1, 'url' => route('admin/cruise'), 'msg' => 'Cruise updated successfully']);
+            return response()->json(['result' => 1, 'url' => route('admin/ships'), 'msg' => 'Ship updated successfully']);
         }else{
             return response()->json(['result' => -1, 'msg' => 'No changes were found!']);
         }
     }
 
-    public function deleteCruise($id){
+    public function deleteShip($id){
         $id = decryptionID($id);
         DB::table('ship_images')->where('id', $id)->delete();
         if(true){

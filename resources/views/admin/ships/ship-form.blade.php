@@ -18,7 +18,7 @@
                                 <iconify-icon icon="heroicons-outline:chevron-right" class="relative top-[3px] text-slate-500 rtl:rotate-180"></iconify-icon>
                             </li>
                             <li class="inline-block relative text-sm text-slate-500 font-Inter dark:text-white">
-                                <?php echo !empty($cruise_detail) ? 'Edit' : 'Add'; ?> Ship
+                                <?php echo !empty($ship_detail) ? 'Edit' : 'Add'; ?> Ship
                             </li>
                         </ul>
                     </div>
@@ -27,11 +27,11 @@
                     <div class="space-y-5">
                         <div class="card">
                             <div class="card-body p-6">
-                                <form method="post" id="submit-form" action="<?php echo !empty($cruise_detail) ? route('admin/updateCruise', ['id' => encryptionID($cruise_detail->ship_id)]) : route('admin/addCruise'); ?>" enctype="multipart/form-data">
+                                <form method="post" id="submit-form" action="<?php echo !empty($ship_detail) ? route('admin/updateShip', ['id' => encryptionID($ship_detail->ship_id)]) : route('admin/addShip'); ?>" enctype="multipart/form-data">
                                     <div class="grid lg:grid-cols-1 md:grid-cols-1 grid-cols-1 gap-5 mb-3">
                                         <div class="form-group input-area">
                                             <label for="ship_name" class="form-label">Ship Name :</label>
-                                            <input type="text" name="ship_name" id="ship_name" value="<?php echo !empty($cruise_detail->ship_name) ? $cruise_detail->ship_name : null; ?>" class="form-control">
+                                            <input type="text" name="ship_name" id="ship_name" value="<?php echo !empty($ship_detail->ship_name) ? $ship_detail->ship_name : null; ?>" class="form-control">
                                         </div>
 
                                         <!--<div class="form-group input-area">-->
@@ -39,7 +39,7 @@
                                         <!--    <select name="ship_type" id="ship_type" class="form-control">-->
                                         <!--        <option value="" selected disabled>Select Cruise Type</option>-->
                                         <!--        <?php //if(!empty($ship_types)){ foreach($ship_types as $type){ ?>-->
-                                        <!--        <option value="<?php //echo $type->ship_type; ?>" <?php //echo (@$cruise_detail->ship_type == $type->ship_type) ? 'selected' : null; ?>>-->
+                                        <!--        <option value="<?php //echo $type->ship_type; ?>" <?php //echo (@$ship_detail->ship_type == $type->ship_type) ? 'selected' : null; ?>>-->
                                         <!--            <?php //echo $type->ship_type; ?>-->
                                         <!--        </option>-->
                                         <!--        <?php //}} ?>-->
@@ -49,7 +49,7 @@
                                         <div class="form-group input-area lg:col-span-1 md:col-span-1 col-span-1">
                                             <label for="detailed_description" class="form-label">Detailed Description :</label>
                                             <textarea rows="3" name="detailed_description" id="detailed_description" class="tinymice block w-full py-2 px-3 border border-gray-300 rounded-md">
-                                                <?php echo !empty($cruise_detail->detailed_description) ? $cruise_detail->detailed_description : null; ?>
+                                                <?php echo !empty($ship_detail->detailed_description) ? $ship_detail->detailed_description : null; ?>
                                             </textarea>
                                         </div>
 
@@ -116,8 +116,8 @@
                                                 </span>
                                             </label>
                                             <div id="file_preview_profile_pic">
-                                                <?php if(!empty($cruise_detail->thumbnail_image)){ ?>
-                                                <img src="<?php echo $cruise_detail->thumbnail_image; ?>">
+                                                <?php if(!empty($ship_detail->thumbnail_image)){ ?>
+                                                <img src="<?php echo $ship_detail->thumbnail_image; ?>">
                                                 <?php } ?>
                                             </div>
                                         </div>
@@ -146,7 +146,7 @@
                                                 <?php foreach ($ship_images as $value) { ?>
                                                 <div class="relative inline-block previewImages">
                                                     <img src="<?php echo !empty($value->image_url) ? $value->image_url : null; ?>" class="preview-img">
-                                                    <a href="<?php echo route('admin/deleteCruise', ['id' => encryptionID($value->id)]); ?>" class="delete-image cross-btn" data-tippy-content="Delete Image" data-tippy-placement="left">X</a>
+                                                    <a href="<?php echo route('admin/deleteShip', ['id' => encryptionID($value->id)]); ?>" class="delete-image cross-btn" data-tippy-content="Delete Image" data-tippy-placement="left">X</a>
                                                 </div>
                                                 <?php } ?>
                                                 <?php } ?>
@@ -154,9 +154,9 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-end p-6 space-x-2 border-slate-200 rounded-b dark:border-slate-600">
-                                        <a href="<?php echo route('admin/cruise'); ?>" class="btn inline-flex justify-center btn-outline-dark">Cancel</a>
+                                        <a href="<?php echo route('admin/ships'); ?>" class="btn inline-flex justify-center btn-outline-dark">Cancel</a>
                                         <button type="submit" id="submit-btn" class="btn inline-flex justify-center text-white bg-black-500">
-                                            <?php echo !empty($cruise_detail) ? 'Update' : 'Submit'; ?>
+                                            <?php echo !empty($ship_detail) ? 'Update' : 'Submit'; ?>
                                         </button>
                                     </div>
                                 </form>

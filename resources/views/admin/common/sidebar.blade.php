@@ -52,7 +52,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo route('admin/cruise'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Cruise' || $title == 'Add Cruise' || $title == 'Edit Cruise') ? 'active' : ''; ?>">
+                <a href="<?php echo route('admin/ships'); ?>" class="navItem <?php echo (!empty($title) && $title == 'Ships' || $title == 'Add Ship' || $title == 'Edit Ship') ? 'active' : ''; ?>">
                     <span class="flex items-center">
                         <iconify-icon class="nav-icon" icon="tabler:ship"></iconify-icon>
                         <span>Ships</span>
