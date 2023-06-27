@@ -44,9 +44,9 @@
                                         <div class="form-group input-area">
                                             <label for="cruise" class="form-label">Ships :</label>
                                             <select name="cruise[]" id="cruise" class="form-control selecttag"  multiple="multiple">
-                                                <?php if(!empty($cruise_details)){ foreach($cruise_details as $cruise){ ?>
-                                                <option value="<?php echo $cruise->cruise_id; ?>" <?php echo (@in_array(@$cruise->cruise_id, $seleted_crew)) ? "selected" : ""; ?>>
-                                                    <?php echo $cruise->cruise_name; ?>
+                                                <?php if(!empty($ship_details)){ foreach($ship_details as $cruise){ ?>
+                                                <option value="<?php echo $cruise->ship_id; ?>" <?php echo (@in_array(@$cruise->ship_id, $seleted_crew)) ? "selected" : ""; ?>>
+                                                    <?php echo $cruise->ship_name; ?>
                                                 </option>
                                                 <?php }} ?>
                                             </select>

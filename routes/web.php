@@ -5,7 +5,7 @@ use App\Http\Middleware\AdminAuth;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\SurveyController;
-use App\Http\Controllers\admin\CruiseController;
+use App\Http\Controllers\admin\ShipController;
 use App\Http\Controllers\admin\DestinationController;
 use App\Http\Controllers\admin\ActivityController;
 use App\Http\Controllers\admin\AdventureController;
@@ -58,11 +58,11 @@ Route::group(['prefix' => 'admin', 'middleware' => AdminAuth::class], function (
     /* Surveys End */
 
     /* Cruise Start */
-    Route::get('cruise',[CruiseController::class,'cruise'])->name('admin/cruise');
-    Route::any('cruise-form/{id?}',[CruiseController::class,'cruiseForm'])->name('admin/cruiseForm');
-    Route::post('add-cruise',[CruiseController::class,'addCruise'])->name('admin/addCruise');
-    Route::post('update-cruise/{id}',[CruiseController::class,'updateCruise'])->name('admin/updateCruise');
-    Route::post('delete-cruise/{id}',[CruiseController::class,'deleteCruise'])->name('admin/deleteCruise');
+    Route::get('cruise',[ShipController::class,'cruise'])->name('admin/cruise');
+    Route::any('cruise-form/{id?}',[ShipController::class,'cruiseForm'])->name('admin/cruiseForm');
+    Route::post('add-cruise',[ShipController::class,'addCruise'])->name('admin/addCruise');
+    Route::post('update-cruise/{id}',[ShipController::class,'updateCruise'])->name('admin/updateCruise');
+    Route::post('delete-cruise/{id}',[ShipController::class,'deleteCruise'])->name('admin/deleteCruise');
     /* Cruise End */
 
     /* Destinations Start */

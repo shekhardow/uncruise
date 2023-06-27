@@ -156,7 +156,7 @@ class ApiModel extends Model
     public function getAllShips()
     {
         try {
-            $data = DB::table('cruises')->select('*')->get();
+            $data = DB::table('ships')->select('*')->get();
             return $data;
         } catch (\Exception $e) {
             echo $e->getMessage();

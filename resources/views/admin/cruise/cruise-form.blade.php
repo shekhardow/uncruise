@@ -27,25 +27,25 @@
                     <div class="space-y-5">
                         <div class="card">
                             <div class="card-body p-6">
-                                <form method="post" id="submit-form" action="<?php echo !empty($cruise_detail) ? route('admin/updateCruise', ['id' => encryptionID($cruise_detail->cruise_id)]) : route('admin/addCruise'); ?>" enctype="multipart/form-data">
+                                <form method="post" id="submit-form" action="<?php echo !empty($cruise_detail) ? route('admin/updateCruise', ['id' => encryptionID($cruise_detail->ship_id)]) : route('admin/addCruise'); ?>" enctype="multipart/form-data">
                                     <div class="grid lg:grid-cols-1 md:grid-cols-1 grid-cols-1 gap-5 mb-3">
                                         <div class="form-group input-area">
-                                            <label for="cruise_name" class="form-label">Ship Name :</label>
-                                            <input type="text" name="cruise_name" id="cruise_name" value="<?php echo !empty($cruise_detail->cruise_name) ? $cruise_detail->cruise_name : null; ?>" class="form-control">
+                                            <label for="ship_name" class="form-label">Ship Name :</label>
+                                            <input type="text" name="ship_name" id="ship_name" value="<?php echo !empty($cruise_detail->ship_name) ? $cruise_detail->ship_name : null; ?>" class="form-control">
                                         </div>
-                                        
+
                                         <!--<div class="form-group input-area">-->
-                                        <!--    <label for="cruise_type" class="form-label">Cruise Type :</label>-->
-                                        <!--    <select name="cruise_type" id="cruise_type" class="form-control">-->
+                                        <!--    <label for="ship_type" class="form-label">Cruise Type :</label>-->
+                                        <!--    <select name="ship_type" id="ship_type" class="form-control">-->
                                         <!--        <option value="" selected disabled>Select Cruise Type</option>-->
-                                        <!--        <?php //if(!empty($cruise_types)){ foreach($cruise_types as $type){ ?>-->
-                                        <!--        <option value="<?php //echo $type->cruise_type; ?>" <?php //echo (@$cruise_detail->cruise_type == $type->cruise_type) ? 'selected' : null; ?>>-->
-                                        <!--            <?php //echo $type->cruise_type; ?>-->
+                                        <!--        <?php //if(!empty($ship_types)){ foreach($ship_types as $type){ ?>-->
+                                        <!--        <option value="<?php //echo $type->ship_type; ?>" <?php //echo (@$cruise_detail->ship_type == $type->ship_type) ? 'selected' : null; ?>>-->
+                                        <!--            <?php //echo $type->ship_type; ?>-->
                                         <!--        </option>-->
                                         <!--        <?php //}} ?>-->
                                         <!--    </select>-->
                                         <!--</div>-->
-                                       
+
                                         <div class="form-group input-area lg:col-span-1 md:col-span-1 col-span-1">
                                             <label for="detailed_description" class="form-label">Detailed Description :</label>
                                             <textarea rows="3" name="detailed_description" id="detailed_description" class="tinymice block w-full py-2 px-3 border border-gray-300 rounded-md">
@@ -60,10 +60,10 @@
                                                         foreach($seleted_size as $size){?>
                                                                 <option selected value="<?php echo $size;  ?>"  class=" inline-block font-Inter font-normal text-sm text-slate-600"><?php echo $size;  ?></option>
                                                         <?php }
-                                                    } ?> 
-                                            </select>  
+                                                    } ?>
+                                            </select>
                                         </div>
-                                        
+
                                         <div class="form-group input-area">
                                             <label for="guest" class="form-label">Guest :</label>
                                             <select name="guest[]"  class="selecttag form-control w-full mt-2 py-2" multiple="multiple">
@@ -71,11 +71,11 @@
                                                         foreach($seleted_guest as $size){?>
                                                                 <option  selected value="<?php echo $size;  ?>"  class=" inline-block font-Inter font-normal text-sm text-slate-600"><?php echo $size;  ?></option>
                                                         <?php }
-                                                    } ?> 
-                                            </select> 
+                                                    } ?>
+                                            </select>
                                         </div>
-                                        
-                                        
+
+
                                         <div class="form-group input-area">
                                             <label for="crew" class="form-label">Crew :</label>
                                             <select name="crew[]"  class="selecttag form-control w-full mt-2 py-2" multiple="multiple">
@@ -83,8 +83,8 @@
                                                         foreach($seleted_crew as $size){?>
                                                                 <option  selected value="<?php echo $size;  ?>"  class=" inline-block font-Inter font-normal text-sm text-slate-600"><?php echo $size;  ?></option>
                                                         <?php }
-                                                    } ?> 
-                                            </select> 
+                                                    } ?>
+                                            </select>
                                         </div>
 
                                         <div class="form-group input-area">
@@ -94,10 +94,10 @@
                                                         foreach($destinations as $destination){?>
                                                                 <option  value="<?php echo $destination->destination_id;  ?>" <?php echo (@in_array($destination->destination_id,@$seleted_destination))?"selected":""; ?> class=" inline-block font-Inter font-normal text-sm text-slate-600"><?php echo  @$destination->name ?></option>
                                                         <?php }
-                                                    } ?> 
-                                            </select> 
+                                                    } ?>
+                                            </select>
                                         </div>
-                                        
+
                                     </div>
                                     <div class="form-group input-area lg:col-span-3 md:col-span-2 col-span-1 mt-5">
                                         <label for="thumbnail_image" class="form-label">Banner Image :</label>
@@ -142,8 +142,8 @@
 
                                             </div>
                                             <div id="oldFilePreview">
-                                                <?php if (!empty($cruise_images)) { ?>
-                                                <?php foreach ($cruise_images as $value) { ?>
+                                                <?php if (!empty($ship_images)) { ?>
+                                                <?php foreach ($ship_images as $value) { ?>
                                                 <div class="relative inline-block previewImages">
                                                     <img src="<?php echo !empty($value->image_url) ? $value->image_url : null; ?>" class="preview-img">
                                                     <a href="<?php echo route('admin/deleteCruise', ['id' => encryptionID($value->id)]); ?>" class="delete-image cross-btn" data-tippy-content="Delete Image" data-tippy-placement="left">X</a>

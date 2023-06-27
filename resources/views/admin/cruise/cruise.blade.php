@@ -59,27 +59,27 @@
                                                     <?php $i=1; if(!empty($cruises)){ foreach($cruises as $cruise){ ?>
                                                     <tr>
                                                         <td class="table-td"><?php echo $i; ?></td>
-                                                        <td class="table-td smallText"><?php echo !empty($cruise->cruise_name) ? $cruise->cruise_name : null; ?></td>
-                                                        <!-- <td class="table-td smallText"><?php // echo !empty($cruise->cruise_type) ? $cruise->cruise_type : null; ?></td> -->
+                                                        <td class="table-td smallText"><?php echo !empty($cruise->ship_name) ? $cruise->ship_name : null; ?></td>
+                                                        <!-- <td class="table-td smallText"><?php // echo !empty($cruise->ship_type) ? $cruise->ship_type : null; ?></td> -->
                                                         <td class="table-td smallText"><?php echo !empty($cruise->detailed_description) ? limitWords($cruise->detailed_description, 10) : null; ?></td>
                                                         <td class="table-td">
                                                             <?php if($cruise->status == 'Active'){ $class = "text-success-500 bg-success-500"; $status = "Active"; $change_to = "Inactive";
                                                             }else{ $class = "text-danger-500 bg-danger-500"; $status = "Inactive"; $change_to = "Active"; } ?>
-                                                            <!--<a href="<?php //echo url('admin/change-status/' . $cruise->cruise_id . '/' . $change_to . '/cruises/cruise_id/status'); ?>" status-type="<?php //echo $change_to; ?>"-->
+                                                            <!--<a href="<?php //echo url('admin/change-status/' . $cruise->ship_id . '/' . $change_to . '/cruises/ship_id/status'); ?>" status-type="<?php //echo $change_to; ?>"-->
                                                             <!--    class="status inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 <?php //echo $class; ?>">-->
                                                             <!--    <?php //echo $status ?>-->
                                                             <!--</a>-->
                                                              <div class="customSwitchBox">
-                                                                <input type="checkbox" class="toggleStatus"  <?php echo @($cruise->status=='Active')?"Checked":"" ?> id="customSwitch_<?php echo $i ?>" data-table="cruises" data-changevalue="<?php echo @$change_to; ?>" data-column_name='status' data-wherecolumn="cruise_id" data-wherevalue="<?php echo @$cruise->cruise_id; ?>" data-url="<?php echo route('toggleStatus'); ?>"  name="customSwitch" value="<?php echo @$cruise->status ?>"/>
+                                                                <input type="checkbox" class="toggleStatus"  <?php echo @($cruise->status=='Active')?"Checked":"" ?> id="customSwitch_<?php echo $i ?>" data-table="cruises" data-changevalue="<?php echo @$change_to; ?>" data-column_name='status' data-wherecolumn="ship_id" data-wherevalue="<?php echo @$cruise->ship_id; ?>" data-url="<?php echo route('toggleStatus'); ?>"  name="customSwitch" value="<?php echo @$cruise->status ?>"/>
                                                                 <label for="customSwitch_<?php echo $i ?>"></label>
                                                             </div>
                                                         </td>
                                                         <td class="table-td">
                                                             <div class="flex space-x-3 rtl:space-x-reverse">
-                                                                <a class="action-btn" href="<?php echo route('admin/cruiseForm', ['id' => encryptionID($cruise->cruise_id)]); ?>" data-tippy-content="Edit Ship" data-tippy-placement="top">
+                                                                <a class="action-btn" href="<?php echo route('admin/cruiseForm', ['id' => encryptionID($cruise->ship_id)]); ?>" data-tippy-content="Edit Ship" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:pencil-square"></iconify-icon>
                                                                 </a>
-                                                                <a href="<?php echo url('admin/change-status/'.$cruise->cruise_id.'/Deleted/cruises/cruise_id/status'); ?>" class="status action-btn" data-tippy-content="Delete Ship" data-tippy-placement="top">
+                                                                <a href="<?php echo url('admin/change-status/'.$cruise->ship_id.'/Deleted/cruises/ship_id/status'); ?>" class="status action-btn" data-tippy-content="Delete Ship" data-tippy-placement="top">
                                                                     <iconify-icon icon="heroicons:trash"></iconify-icon>
                                                                 </a>
                                                             </div>

@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\admin\AdminModel;
 use App\Models\admin\DestinationModel;
-use App\Models\admin\CruiseModel;
+use App\Models\admin\ShipModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 
-class CruiseController extends Controller
+class ShipController extends Controller
 {
     // DB Instance
     private $admin_model;
@@ -20,7 +20,7 @@ class CruiseController extends Controller
 
     public function __construct(){
         $this->admin_model = new AdminModel();
-        $this->cruise_model = new CruiseModel();
+        $this->cruise_model = new ShipModel();
         $this->destination_model = new DestinationModel();
     }
 
@@ -39,21 +39,21 @@ class CruiseController extends Controller
         return $this->loadview('cruise/cruise', $data);
     }
 
-    public function cruiseForm($cruise_id=null) {
-        $cruise_id = decryptionID($cruise_id);
-        //$data['cruise_types'] = $this->cruise_model->getCruiseTypes();
+    public function cruiseForm($ship_id=null) {
+        $ship_id = decryptionID($ship_id);
+        //$data['ship_types'] = $this->cruise_model->getCruiseTypes();
         $data['destinations'] = $this->destination_model->getAllDestinations();
-        $data['seleted_destination'] = @select('cruise_details','*',[['cruise_id','=',$cruise_id],['cruise_value_type','=','destination']])->map(function($item){return $item->cruise_value;})->toArray();;
-        $data['seleted_crew'] = @select('cruise_details','*',[['cruise_id','=',$cruise_id],['cruise_value_type','=','crew']])->map(function($item){return $item->cruise_value;})->toArray();;
-        $data['seleted_size'] = @select('cruise_details','*',[['cruise_id','=',$cruise_id],['cruise_value_type','=','size']])->map(function($item){return $item->cruise_value;})->toArray();;
-        $data['seleted_guest'] = @select('cruise_details','*',[['cruise_id','=',$cruise_id],['cruise_value_type','=','guest']])->map(function($item){return $item->cruise_value;})->toArray();;
+        $data['seleted_destination'] = @select('ship_details','*',[['ship_id','=',$ship_id],['ship_value_type','=','destination']])->map(function($item){return $item->ship_value;})->toArray();;
+        $data['seleted_crew'] = @select('ship_details','*',[['ship_id','=',$ship_id],['ship_value_type','=','crew']])->map(function($item){return $item->ship_value;})->toArray();;
+        $data['seleted_size'] = @select('ship_details','*',[['ship_id','=',$ship_id],['ship_value_type','=','size']])->map(function($item){return $item->ship_value;})->toArray();;
+        $data['seleted_guest'] = @select('ship_details','*',[['ship_id','=',$ship_id],['ship_value_type','=','guest']])->map(function($item){return $item->ship_value;})->toArray();;
 
-        if(empty($cruise_id)){
+        if(empty($ship_id)){
             $data['title'] = "Add Cruise";
         }else{
             $data['title'] = "Edit Cruise";
-            $data['cruise_detail'] = $this->cruise_model->getCruiseDetail($cruise_id);
-            $data['cruise_images'] = $this->cruise_model->getCruiseImages($cruise_id);
+            $data['cruise_detail'] = $this->cruise_model->getCruiseDetail($ship_id);
+            $data['ship_images'] = $this->cruise_model->getCruiseImages($ship_id);
         }
         return $this->loadview('cruise/cruise-form', $data);
     }
@@ -62,8 +62,8 @@ class CruiseController extends Controller
     public function addCruise(Request $request){
         $requestdata = $request->all();
         $validator = Validator::make($requestdata, $rules = [
-             'cruise_name' => 'required',
-            // // 'cruise_type'   => 'required',
+            'ship_name' => 'required',
+            // // 'ship_type'   => 'required',
             // // 'brief_description'   => 'required',
             'detailed_description'   => 'required',
         ], $messages = [
@@ -87,7 +87,7 @@ class CruiseController extends Controller
         }
         // size and year
         $size = $request->post('sizeyear');
-        
+
         if(empty($size)){
             return response()->json(['result' => -1, 'msg' => 'Please add Size and Year Field']);
             return false;
@@ -113,40 +113,40 @@ class CruiseController extends Controller
             if(!empty($size)){
                 $sizetemp = [];
                 foreach($size as $s){
-                    $sizetemp['cruise_value_type'] = 'size';
-                    $sizetemp['cruise_value'] = $s;
-                    $sizetemp['cruise_id'] = $result;
-                    insert('cruise_details',$sizetemp);
+                    $sizetemp['ship_value_type'] = 'size';
+                    $sizetemp['ship_value'] = $s;
+                    $sizetemp['ship_id'] = $result;
+                    insert('ship_details',$sizetemp);
                     $sizetemp=[];
                 }
             }
             if(!empty($guest)){
                 $guesttemp = [];
                 foreach($guest as $g){
-                    $guesttemp['cruise_value_type'] = 'guest';
-                    $guesttemp['cruise_value'] = $g;
-                    $guesttemp['cruise_id'] = $result;
-                    insert('cruise_details',$guesttemp);
+                    $guesttemp['ship_value_type'] = 'guest';
+                    $guesttemp['ship_value'] = $g;
+                    $guesttemp['ship_id'] = $result;
+                    insert('ship_details',$guesttemp);
                     $sizetemp=[];
                 }
             }
             if(!empty($crew)){
                 $crewtemp = [];
                 foreach($crew as $c){
-                    $crewtemp['cruise_value_type'] = 'crew';
-                    $crewtemp['cruise_value'] = $c;
-                    $crewtemp['cruise_id'] = $result;
-                    insert('cruise_details',$crewtemp);
+                    $crewtemp['ship_value_type'] = 'crew';
+                    $crewtemp['ship_value'] = $c;
+                    $crewtemp['ship_id'] = $result;
+                    insert('ship_details',$crewtemp);
                     $crewtemp=[];
                 }
             }
             if(!empty($destinatios)){
                 $destinatiostemp = [];
                 foreach($destinatios as $s){
-                    $destinatiostemp['cruise_value_type'] = 'destination';
-                    $destinatiostemp['cruise_value'] = $s;
-                    $destinatiostemp['cruise_id'] = $result;
-                    insert('cruise_details',$destinatiostemp);
+                    $destinatiostemp['ship_value_type'] = 'destination';
+                    $destinatiostemp['ship_value'] = $s;
+                    $destinatiostemp['ship_id'] = $result;
+                    insert('ship_details',$destinatiostemp);
                     $destinatiostemp=[];
                 }
             }
@@ -154,7 +154,7 @@ class CruiseController extends Controller
             $other_images = multipleCloudinaryUploads($request, 'other_images');
             if(!empty($other_images)){
                 foreach($other_images as $value){
-                    $data['cruise_id'] = $result;
+                    $data['ship_id'] = $result;
                     $data['image_url'] = $value;
                     $this->cruise_model->insertCruiseImages($data);
                 }
@@ -165,12 +165,12 @@ class CruiseController extends Controller
         }
     }
 
-    public function updateCruise(Request $request, $cruise_id){
+    public function updateCruise(Request $request, $ship_id){
         $requestdata = $request->all();
-        $cruise_id = decryptionID($cruise_id);
+        $ship_id = decryptionID($ship_id);
         $validator = Validator::make($requestdata, $rules = [
-            'cruise_name' => 'required',
-            // 'cruise_type'   => 'required',
+            'ship_name' => 'required',
+            // 'ship_type'   => 'required',
             // 'brief_description'   => 'required',
             'detailed_description'   => 'required',
         ], $messages = [
@@ -180,8 +180,8 @@ class CruiseController extends Controller
             return response()->json(['result' => 0, 'errors' => $validator->errors()]);
             return false;
         }
-        $destination_detail = $this->cruise_model->getCruiseDetail($cruise_id);
-        $other_images = $this->cruise_model->getCruiseImages($cruise_id);
+        $destination_detail = $this->cruise_model->getCruiseDetail($ship_id);
+        $other_images = $this->cruise_model->getCruiseImages($ship_id);
 
         if (!$request->hasfile('other_images') && $other_images->isEmpty()) {
             return response()->json(['result' => -1, 'msg' => 'Please upload at least one other image.']);
@@ -196,7 +196,7 @@ class CruiseController extends Controller
         }
          // size and year
          $size = $request->post('sizeyear');
-        
+
          if(empty($size)){
              return response()->json(['result' => -1, 'msg' => 'Please add Size and Year Field']);
              return false;
@@ -216,46 +216,46 @@ class CruiseController extends Controller
              return response()->json(['result' => -1, 'msg' => 'Please add destinatios  Field']);
              return false;
          }
-        $result = $this->cruise_model->updateCruise($requestdata, $thumbnail_image, $cruise_id);
+        $result = $this->cruise_model->updateCruise($requestdata, $thumbnail_image, $ship_id);
         if($result){
-            delete('cruise_details','cruise_id',$cruise_id);
+            delete('ship_details','ship_id',$ship_id);
             if(!empty($size)){
                 $sizetemp = [];
                 foreach($size as $s){
-                    $sizetemp['cruise_value_type'] = 'size';
-                    $sizetemp['cruise_value'] = $s;
-                    $sizetemp['cruise_id'] = $result;
-                    insert('cruise_details',$sizetemp);
+                    $sizetemp['ship_value_type'] = 'size';
+                    $sizetemp['ship_value'] = $s;
+                    $sizetemp['ship_id'] = $result;
+                    insert('ship_details',$sizetemp);
                     $sizetemp=[];
                 }
             }
             if(!empty($guest)){
                 $guesttemp = [];
                 foreach($guest as $g){
-                    $guesttemp['cruise_value_type'] = 'guest';
-                    $guesttemp['cruise_value'] = $g;
-                    $guesttemp['cruise_id'] = $result;
-                    insert('cruise_details',$guesttemp);
+                    $guesttemp['ship_value_type'] = 'guest';
+                    $guesttemp['ship_value'] = $g;
+                    $guesttemp['ship_id'] = $result;
+                    insert('ship_details',$guesttemp);
                     $sizetemp=[];
                 }
             }
             if(!empty($crew)){
                 $crewtemp = [];
                 foreach($crew as $c){
-                    $crewtemp['cruise_value_type'] = 'crew';
-                    $crewtemp['cruise_value'] = $c;
-                    $crewtemp['cruise_id'] = $result;
-                    insert('cruise_details',$crewtemp);
+                    $crewtemp['ship_value_type'] = 'crew';
+                    $crewtemp['ship_value'] = $c;
+                    $crewtemp['ship_id'] = $result;
+                    insert('ship_details',$crewtemp);
                     $crewtemp=[];
                 }
             }
             if(!empty($destinatios)){
                 $destinatiostemp = [];
                 foreach($destinatios as $s){
-                    $destinatiostemp['cruise_value_type'] = 'destination';
-                    $destinatiostemp['cruise_value'] = $s;
-                    $destinatiostemp['cruise_id'] = $result;
-                    insert('cruise_details',$destinatiostemp);
+                    $destinatiostemp['ship_value_type'] = 'destination';
+                    $destinatiostemp['ship_value'] = $s;
+                    $destinatiostemp['ship_id'] = $result;
+                    insert('ship_details',$destinatiostemp);
                     $destinatiostemp=[];
                 }
             }
@@ -263,7 +263,7 @@ class CruiseController extends Controller
             $other_images = multipleCloudinaryUploads($request, 'other_images');
             if(!empty($other_images)){
                 foreach($other_images as $value){
-                    $data['cruise_id'] = $cruise_id;
+                    $data['ship_id'] = $ship_id;
                     $data['image_url'] = $value;
                     $this->cruise_model->insertCruiseImages($data);
                 }
@@ -276,7 +276,7 @@ class CruiseController extends Controller
 
     public function deleteCruise($id){
         $id = decryptionID($id);
-        DB::table('cruise_images')->where('id', $id)->delete();
+        DB::table('ship_images')->where('id', $id)->delete();
         if(true){
             return response()->json(['result' => 1, 'msg' => 'Image deleted successfully']);
         }else{

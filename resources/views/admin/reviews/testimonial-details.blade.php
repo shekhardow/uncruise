@@ -41,7 +41,7 @@
                                         </label>
                                         <label>
                                             <?php if(@$review_details->review_type == 'Destination'){ echo @$review_details->destination_name;
-                                            }elseif(@$review_details->review_type == 'Cruise'){ echo @$review_details->cruise_name;
+                                            }elseif(@$review_details->review_type == 'Cruise'){ echo @$review_details->ship_name;
                                             }else{ echo @$review_details->adventure_name; } ?>
                                         </label>
                                     </div>
