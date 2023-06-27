@@ -22,3 +22,4 @@ Route::post('resendOTP',[ApiController::class,'resendOTP']);
 Route::post('updateProfile',[ApiController::class,'updateProfile']);
 Route::get('getAllCountries',[ApiController::class,'getAllCountries']);
 Route::post('getProfile',[ApiController::class,'getProfile']);
+Route::get('getAllShips',[ApiController::class,'getAllShips']);

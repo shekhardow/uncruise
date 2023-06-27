@@ -11,9 +11,9 @@ class ApiController extends Controller
 {
     // DB Instance
     private $api_model;
-    private $userdata;
 
-    public function __construct(Request $request){
+    public function __construct()
+    {
         $this->api_model = new ApiModel();
     }
 
@@ -45,16 +45,16 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
         }
-        
+
         $phone = $requestData['phone'];
-        
+
         $user = $this->api_model->getUserByPhone($phone);
 
         if (!empty($user)) {
             return response()->json(['result' => -1, 'msg' => "The Phone Number has already been taken"]);
         }
 
-        $name = $requestData['first_name'].' '.$requestData['last_name'];
+        $name = $requestData['first_name'] . ' ' . $requestData['last_name'];
         $deviceType = $requestData['device_type'];
         $deviceId = $requestData['device_id'];
 
@@ -124,9 +124,9 @@ class ApiController extends Controller
 
         // Get user data and return response
         $result = $this->api_model->getUserByID($user->user_id);
-        if($result){
+        if ($result) {
             return response()->json(['result' => 1, 'msg' => 'OTP has been sent to your registered phone', 'data' => $result], 200);
-        }else{
+        } else {
             return response()->json(['result' => -1, 'msg' => 'Something went wrong!', 'data' => null], 500);
         }
     }
@@ -215,18 +215,20 @@ class ApiController extends Controller
 
         return response()->json(['result' => 1, 'msg' => 'New OTP sent successfully'], 200);
     }
-    
-    
+
+
     public function updateProfile(Request $request)
     {
         $user_id = userAuthentication($request)->user_id;
-        
+
         if (empty($user_id)) {
             return false;
         }
-        
+
+        $userDetails = $this->api_model->getUserByID($user_id);
+
         $requestData = $request->all();
-    
+
         $validator = Validator::make($requestData, [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -237,18 +239,18 @@ class ApiController extends Controller
             'required' => 'This :attribute is required',
             'email' => 'Invalid email address',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['result' => 0, 'errors' => $validator->errors()->first()], 400);
         }
-        
+
         // Profile Image Upload
         if ($request->hasFile('profile_image')) {
             $imagePath = singleCloudinaryUpload($request, 'profile_image');
-        }else{
+        } else {
             $imagePath = $userDetails->profile_image;
         }
-    
+
         $updateData = [
             'first_name' => $requestData['first_name'],
             'last_name' => $requestData['last_name'],
@@ -257,19 +259,18 @@ class ApiController extends Controller
             'age' => $requestData['age'],
             'profile_image' => $imagePath,
         ];
-    
+
         $result = $this->api_model->updateProfile($user_id, $updateData);
-        $data = $this->api_model->getUserByID($user_id);
-    
+
         if ($result) {
             $message = "Profile updated successfully";
-            return response()->json(['result' => 1, 'msg' => $message, 'data' => $data], 200);
+            return response()->json(['result' => 1, 'msg' => $message, 'data' => $userDetails], 200);
         } else {
             return response()->json(['result' => -1, 'msg' => 'Something went wrong!', 'data' => null], 500);
         }
     }
-    
-    
+
+
     public function getAllCountries()
     {
         $result = $this->api_model->getAllCountries();
@@ -284,7 +285,7 @@ class ApiController extends Controller
     public function getProfile(Request $request)
     {
         $user_id = userAuthentication($request)->user_id;
-        
+
         if (empty($user_id)) {
             return false;
         }
@@ -297,5 +298,13 @@ class ApiController extends Controller
         }
     }
 
-
+    public function getAllShips()
+    {
+        $result = $this->api_model->getAllShips();
+        if ($result) {
+            return response()->json(['result' => 1, 'msg' => 'Ships data fetched.', 'data' => $result]);
+        } else {
+            return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
+        }
+    }
 }
