@@ -307,4 +307,166 @@ class ApiController extends Controller
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
         }
     }
+
+    public function getAllDestinations()
+    {
+        $result = $this->api_model->getAllDestinations();
+        if ($result) {
+            return response()->json(['result' => 1, 'msg' => 'Destinations data fetched.', 'data' => $result]);
+        } else {
+            return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
+        }
+    }
+
+    public function getAllAdventures()
+    {
+        $result = $this->api_model->getAllAdventures();
+        if ($result) {
+            return response()->json(['result' => 1, 'msg' => 'Adventures data fetched.', 'data' => $result]);
+        } else {
+            return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
+        }
+    }
+
+    public function getSettings(Request $request)
+    {
+        $type = $request->post('type');
+        if (empty($type)) {
+            return response()->json(['result' => '-1', 'message' => 'Type Required!']);
+        } elseif (!empty($type) && $type == 'Privacy Policy') {
+            $data = select('settings', ['description', 'page_title'], [['page_title', '=', $type]])->first();
+            if ($data) {
+                return response()->json(['result' => '1', 'message' => 'Data Found', 'data' => $data]);
+            } else {
+                return response()->json(['result' => '-1', 'message' => 'Error Occured']);
+            }
+        } elseif (!empty($type) && $type == 'Terms and Conditions') {
+            $data = select('settings', ['description', 'page_title'], [['page_title', '=', $type]])->first();
+            if ($data) {
+                return response()->json(['result' => '1', 'message' => 'Data Found', 'data' => $data]);
+            } else {
+                return response()->json(['result' => '-1', 'message' => 'Error Occured']);
+            }
+        } elseif (!empty($type) && $type == 'About Us') {
+            $data = select('settings', ['description', 'page_title'], [['page_title', '=', $type]])->first();
+            if ($data) {
+                return response()->json(['result' => '1', 'message' => 'Data Found', 'data' => $data]);
+            } else {
+                return response()->json(['result' => '-1', 'message' => 'Error Occured']);
+            }
+        } elseif (!empty($type) && $type == 'Contact Us') {
+            $data = select('settings', ['description', 'page_title'], [['page_title', '=', $type]])->first();
+            if ($data) {
+                return response()->json(['result' => '1', 'message' => 'Data Found', 'data' => $data]);
+            } else {
+                return response()->json(['result' => '-1', 'message' => 'Error Occured']);
+            }
+        } else {
+            return response()->json(['result' => '-1', 'message' => 'Invalid Type!']);
+        }
+    }
+
+    public function searchShipByKeyword(Request $request)
+    {
+        $keyword = $request->post('keyword');
+        $data = $this->api_model->searchShipByKeyword($keyword);
+        dd($data);
+        die;
+        foreach ($data as $value) {
+            $multiple_images = select('ship_images', 'image_url as image', ['ship_id' => $value->ship_id]);
+            $value->multi_images = $multiple_images;
+        }
+        $data = array("ships" => $data);
+        if ($data['ships']->count() > 0) {
+            return response()->json(['result' => 1, 'msg'  => "Data found", 'data' => $data]);
+        } else {
+            return response()->json(['result' => -1, 'msg'  => "No Data FOUND", 'data' => NULL]);
+        }
+    }
+
+    public function rateAdventure(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'review' => 'required',
+            'ratings' => 'required',
+        ], [
+            'required' => 'The :attribute is required.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
+        }
+
+        $user_id = $request->input('user_id');
+        $adventureId = $request->input('adventure_id');
+        $adventureType = $request->input('adventure_type');
+
+        $adventureDetails = $this->api_model->getAdventureDetailsInfo($adventureId, $adventureType);
+
+        $destinationId = null;
+        $shipId = null;
+        $activityId = null;
+
+        foreach ($adventureDetails as $value) {
+            $id = $value->journey_value;
+
+            if ($adventureType == 'destinations') {
+                $value->adventures = select('destinations', ['destination_id', 'name'], ['destination_id' => $id, 'status' => 'Active']);
+                foreach ($value->adventures as $val1) {
+                    $destinationId = $val1->destination_id;
+                }
+            } elseif ($adventureType == 'ships') {
+                $value->ships = select('ships', ['ship_id', 'ship_name'], ['ship_id' => $id, 'status' => 'Active']);
+                foreach ($value->ships as $val2) {
+                    $shipId = $val2->ship_id;
+                }
+            } elseif ($adventureType == 'activities') {
+                $value->activities = select('activities', ['activity_id', 'activity_name'], ['activity_id' => $id, 'status' => 'Active']);
+                foreach ($value->activities as $val3) {
+                    $activityId = $val3->activity_id;
+                }
+            }
+        }
+
+        $existingRating = $this->api_model->getUserAdventureRating($user_id, $adventureType);
+        $reviews = $request->input('review');
+        $ratings = $request->input('ratings');
+        $pictures = $request->file('pictures');
+        if ($existingRating) {
+            delete('review', 'review_id', $existingRating->review_id);
+            delete('review_images', 'review_id', $existingRating->review_id);
+        }
+        $reviews = $request->input('review');
+        $ratings = $request->input('ratings');
+        $pictures = $request->file('pictures');
+
+        foreach ($reviews as $index => $review) {
+            $insertData = [
+                'user_id' => $request->input('user_id'),
+                'review' => $review,
+                'ratings' => $ratings[$index],
+                'review_type' => $adventureType,
+                'destination_id' => $destinationId,
+                'ship_id' => $shipId,
+                'activity_id' => $activityId,
+            ];
+
+            $result = $this->api_model->rateAdventure($insertData);
+        }
+        // dd($result); die;
+        if ($result) {
+            if (!empty($pictures)) {
+                $pictures = multipleCloudinaryUploads($request, 'pictures');
+                foreach ($pictures as $image) {
+                    $data['review_id'] = $result;
+                    $data['image_url'] = $image;
+                    insert('review_images', $data);
+                }
+            }
+            $data = $this->api_model->getReviewDetails($result);
+            return response()->json(['result' => 1, 'msg' => 'Adventure rated successfully.', 'data' => $data], 200);
+        } else {
+            return response()->json(['result' => -1, 'msg' => 'Something went wrong!'], 500);
+        }
+    }
 }

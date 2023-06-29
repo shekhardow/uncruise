@@ -163,4 +163,100 @@ class ApiModel extends Model
             return false;
         }
     }
+
+    public function getAllDestinations()
+    {
+        try {
+            $data = DB::table('destinations')->select('*')->get();
+            return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getAllAdventures()
+    {
+        try {
+            $data = DB::table('adventures')->select('*')->get();
+            return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function searchShipByKeyword($keyword = null)
+    {
+        $data = DB::table('ships')
+            ->select('ships.ship_name', 'ships.detailed_description', 'ships.thumbnail_image', 'review_likes.likes')
+            ->leftJoin('review_likes', 'review_likes.ship_id', '=', 'ships.ship_id');
+        if (!empty($keyword)) {
+            $data->where('ships.ship_name', 'like', '%' . $keyword . '%')
+                ->orWhere('ships.detailed_description', 'like', '%' . $keyword . '%');
+        }
+        return $data->get();
+    }
+
+    public function getAdventureDetailsInfo($id, $type)
+    {
+        return DB::table('adventure_details')->where('adventure_id', $id)->where('journey_type', $type)->get();
+    }
+
+    public function rateAdventure($data)
+    {
+        try {
+            DB::table('review')->insert($data);
+            $lastInsertId = DB::getPdo()->lastInsertId();
+            return $lastInsertId;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getUserAdventureRating($user_id, $type)
+    {
+        try {
+            $data = DB::table('review')->select('*')
+                ->where('user_id', $user_id)
+                ->where('review_type', $type)
+                ->first();
+            return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function updateAdventureRating($review_id, $data, $type)
+    {
+        try {
+            DB::table('review')
+                ->where('review_id', $review_id)
+                ->where('review_type', $type)
+                ->update($data);
+            $lastId = DB::table('review')
+                ->latest('review_id')
+                ->value('review_id');
+            return $lastId;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getReviewDetails($review_id)
+    {
+        try {
+            $data = DB::table('review')->select('review.*','review_images.image_url')
+                ->leftJoin('review_images', 'review_images.review_id', '=', 'review.review_id')
+                ->where('review.review_id', $review_id)
+                ->get();
+            return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
 }
