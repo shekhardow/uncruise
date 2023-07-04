@@ -301,6 +301,10 @@ class ApiController extends Controller
     public function getAllShips()
     {
         $result = $this->api_model->getAllShips();
+        foreach($result as $value){
+            $value->guest = select('ship_details', 'ship_value', ['ship_value_type' => 'guest', 'ship_id' => $value->ship_id]);
+            $value->ratings = select('review', 'ratings', ['ship_id' => $value->ship_id])->avg('ratings');
+        }
         if ($result) {
             return response()->json(['result' => 1, 'msg' => 'Ships data fetched.', 'data' => $result]);
         } else {
@@ -325,6 +329,71 @@ class ApiController extends Controller
             return response()->json(['result' => 1, 'msg' => 'Adventures data fetched.', 'data' => $result]);
         } else {
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
+        }
+    }
+
+    public function getAllPost(Request $request)
+    {
+        $user_id = $request->post('user_id');
+        if (empty($user_id)) {
+            return response()->json(['result' => 0, 'message' => 'UserId Required!'], 400);
+        }
+
+        $result = $this->api_model->getAllPost($user_id);
+
+        foreach ($result as $value) {
+            $multiple_images = select('post_images', 'image_url as image', ['post_id' => $value->post_id]);
+            $value->multi_images = $multiple_images;
+        }
+
+        if ($result) {
+            return response()->json(['result' => 1, 'msg' => "Posts data fetched.", 'data' => $result]);
+        } else {
+            return response()->json(['result' => -1, 'msg' => "Something went wrong!"]);
+        }
+    }
+
+    public function uploadPost(Request $request)   {
+        $requestdata = $request->all();
+        $validator = Validator::make($requestdata, [
+            'user_id' => 'required|numeric',
+            'post_images' => 'required|array|max:10',
+            'post_images.*' => 'image|mimes:jpeg,jpg,png',
+            'journey_date' => 'required|date',
+            'destination' => 'required',
+            // 'post_title' => 'required|string',
+            'description' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['result' => "0", 'errors' => $validator->errors()->first(),], 401);
+        }
+
+        $user_id = $requestdata['user_id'];
+
+        $journey_date = $requestdata['journey_date'];
+
+        $postdata = array(
+            'user_id'  => $user_id,
+            'Post_date' => $journey_date,
+            'description' => $requestdata['description'],
+            // 'post_title' => $requestdata['post_title'],
+            'destination' => $requestdata['destination'],
+        );
+
+        $post_id = insert('posts', $postdata);
+
+        $post_images = multipleCloudinaryUploads($request, 'post_images');
+        if (!empty($post_images)) {
+            foreach ($post_images as $value) {
+                $other_image_data['post_id'] = $post_id;
+                $other_image_data['image_url'] = $value;
+                insert('post_images', $other_image_data);
+            }
+        }
+        if ($post_id) {
+            return response()->json(['result' => '1', 'message' => 'Post added Successfully']);
+        } else {
+            return response()->json(['result' => '-1', 'message' => 'Error Occured']);
         }
     }
 
@@ -420,10 +489,10 @@ class ApiController extends Controller
                 foreach ($value->ships as $val2) {
                     $shipId = $val2->ship_id;
                 }
-            } elseif ($adventureType == 'activities') {
-                $value->activities = select('activities', ['activity_id', 'activity_name'], ['activity_id' => $id, 'status' => 'Active']);
-                foreach ($value->activities as $val3) {
-                    $activityId = $val3->activity_id;
+            } elseif ($adventureType == 'adventures') {
+                $value->adventures = select('adventures', ['adventure_id', 'journey'], ['adventure_id' => $id, 'status' => 'Active']);
+                foreach ($value->adventures as $val3) {
+                    $adventureId = $val3->adventure_id;
                 }
             }
         }
@@ -448,7 +517,7 @@ class ApiController extends Controller
                 'review_type' => $adventureType,
                 'destination_id' => $destinationId,
                 'ship_id' => $shipId,
-                'activity_id' => $activityId,
+                'adventure_id' => $adventureId,
             ];
 
             $result = $this->api_model->rateAdventure($insertData);

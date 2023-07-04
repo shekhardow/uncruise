@@ -50,13 +50,13 @@ class AdventureController extends Controller
         $data['ship_details'] = $this->cruise_model->getAllCruises();
         $data['destination_details'] = $this->destination_model->getAllDestinations();
         $data['activity_details'] = $this->activity_model->getAllActivities();
-        $data['seleted_destination'] = @select('adventure_details', ['journey_value'], [['adventure_id', '=', $adventure_id], ['journey_type', '=', 'destination']])->map(function ($item) {
+        $data['seleted_destination'] = @select('adventure_details', ['journey_value'], [['adventure_id', '=', $adventure_id], ['journey_type', '=', 'destinations']])->map(function ($item) {
             return $item->journey_value;
         })->toArray();
-        $data['seleted_adventures'] = @select('adventure_details', ['journey_value'], [['adventure_id', '=', $adventure_id], ['journey_type', '=', 'adventure']])->map(function ($item) {
+        $data['seleted_adventures'] = @select('adventure_details', ['journey_value'], [['adventure_id', '=', $adventure_id], ['journey_type', '=', 'activities']])->map(function ($item) {
             return $item->journey_value;
         })->toArray();
-        $data['seleted_crew'] = @select('adventure_details', ['journey_value'], [['adventure_id', '=', $adventure_id], ['journey_type', '=', 'crew']])->map(function ($item) {
+        $data['seleted_crew'] = @select('adventure_details', ['journey_value'], [['adventure_id', '=', $adventure_id], ['journey_type', '=', 'ships']])->map(function ($item) {
             return $item->journey_value;
         })->toArray();
 
@@ -130,7 +130,7 @@ class AdventureController extends Controller
             if (!empty($adventures)) {
                 $temp = [];
                 foreach ($adventures as $adv) {
-                    $temp['journey_type'] = 'adventure';
+                    $temp['journey_type'] = 'activities';
                     $temp['journey_value'] = $adv;
                     $temp['adventure_id'] = $result;
                     insert('adventure_details', $temp);
@@ -142,7 +142,7 @@ class AdventureController extends Controller
             if (!empty($destinations)) {
                 $temp = [];
                 foreach ($destinations as $des) {
-                    $temp['journey_type'] = 'destination';
+                    $temp['journey_type'] = 'destinations';
                     $temp['journey_value'] = $des;
                     $temp['adventure_id'] = $result;
                     insert('adventure_details', $temp);
@@ -153,7 +153,7 @@ class AdventureController extends Controller
             if (!empty($cruise)) {
                 $temp = [];
                 foreach ($cruise as $crew) {
-                    $temp['journey_type'] = 'crew';
+                    $temp['journey_type'] = 'ships';
                     $temp['journey_value'] = $crew;
                     $temp['adventure_id'] = $result;
                     insert('adventure_details', $temp);
@@ -249,7 +249,7 @@ class AdventureController extends Controller
             if (!empty($adventures)) {
                 $temp = [];
                 foreach ($adventures as $adv) {
-                    $temp['journey_type'] = 'adventure';
+                    $temp['journey_type'] = 'activities';
                     $temp['journey_value'] = $adv;
                     $temp['adventure_id'] = $adventure_id;
                     insert('adventure_details', $temp);
@@ -261,7 +261,7 @@ class AdventureController extends Controller
             if (!empty($destinations)) {
                 $temp = [];
                 foreach ($destinations as $des) {
-                    $temp['journey_type'] = 'destination';
+                    $temp['journey_type'] = 'destinations';
                     $temp['journey_value'] = $des;
                     $temp['adventure_id'] = $adventure_id;
                     insert('adventure_details', $temp);
@@ -272,7 +272,7 @@ class AdventureController extends Controller
             if (!empty($cruise)) {
                 $temp = [];
                 foreach ($cruise as $crew) {
-                    $temp['journey_type'] = 'crew';
+                    $temp['journey_type'] = 'ships';
                     $temp['journey_value'] = $crew;
                     $temp['adventure_id'] = $adventure_id;
                     insert('adventure_details', $temp);

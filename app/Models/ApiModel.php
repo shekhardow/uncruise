@@ -156,7 +156,7 @@ class ApiModel extends Model
     public function getAllShips()
     {
         try {
-            $data = DB::table('ships')->select('*')->get();
+            $data = DB::table('ships')->select('ship_id', 'ship_name', 'thumbnail_image')->get();
             return $data;
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -180,6 +180,25 @@ class ApiModel extends Model
         try {
             $data = DB::table('adventures')->select('*')->get();
             return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getAllPost($user_id=null){
+        try {
+            return DB::table('posts')
+                ->select(
+                    'posts.post_id',
+                    DB::raw("CONCAT(users.first_name, ' ', users.last_name, ' at ', users.city) AS title"),
+                    'posts.description',
+                    'post_likes.likes'
+                )
+                ->leftJoin('users', 'users.user_id', '=', 'posts.user_id')
+                ->leftJoin('post_likes', 'post_likes.user_id', '=', 'posts.user_id')
+                ->where('posts.user_id', '=', $user_id)
+                ->get();
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;
