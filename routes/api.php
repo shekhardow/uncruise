@@ -27,11 +27,22 @@ Route::get('getAllCountries',[ApiController::class,'getAllCountries']);
 Route::post('getSettings',[ApiController::class,'getSettings']);
 
 Route::get('getAllShips',[ApiController::class,'getAllShips']);
+Route::post('getShipDetails',[ApiController::class,'getShipDetails']);
+
 Route::get('getAllDestinations',[ApiController::class,'getAllDestinations']);
+Route::post('getDestinationDetails',[ApiController::class,'getDestinationDetails']);
+
 Route::get('getAllAdventures',[ApiController::class,'getAllAdventures']);
+Route::post('getAdventureDetails',[ApiController::class,'getAdventureDetails']);
 
 Route::post('getAllPost',[ApiController::class,'getAllPost']);
 Route::post('uploadPost',[ApiController::class,'uploadPost']);
 
 Route::get('searchShipByKeyword',[ApiController::class,'searchShipByKeyword']);
+
+Route::post('getUserReviews',[ApiController::class,'getUserReviews']);
 Route::post('rateAdventure',[ApiController::class,'rateAdventure']);
+
+Route::post('getUserDocuments',[ApiController::class,'getUserDocuments']);
+Route::post('uploadUserDocuments',[ApiController::class,'uploadUserDocuments']);
+Route::post('deleteUserDocuments',[ApiController::class,'deleteUserDocuments']);

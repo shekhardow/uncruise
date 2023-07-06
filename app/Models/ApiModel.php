@@ -164,10 +164,38 @@ class ApiModel extends Model
         }
     }
 
+    public function getShipDetails($id)
+    {
+        try {
+            $data = DB::table('ships')
+                ->select('ship_id', 'ship_name', 'detailed_description')
+                ->where('ship_id', $id)
+                ->first();
+            return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
     public function getAllDestinations()
     {
         try {
             $data = DB::table('destinations')->select('*')->get();
+            return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getDestinationDetails($id)
+    {
+        try {
+            $data = DB::table('destinations')
+                ->select('destination_id', 'name', 'location', 'description')
+                ->where('destination_id', $id)
+                ->first();
             return $data;
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -186,7 +214,8 @@ class ApiModel extends Model
         }
     }
 
-    public function getAllPost($user_id=null){
+    public function getAllPost($user_id = null)
+    {
         try {
             return DB::table('posts')
                 ->select(
@@ -217,6 +246,34 @@ class ApiModel extends Model
         return $data->get();
     }
 
+    public function getUserReviews($user_id, $type = null)
+    {
+        try {
+            $data = DB::table('review');
+            switch ($type) {
+                case 'ships':
+                    $data->select('ship_id', 'review_id', 'review', 'ratings', 'review_type');
+                    break;
+                case 'destinations':
+                    $data->select('destination_id', 'review_id', 'review', 'ratings', 'review_type');
+                    break;
+                case 'activities':
+                    $data->select('review_id', 'activity_id', 'review', 'ratings', 'review_type');
+                    break;
+                default:
+                    $data->select('destination_id', 'ship_id', 'review_id', 'activity_id', 'review', 'ratings', 'review_type');
+            }
+            $data->where('user_id', $user_id);
+            if ($type !== null) {
+                $data->where('review_type', $type);
+            }
+            return $data->get();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
     public function getAdventureDetailsInfo($id, $type)
     {
         return DB::table('adventure_details')->where('adventure_id', $id)->where('journey_type', $type)->get();
@@ -228,6 +285,41 @@ class ApiModel extends Model
             DB::table('review')->insert($data);
             $lastInsertId = DB::getPdo()->lastInsertId();
             return $lastInsertId;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getAdventureReview($userId, $uniqueId, $keyName)
+    {
+        try {
+            $query = DB::table('review')
+                ->where('user_id', $userId);
+
+            if ($keyName === 'destinations') {
+                $query->where('destination_id', $uniqueId);
+            } elseif ($keyName === 'ships') {
+                $query->where('ship_id', $uniqueId);
+            } elseif ($keyName === 'activities') {
+                $query->where('activity_id', $uniqueId);
+            }
+
+            $data = $query->first();
+            return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function updateAdventureReview($reviewId, $data)
+    {
+        try {
+            DB::table('review')
+                ->where('review_id', $reviewId)
+                ->update($data);
+            return true;
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;
@@ -268,7 +360,7 @@ class ApiModel extends Model
     public function getReviewDetails($review_id)
     {
         try {
-            $data = DB::table('review')->select('review.*','review_images.image_url')
+            $data = DB::table('review')->select('review.*', 'review_images.image_url')
                 ->leftJoin('review_images', 'review_images.review_id', '=', 'review.review_id')
                 ->where('review.review_id', $review_id)
                 ->get();
@@ -276,6 +368,56 @@ class ApiModel extends Model
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;
+        }
+    }
+
+    public function getAdventureData($id = null, $type = null)
+    {
+
+        if ($type == 'Activities') {
+            return DB::table('activities')
+                ->select('activity_name', 'description', 'thumbnail_image')
+                ->where('destination_id', $id)
+                ->get();
+        } elseif ($type == 'Ships') {
+            return DB::table('destinations_amenities')
+                ->select('amenitie_title', 'amenitie_descriptions')
+                ->where('destination_id', $id)
+                ->get();
+        } elseif ($type == 'Destinations') {
+
+            $data = DB::table('destinations')
+                ->select(
+                    'destinations.name',
+                    'destinations.location',
+                    'destinations.description',
+                    'destinations.thumbnail_image',
+                    'review_likes.likes'
+                )
+                ->leftJoin('review_likes', 'review_likes.destination_id', '=', 'destinations.destination_id');
+            if (!empty($id)) {
+                $data->where('destinations.destination_id', $id);
+            }
+            return $data->paginate();
+        } else {
+            $activities = DB::table('activities')->select('activity_name')->get();
+            $adventures = DB::table('adventures')
+                ->select(
+                    'adventures.journey',
+                    'adventures.description',
+                    'adventures.thumbnail_image',
+                    'review_likes.likes'
+                )
+                ->leftJoin('review_likes', 'review_likes.adventure_id', '=', 'adventures.adventure_id');
+            if (!empty($id)) {
+                $adventures->where('adventures.adventure_id', $id);
+            }
+            $paginatedDestinations = $adventures->paginate();
+
+            return [
+                'activities' => $activities,
+                'adventures' => $paginatedDestinations
+            ];
         }
     }
 }

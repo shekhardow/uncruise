@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\ApiModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ApiController extends Controller
 {
@@ -301,12 +303,37 @@ class ApiController extends Controller
     public function getAllShips()
     {
         $result = $this->api_model->getAllShips();
-        foreach($result as $value){
+        foreach ($result as $value) {
             $value->guest = select('ship_details', 'ship_value', ['ship_value_type' => 'guest', 'ship_id' => $value->ship_id]);
             $value->ratings = select('review', 'ratings', ['ship_id' => $value->ship_id])->avg('ratings');
         }
         if ($result) {
             return response()->json(['result' => 1, 'msg' => 'Ships data fetched.', 'data' => $result]);
+        } else {
+            return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
+        }
+    }
+
+    public function getShipDetails(Request $request)
+    {
+        $ship_id = $request->post('ship_id');
+        if (empty($ship_id)) {
+            return response()->json(['result' => 0, 'message' => 'ShipId Required!'], 400);
+        }
+        $result = $this->api_model->getShipDetails($ship_id);
+        $result->ratings = select('review', 'ratings', ['ship_id' => $ship_id])->avg('ratings');
+        $result->images = select('ship_images', 'image_url', ['ship_id' => $ship_id]);
+        $result->size = select('ship_details', 'ship_value', ['ship_value_type' => 'size', 'ship_id' => $ship_id]);
+        $result->guest = select('ship_details', 'ship_value', ['ship_value_type' => 'guest', 'ship_id' => $ship_id]);
+        $result->crew = select('ship_details', 'ship_value', ['ship_value_type' => 'crew', 'ship_id' => $ship_id]);
+        $result->destination = select('ship_details', 'ship_value', ['ship_value_type' => 'destination', 'ship_id' => $ship_id]);
+        foreach ($result->destination as $key => $row) {
+            $destination = select('destinations', 'name', ['destination_id' => $row->ship_value]);
+            $row->name = $destination[0]->name;
+            unset($row->ship_value);
+        }
+        if ($result) {
+            return response()->json(['result' => 1, 'msg' => 'Ships details fetched.', 'data' => $result]);
         } else {
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
         }
@@ -322,6 +349,46 @@ class ApiController extends Controller
         }
     }
 
+    public function getDestinationDetails(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'destination_id' => 'required',
+            'key' => 'required',
+        ], [
+            'required' => 'This :attribute is required',
+            'key.required' => 'Key should be (about, activities, amenities)',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
+        }
+
+        $destination_id = $request->post('destination_id');
+        $key = $request->post('key');
+        $result = $this->api_model->getDestinationDetails($destination_id);
+        if ($key == 'about') {
+            $result->ratings = select('review', 'ratings', ['destination_id' => $destination_id])->avg('ratings');
+            $result->images = select('destination_images', 'image_url', ['destination_id' => $destination_id]);
+        } elseif ($key == 'activities') {
+            $result->activities = select('destinations_activities', 'activity_id', ['destination_id' => $destination_id]);
+            foreach ($result->activities as $row) {
+                $activities = select('activities', ['activity_name', 'description', 'thumbnail_image'], ['destination_id' => $row->activity_id]);
+                $row->activity_name = $activities[0]->activity_name;
+                $row->description = $activities[0]->description;
+                $row->thumbnail_image = $activities[0]->thumbnail_image;
+                $row->ratings = select('review', 'ratings', ['ship_id' => $row->activity_id])->avg('ratings');
+                unset($row->activity_id);
+            }
+        } else {
+            $result->amenities = select('destinations_amenities', ['amenitie_title', 'amenitie_descriptions'], ['destination_id' => $destination_id]);
+        }
+        if ($result) {
+            return response()->json(['result' => 1, 'msg'  => "Destinations details fetched.", 'data' => $result]);
+        } else {
+            return response()->json(['result' => -1, 'msg'  => "Something went wrong!", 'data' => null]);
+        }
+    }
+
     public function getAllAdventures()
     {
         $result = $this->api_model->getAllAdventures();
@@ -329,6 +396,67 @@ class ApiController extends Controller
             return response()->json(['result' => 1, 'msg' => 'Adventures data fetched.', 'data' => $result]);
         } else {
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
+        }
+    }
+
+    public function getAdventureDetails(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'adventure_id' => 'required',
+            'type' => 'required',
+        ], [
+            'required' => 'This :attribute is required',
+            'type.required' => 'Type should be (destinations, ships, activities)',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
+        }
+
+        $adventure_id = $request->post('adventure_id');
+        $type = $request->post('type');
+        if ($type == 'destinations') {
+            $result = select('adventure_details', 'journey_value', ['journey_type' => 'destinations', 'adventure_id' => $adventure_id]);
+            foreach ($result as $key => $row) {
+                $destination = select('destinations', ['destination_id', 'name', 'description', 'thumbnail_image'], ['destination_id' => $row->journey_value]);
+                if (!empty($destination)) {
+                    $row->destination_name = $destination[0]->name;
+                    $row->description = $destination[0]->description;
+                    $row->thumbnail_image = $destination[0]->thumbnail_image;
+                    $row->ratings = select('review', 'ratings', ['destination_id' => $row->journey_value])->avg('ratings');
+                    unset($row->journey_value);
+                }
+            }
+        } elseif ($type == 'ships') {
+            $result = select('adventure_details', ['journey_value'], ['journey_type' => 'ships', 'adventure_id' => $adventure_id]);
+            foreach ($result as $key => $row) {
+                $ships = select('ships', ['ship_id', 'ship_name', 'brief_description', 'thumbnail_image'], ['ship_id' => $row->journey_value]);
+                if (!empty($ships)) {
+                    $row->ship_name = $ships[0]->ship_name;
+                    $row->brief_description = $ships[0]->brief_description;
+                    $row->thumbnail_image = $ships[0]->thumbnail_image;
+                    $row->guest = select('ship_details', 'ship_value', ['ship_value_type' => 'guest', 'ship_id' => $row->journey_value]);
+                    $row->ratings = select('review', 'ratings', ['ship_id' => $row->journey_value])->avg('ratings');
+                    unset($row->journey_value);
+                }
+            }
+        } else {
+            $result = select('adventure_details', 'journey_value', ['journey_type' => 'activities', 'adventure_id' => $adventure_id]);
+            foreach ($result as $key => $row) {
+                $ships = select('activities', ['activity_id', 'activity_name', 'description', 'thumbnail_image'], ['activity_id' => $row->journey_value]);
+                if (!empty($ships)) {
+                    $row->activity_name = $ships[0]->activity_name;
+                    $row->description = $ships[0]->description;
+                    $row->thumbnail_image = $ships[0]->thumbnail_image;
+                    $row->ratings = select('review', 'ratings', ['adventure_id' => $row->journey_value])->avg('ratings');
+                    unset($row->journey_value);
+                }
+            }
+        }
+        if ($result) {
+            return response()->json(['result' => 1, 'msg'  => "Adventures details fetched.", 'data' => $result]);
+        } else {
+            return response()->json(['result' => -1, 'msg'  => "Something went wrong!"]);
         }
     }
 
@@ -353,7 +481,8 @@ class ApiController extends Controller
         }
     }
 
-    public function uploadPost(Request $request)   {
+    public function uploadPost(Request $request)
+    {
         $requestdata = $request->all();
         $validator = Validator::make($requestdata, [
             'user_id' => 'required|numeric',
@@ -453,89 +582,268 @@ class ApiController extends Controller
         }
     }
 
-    public function rateAdventure(Request $request)
+    public function getUserReviews(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'review' => 'required',
-            'ratings' => 'required',
-        ], [
-            'required' => 'The :attribute is required.',
+            'user_id' => 'required|numeric',
+            'type' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['result' => "0", 'errors' => $validator->errors()->first(),], 401);
+        }
+
+        $user_id = $request->post('user_id');
+        $type = $request->post('type');
+
+        $review_data = $this->api_model->getUserReviews($user_id, $type);
+
+        foreach ($review_data as $value) {
+            $value->multi_images = select('review_images', 'image_url as image', ['review_id' => $value->review_id]);
+        }
+
+        if ($review_data) {
+            return response()->json(['result' => 1, 'msg' => 'Data found', 'data' => $review_data]);
+        } else {
+            return response()->json(['result' => '-1', 'msg' => 'No Data Found', 'data' => $review_data]);
+        }
+    }
+
+    public function rateAdventure(Request $request)
+    {
+        try {
+            $keyName = $request->input('key_name');
+
+            // Validate the key_name
+            $allowedKeyNames = ['destinations', 'ships', 'activities'];
+            if (!in_array($keyName, $allowedKeyNames)) {
+                return response()->json(['error' => 'Invalid key name'], 400);
+            }
+
+            $userId = $request->input('user_id');
+
+            $uniqueIds = $request->input(rtrim($keyName, 's') . '_unique_id');
+
+            if (is_array($uniqueIds)) {
+                foreach ($uniqueIds as $uniqueId) {
+                    $reviewKey = rtrim($keyName, 's') . '_' . $uniqueId . '_review';
+                    $ratingKey = rtrim($keyName, 's') . '_' . $uniqueId . '_rating';
+
+                    $review = $request->input($reviewKey);
+                    $rating = $request->input($ratingKey);
+
+                    $existingReview = $this->api_model->getAdventureReview($userId, $uniqueId, $keyName);
+
+                    if ($existingReview) {
+                        $this->api_model->updateAdventureReview($existingReview->review_id, [
+                            'ratings' => $rating,
+                            'review' => $review,
+                        ]);
+
+                        delete('review_images', 'review_id', $existingReview->review_id);
+
+                        $newImagesKey = rtrim($keyName, 's') . '_' . $uniqueId . '_images';
+                        $newImages = $request->file($newImagesKey);
+
+                        if (isset($newImages) && is_array($newImages)) {
+                            $newPictures = multipleCloudinaryUploads($request, $newImagesKey);
+                            foreach ($newPictures as $image) {
+                                $data['review_id'] = $existingReview->review_id;
+                                $data['image_url'] = $image;
+                                insert('review_images', $data);
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    $insertData = [
+                        'user_id' => $userId,
+                        'destination_id' => null,
+                        'ship_id' => null,
+                        'activity_id' => null,
+                        'ratings' => $rating,
+                        'review' => $review,
+                        'review_type' => $keyName,
+                    ];
+
+                    if ($keyName == 'destinations') {
+                        $insertData['destination_id'] = $uniqueId;
+                    } elseif ($keyName == 'ships') {
+                        $insertData['ship_id'] = $uniqueId;
+                    } elseif ($keyName == 'activities') {
+                        $insertData['activity_id'] = $uniqueId;
+                    }
+
+                    $result = $this->api_model->rateAdventure($insertData);
+
+                    $imagesKey = 'destination_' . $uniqueId . '_images';
+                    $images = $request->file($imagesKey);
+
+                    $imagesKey = rtrim($keyName, 's') . '_' . $uniqueId . '_images';
+                    $images = $request->file($imagesKey);
+
+                    if (isset($images) && is_array($images)) {
+                        $pictures = multipleCloudinaryUploads($request, $imagesKey);
+                        foreach ($pictures as $image) {
+                            $data['review_id'] = $result;
+                            $data['image_url'] = $image;
+                            insert('review_images', $data);
+                        }
+                    }
+                }
+            } else {
+                return response()->json(['result' => -1, 'message' => 'UniqueId must be an array.']);
+            }
+
+            return response()->json(['result' => 1, 'message' => 'Reviews submitted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['result' => -1, 'message' => 'Something went wrong: ' . $e->getMessage()]);
+        }
+    }
+
+    // public function rateAdventure(Request $request)
+    // {
+    //     $requestdata = $request->all();
+    //     $data = $request->input('data');
+    //     if (empty($data)) {
+    //         return response()->json(['result' => '0', 'message' => 'Data Required']);
+    //     }
+    //     $type = $requestdata['type'];
+    //     if (empty($type)) {
+    //         return response()->json(['result' => '0', 'message' => 'Type Required']);
+    //     }
+    //     $reviewImages = $request->file('review_images');
+    //     foreach ($data as $key => $item) {
+    //         if (isset($item['review']) || isset($item['rating']) || isset($reviewImages[$key]) || isset($item['rating'])) {
+    //             if (!isset($item['activity_id']) || empty($request->post('user_id'))) {
+    //                 return response()->json(['result' => '0', 'message' => 'Activity Id  & User Id Required ']);
+    //             }
+    //         }
+    //         if (!isset($item['rating'])) {
+    //             return response()->json(['result' => 0, 'msg' => 'Rating Required']);
+    //         } else {
+    //             if (!isset($item['review']) && !isset($reviewImages[$key])) {
+    //                 return response()->json(['result' => '0', 'message' => 'Please Upload Review Image or Give Review']);
+    //             } else {
+    //                 $user_id = $requestdata['user_id'];
+    //                 $activityId = $item['activity_id'];
+    //                 if (isset($item['review'])) {
+    //                     $review = $item['review'];
+    //                 } else {
+    //                     $review = null;
+    //                 }
+
+    //                 $rating = $item['rating'];
+    //                 $ratereviewdata['review_type'] = $type;
+    //                 if (!empty($user_id)) {
+    //                     $ratereviewdata['user_id'] = $user_id;
+    //                 }
+
+    //                 if (!empty($activityId)) {
+    //                     $ratereviewdata['activity_id'] = $activityId;
+    //                 }
+
+    //                 if (!empty($rating)) {
+    //                     $ratereviewdata['ratings'] = $rating;
+    //                 }
+
+    //                 if (!empty($review)) {
+    //                     $ratereviewdata['review'] = $review;
+    //                 }
+
+    //                 $review_data_active = insert('review', $ratereviewdata);
+
+    //                 if (!empty($reviewImages) && isset($reviewImages[$key])) {
+
+    //                     $uploadedFiles = $reviewImages[$key];
+
+    //                     foreach ($uploadedFiles as $uploadedFile) {
+    //                         $review_image_url = Cloudinary::upload($uploadedFile->getRealPath())->getSecurePath();
+    //                         $other_image_data['review_id'] = $review_data_active;
+    //                         $other_image_data['image_url'] = $review_image_url;
+    //                         insert('review_images', $other_image_data);
+    //                     }
+    //                 }
+
+    //                 if ($review_data_active) {
+    //                     return response()->json(['result' => 1, 'msg' => 'Review posted Seccesfully']);
+    //                 } else {
+    //                     return response()->json(['result' => '1', 'msg' => 'No data found']);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+    public function uploadUserDocuments(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|numeric',
+            'documents' => 'required|array|max:10',
+            'documents.*' => 'image|mimes:jpeg,jpg,png',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['result' => 0, 'errors' => $validator->errors()->first()]);
+            return response()->json(['result' => "0", 'errors' => $validator->errors()->first()], 401);
         }
 
         $user_id = $request->input('user_id');
-        $adventureId = $request->input('adventure_id');
-        $adventureType = $request->input('adventure_type');
 
-        $adventureDetails = $this->api_model->getAdventureDetailsInfo($adventureId, $adventureType);
-
-        $destinationId = null;
-        $shipId = null;
-        $activityId = null;
-
-        foreach ($adventureDetails as $value) {
-            $id = $value->journey_value;
-
-            if ($adventureType == 'destinations') {
-                $value->adventures = select('destinations', ['destination_id', 'name'], ['destination_id' => $id, 'status' => 'Active']);
-                foreach ($value->adventures as $val1) {
-                    $destinationId = $val1->destination_id;
-                }
-            } elseif ($adventureType == 'ships') {
-                $value->ships = select('ships', ['ship_id', 'ship_name'], ['ship_id' => $id, 'status' => 'Active']);
-                foreach ($value->ships as $val2) {
-                    $shipId = $val2->ship_id;
-                }
-            } elseif ($adventureType == 'adventures') {
-                $value->adventures = select('adventures', ['adventure_id', 'journey'], ['adventure_id' => $id, 'status' => 'Active']);
-                foreach ($value->adventures as $val3) {
-                    $adventureId = $val3->adventure_id;
-                }
+        $uploadedDocuments = multipleCloudinaryUploads($request, 'documents');
+        if (!empty($uploadedDocuments)) {
+            foreach ($uploadedDocuments as $document) {
+                $temp['user_id'] = $user_id;
+                $temp['document'] = $document;
+                insert('user_documents', $temp);
             }
         }
-
-        $existingRating = $this->api_model->getUserAdventureRating($user_id, $adventureType);
-        $reviews = $request->input('review');
-        $ratings = $request->input('ratings');
-        $pictures = $request->file('pictures');
-        if ($existingRating) {
-            delete('review', 'review_id', $existingRating->review_id);
-            delete('review_images', 'review_id', $existingRating->review_id);
-        }
-        $reviews = $request->input('review');
-        $ratings = $request->input('ratings');
-        $pictures = $request->file('pictures');
-
-        foreach ($reviews as $index => $review) {
-            $insertData = [
-                'user_id' => $request->input('user_id'),
-                'review' => $review,
-                'ratings' => $ratings[$index],
-                'review_type' => $adventureType,
-                'destination_id' => $destinationId,
-                'ship_id' => $shipId,
-                'adventure_id' => $adventureId,
-            ];
-
-            $result = $this->api_model->rateAdventure($insertData);
-        }
-        // dd($result); die;
-        if ($result) {
-            if (!empty($pictures)) {
-                $pictures = multipleCloudinaryUploads($request, 'pictures');
-                foreach ($pictures as $image) {
-                    $data['review_id'] = $result;
-                    $data['image_url'] = $image;
-                    insert('review_images', $data);
-                }
-            }
-            $data = $this->api_model->getReviewDetails($result);
-            return response()->json(['result' => 1, 'msg' => 'Adventure rated successfully.', 'data' => $data], 200);
+        if ($uploadedDocuments) {
+            return response()->json(['result' => '1', 'message' => 'Document uploaded successfully.']);
         } else {
-            return response()->json(['result' => -1, 'msg' => 'Something went wrong!'], 500);
+            return response()->json(['result' => '-1', 'message' => 'Something went wrong!']);
+        }
+    }
+
+    public function deleteUserDocuments(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|numeric',
+            'document_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => "0", 'errors' => $validator->errors()->first()], 401);
+        }
+
+        $user_id = $request->input('user_id');
+        $document_id = $request->input('document_id');
+
+        $result = delete('user_documents', ['document_id' => $document_id, 'user_id' => $user_id], $document_id);
+
+        if ($result) {
+            return response()->json(['result' => '1', 'message' => 'Document deleted successfully.']);
+        } else {
+            return response()->json(['result' => '-1', 'message' => 'Something went wrong!']);
+        }
+    }
+
+    public function getUserDocuments(Request $request)
+    {
+        $requestdata = $request->all();
+        $validator = Validator::make($requestdata, [
+            'user_id' => 'required|numeric'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['result' => "0", 'errors' => $validator->errors()->first(),], 401);
+        }
+        $user_id = $request->post('user_id');
+
+        $document_data = select('user_documents', 'document', [['user_id', '=', $user_id]]);
+
+        if ($document_data) {
+            return response()->json(['result' => '1', 'message' => 'Document Found', 'data' => $document_data]);
+        } else {
+            return response()->json(['result' => '-1', 'message' => 'Something went wrong']);
         }
     }
 }

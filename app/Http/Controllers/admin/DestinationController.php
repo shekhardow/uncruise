@@ -41,7 +41,7 @@ class DestinationController extends Controller
     public function destinationForm($destination_id=null) {
         $destination_id = decryptionID($destination_id);
         $data['adventures'] = $this->adventure_model->getAllActivities();
-        $data['seleted_adventures'] = @select('destinations_adventures',['adventure_id'],[['destination_id','=',$destination_id]])->map(function($item){return $item->adventure_id;})->toArray();
+        $data['seleted_adventures'] = @select('destinations_activities',['activity_id'],[['destination_id','=',$destination_id]])->map(function($item){return $item->activity_id;})->toArray();
         $data['seleted_amenities'] = @select('destinations_amenities','*',[['destination_id','=',$destination_id]]);
         if(empty($destination_id)){
             $data['title'] = "Add Destination";
@@ -112,9 +112,9 @@ class DestinationController extends Controller
             if(!empty($adventures)){
                 $adventure = [];
                 foreach($adventures as $adv){
-                    $adventure['adventure_id'] = $adv;
+                    $adventure['activity_id'] = $adv;
                     $adventure['destination_id'] = $result;
-                    insert('destinations_adventures',$adventure);
+                    insert('destinations_activities',$adventure);
                     $adventure=null;
                 }
             }
@@ -203,12 +203,12 @@ class DestinationController extends Controller
 
             // multiple adventures
             if(!empty($adventures)){
-                delete('destinations_adventures','destination_id',$destination_id);
+                delete('destinations_activities','destination_id',$destination_id);
                 $adventure = [];
                 foreach($adventures as $adv){
-                    $adventure['adventure_id'] = $adv;
+                    $adventure['activity_id'] = $adv;
                     $adventure['destination_id'] = $destination_id;
-                    insert('destinations_adventures',$adventure);
+                    insert('destinations_activities',$adventure);
                     $adventure=null;
                 }
             }
