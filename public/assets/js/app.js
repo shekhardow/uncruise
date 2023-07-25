@@ -553,6 +553,13 @@
 
   // data table validation
   $("#data-table, .data-table").DataTable({
+    "bStateSave": true,
+    "fnStateSave": function (oSettings, oData) {
+        localStorage.setItem('offersDataTables', JSON.stringify(oData));
+    },
+    "fnStateLoad": function (oSettings) {
+        return JSON.parse(localStorage.getItem('offersDataTables'));
+    },
     dom: "<'grid grid-cols-12 gap-5 px-6 mt-6'<'col-span-4'l><'col-span-8 flex justify-end'f><'#pagination.flex items-center'>><'min-w-full't><'flex justify-end items-center'p>",
     paging: true,
     ordering: true,

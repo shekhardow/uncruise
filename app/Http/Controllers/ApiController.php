@@ -224,7 +224,7 @@ class ApiController extends Controller
         if ($auth->getStatusCode() !== 200) {
             return $auth;
         }
-        
+
         $user_id = @$auth->original['data']->user_id;
 
         $userDetails = $this->api_model->getUserByID($user_id);
@@ -291,18 +291,18 @@ class ApiController extends Controller
         if ($auth->getStatusCode() !== 200) {
             return $auth;
         }
-        
+
         $user_id = @$auth->original['data']->user_id;
-    
+
         $result = $this->api_model->getProfile($user_id);
-    
+
         if ($result) {
             return response()->json(['result' => 1, 'msg' => 'Profile data fetched.', 'data' => $result]);
         } else {
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
         }
     }
-    
+
     public function getSettings(Request $request)
     {
         $requestData = $request->all();
@@ -332,7 +332,7 @@ class ApiController extends Controller
     public function getAllShips()
     {
         $result = $this->api_model->getAllShips();
-        foreach($result as $value){
+        foreach ($result as $value) {
             $value->guest = select('ship_details', 'ship_value', ['ship_value_type' => 'guest', 'ship_id' => $value->ship_id]);
             $value->ratings = select('review', 'ratings', ['ship_id' => $value->ship_id])->avg('ratings');
         }
@@ -342,7 +342,7 @@ class ApiController extends Controller
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
         }
     }
-    
+
     public function getShipDetails(Request $request)
     {
         $ship_id = $request->post('ship_id');
@@ -356,7 +356,7 @@ class ApiController extends Controller
         $result->guest = select('ship_details', 'ship_value', ['ship_value_type' => 'guest', 'ship_id' => $ship_id]);
         $result->crew = select('ship_details', 'ship_value', ['ship_value_type' => 'crew', 'ship_id' => $ship_id]);
         $result->destination = select('ship_details', 'ship_value', ['ship_value_type' => 'destination', 'ship_id' => $ship_id]);
-        foreach($result->destination as $key => $row){
+        foreach ($result->destination as $key => $row) {
             $destination = select('destinations', 'name', ['destination_id' => $row->ship_value]);
             $row->name = $destination[0]->name;
             unset($row->ship_value);
@@ -367,11 +367,11 @@ class ApiController extends Controller
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
         }
     }
-    
+
     public function getAllDestinations()
     {
         $result = $this->api_model->getAllDestinations();
-        foreach($result as $value){
+        foreach ($result as $value) {
             $value->ratings = select('review', 'ratings', ['destination_id' => $value->destination_id])->avg('ratings');
         }
         if ($result) {
@@ -380,7 +380,7 @@ class ApiController extends Controller
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
         }
     }
-    
+
     public function getDestinationDetails(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -398,12 +398,12 @@ class ApiController extends Controller
         $destination_id = $request->post('destination_id');
         $key = $request->post('key');
         $result = $this->api_model->getDestinationDetails($destination_id);
-        if($key == 'about'){
+        if ($key == 'about') {
             $result->ratings = select('review', 'ratings', ['destination_id' => $destination_id])->avg('ratings');
             $result->images = select('destination_images', 'image_url', ['destination_id' => $destination_id]);
-        }elseif($key == 'activities'){
+        } elseif ($key == 'activities') {
             $result->activities = select('destinations_activities', 'activity_id', ['destination_id' => $destination_id]);
-            foreach($result->activities as $row){
+            foreach ($result->activities as $row) {
                 $activities = select('activities', ['activity_name', 'description', 'thumbnail_image'], ['destination_id' => $row->activity_id]);
                 $row->activity_name = $activities[0]->activity_name;
                 $row->description = $activities[0]->description;
@@ -411,7 +411,7 @@ class ApiController extends Controller
                 $row->ratings = select('review', 'ratings', ['ship_id' => $row->activity_id])->avg('ratings');
                 unset($row->activity_id);
             }
-        }else{
+        } else {
             $result->amenities = select('destinations_amenities', ['amenitie_title', 'amenitie_descriptions'], ['destination_id' => $destination_id]);
         }
         if ($result) {
@@ -424,7 +424,7 @@ class ApiController extends Controller
     public function getAllAdventures()
     {
         $result = $this->api_model->getAllAdventures();
-        foreach($result as $value){
+        foreach ($result as $value) {
             $value->ratings = select('review', 'ratings', ['adventure_id' => $value->adventure_id])->avg('ratings');
         }
         if ($result) {
@@ -433,7 +433,7 @@ class ApiController extends Controller
             return response()->json(['result' => 1, 'msg' => 'Something went wrong!']);
         }
     }
-    
+
     public function getAdventureDetails(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -450,11 +450,11 @@ class ApiController extends Controller
 
         $adventure_id = $request->post('adventure_id');
         $type = $request->post('type');
-        if($type == 'destinations'){
-            $result = select('adventure_details', 'journey_value', ['journey_type' => 'destinations','adventure_id' => $adventure_id]);
+        if ($type == 'destinations') {
+            $result = select('adventure_details', 'journey_value', ['journey_type' => 'destinations', 'adventure_id' => $adventure_id]);
             foreach ($result as $key => $row) {
                 $destination = select('destinations', ['destination_id', 'name', 'description', 'thumbnail_image'], ['destination_id' => $row->journey_value]);
-                if(!empty($destination)){
+                if (!empty($destination)) {
                     $row->destination_name = $destination[0]->name;
                     $row->description = $destination[0]->description;
                     $row->thumbnail_image = $destination[0]->thumbnail_image;
@@ -462,11 +462,11 @@ class ApiController extends Controller
                     unset($row->journey_value);
                 }
             }
-        }elseif($type == 'ships'){
-            $result = select('adventure_details', ['journey_value'], ['journey_type' => 'ships','adventure_id' => $adventure_id]);
+        } elseif ($type == 'ships') {
+            $result = select('adventure_details', ['journey_value'], ['journey_type' => 'ships', 'adventure_id' => $adventure_id]);
             foreach ($result as $key => $row) {
                 $ships = select('ships', ['ship_id', 'ship_name', 'brief_description', 'thumbnail_image'], ['ship_id' => $row->journey_value]);
-                if(!empty($ships)){
+                if (!empty($ships)) {
                     $row->ship_name = $ships[0]->ship_name;
                     $row->brief_description = $ships[0]->brief_description;
                     $row->thumbnail_image = $ships[0]->thumbnail_image;
@@ -475,11 +475,11 @@ class ApiController extends Controller
                     unset($row->journey_value);
                 }
             }
-        }else{
-            $result = select('adventure_details', 'journey_value', ['journey_type' => 'activities','adventure_id' => $adventure_id]);
+        } else {
+            $result = select('adventure_details', 'journey_value', ['journey_type' => 'activities', 'adventure_id' => $adventure_id]);
             foreach ($result as $key => $row) {
                 $ships = select('activities', ['activity_id', 'activity_name', 'description', 'thumbnail_image'], ['activity_id' => $row->journey_value]);
-                if(!empty($ships)){
+                if (!empty($ships)) {
                     $row->activity_name = $ships[0]->activity_name;
                     $row->description = $ships[0]->description;
                     $row->thumbnail_image = $ships[0]->thumbnail_image;
@@ -494,7 +494,7 @@ class ApiController extends Controller
             return response()->json(['result' => -1, 'msg'  => "Something went wrong!"]);
         }
     }
-    
+
     public function getAllPost(Request $request)
     {
         $user_id = $request->post('user_id');
@@ -515,7 +515,7 @@ class ApiController extends Controller
             return response()->json(['result' => -1, 'msg' => "Something went wrong!"]);
         }
     }
-    
+
     public function uploadPost(Request $request)
     {
         $requestdata = $request->all();
@@ -560,7 +560,7 @@ class ApiController extends Controller
             return response()->json(['result' => '-1', 'message' => 'Error Occured']);
         }
     }
-    
+
     public function searchShipByKeyword(Request $request)
     {
         $keyword = $request->post('keyword');
@@ -575,10 +575,39 @@ class ApiController extends Controller
         if ($data['ships']->count() > 0) {
             return response()->json(['result' => 1, 'msg'  => "Data found", 'data' => $data]);
         } else {
-            return response()->json(['result' => -1, 'msg'  => "No Data FOUND", 'data' => NULL]);
+            return response()->json(['result' => -1, 'msg'  => "Something went wrong!"]);
         }
     }
-    
+
+    public function getUserReviews(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|numeric',
+            'type' => 'required',
+        ], [
+            'required' => 'The :attribute is required.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 0, 'errors' => $validator->errors()->first(),], 401);
+        }
+
+        $user_id = $request->post('user_id');
+        $type = $request->post('type');
+
+        $review_data = $this->api_model->getUserReviews($user_id, $type);
+
+        foreach ($review_data as $value) {
+            $value->multi_images = select('review_images', 'image_url as image', ['review_id' => $value->review_id]);
+        }
+
+        if ($review_data) {
+            return response()->json(['result' => 1, 'msg' => 'Reviews data fetched.', 'data' => $review_data]);
+        } else {
+            return response()->json(['result' => '-1', 'msg' => 'Something went wrong!']);
+        }
+    }
+
     public function rateAdventure(Request $request)
     {
         try {
@@ -668,10 +697,11 @@ class ApiController extends Controller
 
             return response()->json(['result' => 1, 'message' => 'Reviews submitted successfully']);
         } catch (\Exception $e) {
-            return response()->json(['result' => -1, 'message' => 'Something went wrong: ' . $e->getMessage()]);
+            // return response()->json(['result' => -1, 'message' => 'Something went wrong: ' . $e->getMessage()]);
+            return response()->json(['result' => -1, 'message' => 'Something went wrong!']);
         }
     }
-    
+
     public function uploadUserDocuments(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -724,7 +754,7 @@ class ApiController extends Controller
             return response()->json(['result' => '-1', 'message' => 'Something went wrong!']);
         }
     }
-    
+
     public function getUserDocuments(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -733,7 +763,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return response()->json(['result' => "0", 'errors' => $validator->errors()->first(),], 401);
         }
-        
+
         $user_id = $request->post('user_id');
 
         $document_data = select('user_documents', ['document_id', 'document', 'doc_name'], ['user_id' => $user_id]);
@@ -744,7 +774,7 @@ class ApiController extends Controller
             return response()->json(['result' => '-1', 'message' => 'Something went wrong!']);
         }
     }
-    
+
     public function editUserDocumentName(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -753,7 +783,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return response()->json(['result' => "0", 'errors' => $validator->errors()->first(),], 401);
         }
-        
+
         $document_id = $request->post('document_id');
         $doc_name = $request->post('doc_name');
 
@@ -764,6 +794,63 @@ class ApiController extends Controller
             return response()->json(['result' => '1', 'message' => 'Document name updated successfully.', 'data' => $document_data]);
         } else {
             return response()->json(['result' => '-1', 'message' => 'Something went wrong!']);
+        }
+    }
+
+    public function getAllTestimonials()
+    {
+        $user_data = $this->api_model->getAllTestimonials();
+
+        foreach ($user_data as $data) {
+            if (!empty($data->ship_id)) {
+                $picture = select('cruises', 'thumbnail_image', ['cruise_id' => $data->ship_id]);
+                $data->ship_image = $picture[0]->thumbnail_image;
+            }
+            if (!empty($data->destination_id)) {
+                $picture = select('destinations', 'thumbnail_image', ['destination_id' => $data->destination_id]);
+                $data->destination_image = $picture[0]->thumbnail_image;
+            }
+            if (!empty($data->activity_id)) {
+                $picture = select('activities', 'thumbnail_image', ['activity_id' => $data->activity_id]);
+                $data->activity_image = $picture[0]->thumbnail_image;
+            }
+            $data->name = $data->first_name . ' ' . $data->last_name . ' | ' . $data->country;
+            unset($data->first_name);
+            unset($data->last_name);
+            unset($data->country);
+            unset($data->activity_id);
+            unset($data->ship_id);
+            unset($data->destination_id);
+        }
+
+        if ($user_data) {
+            return response()->json(['result' => 1, 'msg'  => "Testimonials data fetched.", 'data' => $user_data]);
+        } else {
+            return response()->json(['result' => -1, 'msg'  => "Something went wrong!"]);
+        }
+    }
+
+    public function getAllActivities()
+    {
+        $activities = select('activities', ['activity_id', 'activity_name']);
+        if ($activities) {
+            return response()->json(['result' => 1, 'msg'  => "Activities data fetched.", 'data' => $activities]);
+        } else {
+            return response()->json(['result' => -1, 'msg'  => "Something went wrong!"]);
+        }
+    }
+
+    public function getActivityDetails(Request $request)
+    {
+        $activityIds = $request->post('activity_id');
+        if (empty($activityIds)) {
+            return response()->json(['result' => 0, 'msg'  => "Id is required"]);
+        }
+        $activityData = $this->api_model->getDestinationByActivity($activityIds);
+        if ($activityData) {
+            return response()->json(['result' => 1, 'msg'  => "Activities details fetched.", 'data' => $activityData]);
+        } else {
+            return response()->json(['result' => -1, 'msg'  => "Something went wrong!"]);
         }
     }
 }

@@ -518,7 +518,11 @@ class AdminController extends Controller
         $wherevalue = $request->post('wherevalue');
         $table = $request->post('table');
         $wherecolumn = $request->post('wherecolumn');
-        update($table, $wherecolumn, $wherevalue, [$change_column_name => $change_status]);
-        return response()->json(['result' => 1, 'msg' => 'Status Changed Successfully']);
+
+        DB::table($table)->where($wherecolumn, $wherevalue)->update([$change_column_name => $change_status]);
+
+        $updatedValue = DB::table($table)->where($wherecolumn, $wherevalue)->value($change_column_name);
+
+        return response()->json([ 'result' => 1, 'msg' => 'Status Changed Successfully', 'newValue' => $updatedValue]);
     }
 }

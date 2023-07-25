@@ -266,23 +266,32 @@ var Events = function () {
 				}
 			});
 		});
-		
+
 		$(document).on("click", ".toggleStatus", function () {
-			var url = $(this).data("url");
-			var value = $(this).val();
-			var changevalue = $(this).data('changevalue');
+            var url = $(this).data("url");
+            var value = $(this).val();
+            var changevalue = $(this).data('changevalue');
             var column_name = $(this).data('column_name');
             var wherevalue =  $(this).data('wherevalue');
             var table =  $(this).data('table');
             var wherecolumn =  $(this).data('wherecolumn');
-			$.post(url, {value,changevalue,column_name,wherevalue,table,wherecolumn}, function (out) {
+
+            var button = $(this);
+
+            $.post(url, {value, changevalue, column_name, wherevalue, table, wherecolumn}, function (out) {
                 if (out.result === 1) {
-                    // location.reload();
-                    toastr.remove()
+                    toastr.remove();
                     toastr.success(out.msg);
+
+                    button.val(out.newValue);
+
+                    var newValue = (out.newValue === 'Inactive') ? 'Active' : 'Inactive';
+                    button.data('changevalue', newValue);
+
+                    value = out.newValue;
                 }
             });
-		});
+        });
 	};
 
 	this.logout = function () {

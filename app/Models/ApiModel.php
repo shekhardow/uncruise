@@ -164,7 +164,7 @@ class ApiModel extends Model
             return false;
         }
     }
-    
+
     public function getShipDetails($id)
     {
         try {
@@ -178,7 +178,7 @@ class ApiModel extends Model
             return false;
         }
     }
-    
+
     public function getAllDestinations($keyword = null)
     {
         try {
@@ -193,7 +193,7 @@ class ApiModel extends Model
             return false;
         }
     }
-    
+
     public function getDestinationDetails($id)
     {
         try {
@@ -219,8 +219,9 @@ class ApiModel extends Model
             return false;
         }
     }
-    
-    public function getAllPost($user_id=null){
+
+    public function getAllPost($user_id = null)
+    {
         try {
             return DB::table('posts')
                 ->select(
@@ -238,7 +239,7 @@ class ApiModel extends Model
             return false;
         }
     }
-    
+
     public function searchShipByKeyword($keyword = null)
     {
         $data = DB::table('ships')
@@ -249,6 +250,34 @@ class ApiModel extends Model
                 ->orWhere('ships.detailed_description', 'like', '%' . $keyword . '%');
         }
         return $data->get();
+    }
+
+    public function getUserReviews($user_id, $type = null)
+    {
+        try {
+            $data = DB::table('review');
+            switch ($type) {
+                case 'ships':
+                    $data->select('ship_id', 'review_id', 'review', 'ratings', 'review_type');
+                    break;
+                case 'destinations':
+                    $data->select('destination_id', 'review_id', 'review', 'ratings', 'review_type');
+                    break;
+                case 'activities':
+                    $data->select('review_id', 'activity_id', 'review', 'ratings', 'review_type');
+                    break;
+                default:
+                    $data->select('destination_id', 'ship_id', 'review_id', 'activity_id', 'review', 'ratings', 'review_type');
+            }
+            $data->where('user_id', $user_id);
+            if ($type !== null) {
+                $data->where('review_type', $type);
+            }
+            return $data->get();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
     }
 
     public function getAdventureDetailsInfo($id, $type)
@@ -267,7 +296,7 @@ class ApiModel extends Model
             return false;
         }
     }
-    
+
     public function getAdventureReview($userId, $uniqueId, $keyName)
     {
         try {
@@ -337,11 +366,27 @@ class ApiModel extends Model
     public function getReviewDetails($review_id)
     {
         try {
-            $data = DB::table('review')->select('review.*','review_images.image_url')
+            $data = DB::table('review')->select('review.*', 'review_images.image_url')
                 ->leftJoin('review_images', 'review_images.review_id', '=', 'review.review_id')
                 ->where('review.review_id', $review_id)
                 ->get();
             return $data;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getAllTestimonials()
+    {
+        try {
+            $data = DB::table('review')
+                ->select('users.first_name', 'users.last_name', 'users.country', 'review.ship_id', 'review.activity_id', 'review.destination_id', 'review.review')
+                ->leftJoin('users', 'users.user_id', '=', 'review.user_id')
+                ->where('mark_as_testimonial', '=', 'Yes');
+
+            $result = $data->paginate();
+            return $result;
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;

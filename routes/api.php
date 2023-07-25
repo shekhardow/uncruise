@@ -39,9 +39,13 @@ Route::post('getAllPost',[ApiController::class,'getAllPost']);
 Route::post('uploadPost',[ApiController::class,'uploadPost']);
 
 Route::get('searchShipByKeyword',[ApiController::class,'searchShipByKeyword']);
+
+Route::post('getUserReviews',[ApiController::class,'getUserReviews']);
 Route::post('rateAdventure',[ApiController::class,'rateAdventure']);
 
 Route::post('uploadUserDocuments',[ApiController::class,'uploadUserDocuments']);
 Route::post('deleteUserDocuments',[ApiController::class,'deleteUserDocuments']);
 Route::post('getUserDocuments',[ApiController::class,'getUserDocuments']);
 Route::post('editUserDocumentName',[ApiController::class,'editUserDocumentName']);
+
+Route::get('getAllTestimonials',[ApiController::class,'getAllTestimonials']);
